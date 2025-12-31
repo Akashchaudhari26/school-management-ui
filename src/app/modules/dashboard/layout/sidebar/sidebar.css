@@ -1,0 +1,242 @@
+/* --- BASE SIDEBAR --- */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    /* Premium Dark Theme (Slate 900) */
+    background: #0f172a;
+    color: #94a3b8;
+    /* Muted text color */
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding-top: 80px;
+    /* Space for navbar */
+    z-index: 900;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- COLLAPSED STATE --- */
+.sidebar.collapsed {
+    width: 72px;
+}
+
+.sidebar.collapsed .menu-header,
+.sidebar.collapsed .link-text {
+    display: none;
+}
+
+.sidebar.collapsed .nav-links li a {
+    justify-content: center;
+    padding: 12px 0;
+    margin: 4px 10px;
+    /* Centered square when collapsed */
+}
+
+.sidebar.collapsed .icon {
+    margin-right: 0;
+    font-size: 1.4rem;
+}
+
+/* --- LINKS STYLING (The Premium Part) --- */
+.menu-header {
+    padding: 0 24px;
+    margin-bottom: 16px;
+    font-size: 0.7rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #475569;
+    /* Darker grey header */
+    font-weight: 700;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0 12px;
+    /* Side padding so buttons don't touch edge */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    /* Space between buttons */
+}
+
+.nav-links li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: #cbd5e1;
+    text-decoration: none;
+    /* Rounded Corners = Premium Feel */
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* Hover Effect */
+.nav-links li a:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+/* Active State (Floating Pill) */
+.nav-links li a.active {
+    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+    /* Blue Gradient */
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    /* Soft Blue Glow */
+    font-weight: 600;
+}
+
+.icon {
+    margin-right: 12px;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* --- TOGGLE BUTTON (Floating Circle) --- */
+.toggle-btn {
+    position: absolute;
+    top: 85px;
+    /* Aligned near top */
+    right: -14px;
+    /* Halfway sticking out */
+    background: #0f172a;
+    /* Same as sidebar bg */
+    color: #94a3b8;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1001;
+    border: 1px solid #334155;
+    /* Thin border */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+    background: #3b82f6;
+    /* Blue on hover */
+    border-color: #3b82f6;
+    color: white;
+}
+
+/* --- MOBILE --- */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .toggle-btn {
+        display: none;
+    }
+}
+
+/* ... existing CSS ... */
+
+/* 🚀 DROPDOWN ARROW */
+.arrow {
+    margin-left: auto;
+    /* Pushes arrow to right */
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
+
+/* 🚀 SUBMENU CONTAINER */
+.submenu-container {
+    padding-left: 28px;
+    /* Aligns with the parent icon */
+    margin-top: 4px;
+    overflow: hidden;
+    animation: slideDown 0.3s ease-out;
+}
+
+/* 🚀 SUBMENU LIST (The Timeline) */
+.sub-nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    /* The vertical grey line */
+    margin-left: 11px;
+    /* Align line with parent icon center */
+    padding-left: 15px;
+    /* Space between line and text */
+}
+
+.sub-nav-links li a {
+    padding: 8px 0;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.sub-nav-links li a:hover {
+    color: #ffffff;
+    background: transparent;
+    /* No bg on hover for sub-items, just text color */
+    transform: translateX(4px);
+}
+
+/* 🚀 ACTIVE SUB-ITEM (The Blue Dot Effect) */
+.sub-nav-links li a.sub-active {
+    color: #3b82f6;
+    /* Blue text */
+    font-weight: 600;
+}
+
+/* The Blue Dot */
+.sub-nav-links li a.sub-active::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    /* Moves dot onto the vertical line */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: #3b82f6;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+    /* Glow effect */
+}
+
+/* Animation for smooth opening */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hide submenu completely when collapsed to avoid UI breaking */
+.sidebar.collapsed .submenu-container {
+    display: none;
+}

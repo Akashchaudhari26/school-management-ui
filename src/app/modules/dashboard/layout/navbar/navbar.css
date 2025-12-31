@@ -1,0 +1,99 @@
+.navbar {
+    height: 70px;
+    /* Slightly taller */
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    /* Remove border, use shadow for depth */
+    border-bottom: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    position: relative;
+    z-index: 950;
+}
+
+.brand-name {
+    font-family: 'Inter', sans-serif;
+    /* Ensure modern font */
+    font-weight: 700;
+    font-size: 1.25rem;
+    background: linear-gradient(90deg, #1e293b, #334155);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Gradient Text */
+    letter-spacing: -0.5px;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+/* Hamburger - Hidden by default (Desktop) */
+.hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #2c3e50;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .hamburger-btn {
+        display: block;
+    }
+
+    /* Show on mobile */
+    .user-info {
+        display: none;
+    }
+
+    /* Hide names on small screens */
+    .navbar {
+        padding: 0 10px;
+    }
+}
+
+/* Keep your existing Right Side styles here... */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: #777;
+}
+
+.avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #e0e0e0;
+}
+
+.logout-btn {
+    padding: 6px 12px;
+    background: #fee2e2;
+    color: #991b1b;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

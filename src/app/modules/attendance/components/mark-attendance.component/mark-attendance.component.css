@@ -1,0 +1,201 @@
+/* =========================================
+   1. GLOBAL & LAYOUT
+   ========================================= */
+:host {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --bg-surface: #ffffff;
+    --border-color: #e5e7eb;
+    --input-bg: #f9fafb;
+}
+
+.main-container {
+    padding: 24px;
+    max-width: 100%;
+}
+
+/* =========================================
+   2. TOOLBAR CONTAINER
+   ========================================= */
+.toolbar {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+
+    /* FLEXBOX MAGIC: Align children side-by-side */
+    display: flex;
+    flex-flow: row wrap;
+    /* Allow wrapping only if screen is tiny */
+    align-items: center;
+    gap: 12px;
+}
+
+/* =========================================
+   3. SEARCH BAR (Left Side)
+   ========================================= */
+.search-group {
+    /* Allow search to grow, but set a base width */
+    flex: 1 1 1px;
+    min-width: 200px;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    /* Fills the .search-group container, not the whole page */
+    height: 40px;
+    /* Fixed height for alignment */
+    padding-left: 36px;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* =========================================
+   4. FILTERS GROUP (Right Side)
+   ========================================= */
+.filters-group {
+    /* Force filters to sit in a row next to search */
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 12px;
+
+    /* Make sure it doesn't take 100% width unless needed */
+    flex: 2 1 auto;
+}
+
+/* Common style for Selects and Year Input */
+.filter-select,
+.filter-input {
+    height: 40px;
+    /* Match search height exactly */
+    padding: 0 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--input-bg);
+    color: var(--text-main);
+    font-size: 14px;
+
+    /* CRITICAL: Prevent them from stretching to 100% */
+    width: auto;
+    min-width: 140px;
+    /* Minimum readable width */
+    flex-grow: 1;
+    /* Allow slight growth */
+}
+
+/* =========================================
+   5. SEARCH BUTTON
+   ========================================= */
+.filter-actions {
+    display: block;
+    /* Ensures button wrapper behaves */
+}
+
+.btn-search {
+    height: 40px;
+    padding: 0 24px;
+    background-color: var(--text-main);
+    /* Dark Button */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    /* Prevents text split */
+}
+
+.btn-search:hover {
+    background-color: rgba(79, 70, 229);
+}
+
+/* =========================================
+   6. MOBILE RESPONSIVENESS
+   ========================================= */
+@media (max-width: 768px) {
+
+    /* On phones, stack them vertically */
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-search {
+        width: 100%;
+    }
+}
+
+/* =========================================
+   7. SAVE BUTTON (Centered)
+   ========================================= */
+.submit {
+    /* Positioning: Centered */
+    display: block;
+    margin: 24px auto;
+    /* Top/Bottom: 24px, Left/Right: Auto (Centers it) */
+
+    /* Visual Style */
+    background-color: var(--primary-color);
+    /* Indigo #4f46e5 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 48px;
+    /* Slightly wider padding looks better when centered */
+
+    /* Typography */
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    /* Interaction */
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover State */
+.submit:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px -1px rgba(79, 70, 229, 0.3);
+}
+
+/* Active State */
+.submit:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Disabled State */
+.submit:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.7;
+}

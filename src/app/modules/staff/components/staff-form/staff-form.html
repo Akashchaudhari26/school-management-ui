@@ -1,0 +1,138 @@
+<div class="form-container">
+    <button class="back-btn" (click)="location.back()">
+        <i class="bi bi-arrow-left"></i> Back
+    </button>
+
+    <div class="form-header">
+        <h2>{{ isEditMode ? 'Edit Staff' : 'Add New Staff' }}</h2>
+        <p>Enter personal and professional details for the employee.</p>
+    </div>
+
+    <form [formGroup]="staffForm" (ngSubmit)="onSubmit()">
+
+        <div class="section-title">Personal Information</div>
+
+        <div class="grid-row">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" formControlName="fullName" placeholder="e.g. Rahul Verma">
+                <div *ngIf="f['fullName'].touched && f['fullName'].invalid" class="error-text">
+                    Name is required.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Mobile Number *</label>
+                <input type="text" formControlName="mobile" placeholder="10-digit Mobile" maxlength="10">
+                <div *ngIf="f['mobile'].touched && f['mobile'].invalid" class="error-text">
+                    Valid 10-digit mobile required.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" formControlName="email" placeholder="staff@school.com">
+                <div *ngIf="f['email'].touched && f['email'].invalid" class="error-text">
+                    Invalid email.
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="form-group">
+                <label>Gender *</label>
+                <select formControlName="gender">
+                    <option value="">Select Gender</option>
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                    <option value="OTHER">Other</option>
+                </select>
+                <div *ngIf="f['gender'].touched && f['gender'].invalid" class="error-text">Required.</div>
+            </div>
+
+            <div class="form-group">
+                <label>Date of Birth *</label>
+                <input type="date" formControlName="dateOfBirth">
+                <div *ngIf="f['dateOfBirth'].touched && f['dateOfBirth'].invalid" class="error-text">Required.</div>
+            </div>
+
+            <div class="form-group">
+                <label>Adhaar Number</label>
+                <input type="text" formControlName="adhaar" placeholder="12-digit UID" maxlength="12">
+                <div *ngIf="f['adhaar'].touched && f['adhaar'].invalid" class="error-text">Must be 12 digits.</div>
+            </div>
+        </div>
+
+        <div class="section-title">Professional Details</div>
+
+        <div class="grid-row">
+            <div class="form-group">
+                <label>Staff Type *</label>
+                <select formControlName="staffType">
+                    <option *ngFor="let type of staffTypes" [value]="type">{{ type | titlecase }}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Designation *</label>
+                <select formControlName="designation">
+                    <option value="">Select Designation</option>
+                    <option *ngFor="let role of designations" [value]="role">{{ role }}</option>
+                </select>
+                <div *ngIf="f['designation'].touched && f['designation'].invalid" class="error-text">Required.</div>
+            </div>
+
+            <div class="form-group">
+                <label>Employee Code *</label>
+                <input type="text" formControlName="employeeCode" placeholder="e.g. EMP-001">
+                <div *ngIf="f['employeeCode'].touched && f['employeeCode'].invalid" class="error-text">Required.</div>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="form-group">
+                <label>Joining Date *</label>
+                <input type="date" formControlName="joiningDate">
+                <div *ngIf="f['joiningDate'].touched && f['joiningDate'].invalid" class="error-text">Required.</div>
+            </div>
+        </div>
+
+        @if (staffForm.get('staffType')?.value === 'TEACHER') {
+        <div class="section-title">Academic Assignments</div>
+
+        <div class="form-group mb-4">
+            <label class="mb-2">Assigned Classes</label>
+            <div class="checkbox-grid">
+                @for (cls of availableClasses| async; track cls) {
+                <label class="checkbox-pill">
+                    <input type="checkbox" [value]="cls" (change)="onCheckChange($event, 'assignedClassIds')"
+                        [checked]="isChecked(cls.label, 'assignedClassIds')">
+                    <span>{{ cls.label }}</span>
+                </label>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="mb-2">Subjects Taught</label>
+            <div class="checkbox-grid">
+                @for (sub of availableSubjects; track sub) {
+                <label class="checkbox-pill">
+                    <input type="checkbox" [value]="sub" (change)="onCheckChange($event, 'subjects')"
+                        [checked]="isChecked(sub, 'subjects')">
+                    <span>{{ sub }}</span>
+                </label>
+                }
+            </div>
+        </div>
+        }
+
+        <div class="form-actions">
+            <button type="button" routerLink="/dashboard/staff" class="btn-secondary">Cancel</button>
+            <button type="submit" class="btn-primary" [disabled]="staffForm.invalid || isLoading">
+                {{ isLoading ? 'Saving...' : (isEditMode ? 'Update Staff' : 'Create Staff') }}
+            </button>
+        </div>
+
+    </form>
+</div>

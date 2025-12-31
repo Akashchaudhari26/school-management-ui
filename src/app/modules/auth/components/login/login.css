@@ -1,0 +1,174 @@
+/* Main Wrapper: Centers the card on the screen */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+    /* Light grey background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* The Login Card */
+.login-box {
+    background: #ffffff;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    /* Soft shadow */
+}
+
+/* Header Section */
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header h2 {
+    margin: 0;
+    color: #1a202c;
+    /* Dark slate text */
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.header p {
+    margin: 0.5rem 0 0;
+    color: #718096;
+    /* Muted grey text */
+    font-size: 0.95rem;
+}
+
+/* Form Inputs */
+.input-group {
+    margin-bottom: 1.25rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #2d3748;
+    box-sizing: border-box;
+    /* Ensures padding doesn't break layout */
+    transition: border-color 0.2s;
+}
+
+input:focus {
+    border-color: #3182ce;
+    /* Blue focus ring */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+/* Error States */
+input.error {
+    border-color: #e53e3e;
+    /* Red border */
+    background-color: #fff5f5;
+}
+
+.error-text {
+    color: #e53e3e;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Alert Box for Backend Errors */
+.alert {
+    background-color: #fed7d7;
+    color: #c53030;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+    border: 1px solid #feb2b2;
+}
+
+/* Login Button */
+button {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: #3182ce;
+    /* Primary Blue */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #2b6cb0;
+    /* Darker Blue */
+}
+
+button:disabled {
+    background-color: #cbd5e0;
+    cursor: not-allowed;
+}
+
+/* Footer Links */
+.footer-links {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.footer-links a {
+    color: #3182ce;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .login-box {
+        padding: 1.5rem;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .login-wrapper {
+        background: #ffffff;
+        align-items: flex-start;
+        padding-top: 3rem;
+    }
+}
+
+/* Add this to your existing CSS */
+.form-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #2d3748;
+    background-color: white;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.form-select:focus {
+    border-color: #3182ce;
+    outline: none;
+}

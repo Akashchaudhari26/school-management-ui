@@ -1,0 +1,59 @@
+<div class="login-wrapper">
+    <div class="login-box">
+        <div class="header">
+            <h2>Matrutva Little Buds</h2>
+            <p>School Management System</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+            <div class="input-group">
+                <label>Login Method</label>
+                <select formControlName="loginType" class="form-select">
+                    <option value="email">Email Address</option>
+                    <option value="mobile">Mobile Number</option>
+                    <option value="adhar">Adhar Number</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    @if (loginForm.get('loginType')?.value === 'email') { Email Address }
+                    @else if (loginForm.get('loginType')?.value === 'mobile') { Mobile Number }
+                    @else { Adhar Number }
+                </label>
+
+                <input type="text" formControlName="identifier" [placeholder]="placeholderText"
+                    [class.error]="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched" />
+
+                @if (loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched) {
+                <span class="error-text">This field is required</span>
+                }
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" formControlName="password" placeholder="Enter Password"
+                    [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
+
+                @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                <span class="error-text">Password is required</span>
+                }
+            </div>
+
+            @if (errorMessage) {
+            <div class="alert">{{ errorMessage }}</div>
+            }
+
+            <button type="submit" [disabled]="loginForm.invalid || isLoading">
+                @if (isLoading) { <span>Verifying...</span> }
+                @else { <span>Login</span> }
+            </button>
+
+            <div class="footer-links">
+                <a routerLink="#">Forgot Password?</a>
+            </div>
+
+        </form>
+    </div>
+</div>

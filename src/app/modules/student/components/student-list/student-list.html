@@ -1,0 +1,81 @@
+<div class="main-container">
+
+    <div class="page-header">
+        <div class="header-content">
+            <h2>Students List</h2>
+            <p class="subtitle">Manage admissions and profiles.</p>
+        </div>
+        <a routerLink="/dashboard/students/new" class="btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            <span>New Admission</span>
+        </a>
+    </div>
+
+    <div class="content-card">
+
+        <div class="toolbar" [formGroup]="filterForm">
+            <div class="search-group">
+                <div class="search-wrapper">
+                    <i class="bi bi-search search-icon"></i>
+                    <input formControlName="keyword" (keyup.enter)="onSearch()" type="text" class="search-input"
+                        placeholder="Name, Phone, or ID...">
+                </div>
+            </div>
+
+            <div class="filters-group">
+                <select formControlName="classId" class="filter-select" (change)="onSearch()">
+                    <option value="">All Classes</option>
+
+                    @for (cls of classes$ | async; track cls.value) {
+                    <option [value]="cls.value">{{ cls.label }}</option>
+                    }
+                </select>
+
+                <select formControlName="section" class="filter-select" (change)="onSearch()">
+                    <option value="">All Sections</option>
+
+                    @for (sec of sections$ | async; track sec.value) {
+                    <option [value]="sec.value">{{ sec.label }}</option>
+                    }
+                </select>
+
+                <input type="number" formControlName="admissionYear" class="filter-input" placeholder="Year"
+                    (keyup.enter)="onSearch()">
+
+                <div class="filter-actions">
+                    <button class="btn-search" (click)="onSearch()">Search</button>
+                    <button class="btn-reset" (click)="resetFilters()" title="Reset Filters">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <app-student-table [students]="students" mode="VIEW" (view)="onView($event)" (edit)="onEdit($event)"
+            (delete)="onDelete($event)">
+        </app-student-table>
+
+        <div class="pagination-footer">
+            <span class="pagination-info">
+                Showing <strong>{{ currentPage * pageSize + 1 }}</strong> to
+                <strong>{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize
+                    }}</strong>
+                of <strong>{{ totalElements }}</strong> results
+            </span>
+
+            <div class="pagination-controls">
+                <button class="page-btn" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">
+                    <i class="bi bi-chevron-left"></i> Previous
+                </button>
+
+                <span class="page-number">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+
+                <button class="page-btn" [disabled]="currentPage === totalPages - 1"
+                    (click)="onPageChange(currentPage + 1)">
+                    Next <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

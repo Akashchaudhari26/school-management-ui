@@ -1,0 +1,99 @@
+<div class="table-responsive">
+    <table class="premium-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Profile</th>
+                <th>Class</th>
+                <th>Gender</th>
+                <th>Guardian</th>
+
+                @if (mode === 'VIEW') {
+                <th class="text-center">Actions</th>
+                } @else {
+                <th class="text-center">Attendance</th>
+                }
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (student of students; track student.id) {
+            <tr>
+                <td data-label="ID">
+                    <span class="id-badge">{{ student.admissionNumber || '#' }}</span>
+                </td>
+
+                <td class="mobile-profile-header">
+                    <div class="profile-cell">
+                        <div class="avatar-circle">
+                            <span class="initials">
+                                {{ student.firstName.charAt(0) }}
+                            </span>
+                        </div>
+                        <div class="profile-info">
+                            <span class="name">
+                                {{ student.firstName }} {{ student.lastName }}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+
+                <td data-label="Class">
+                    <span class="class-pill">
+                        {{ student.currentClassId }} - {{ student.currentSection }}
+                    </span>
+                </td>
+
+                <td data-label="Gender">
+                    {{ student.gender | titlecase }}
+                </td>
+
+                <td data-label="Guardian">
+                    {{ student.guardians?.[0]?.name || '-' }}
+                </td>
+
+                <!-- 🔁 MODE SWITCH -->
+                @if (mode === 'VIEW') {
+                <td class="mobile-actions">
+                    <div class="action-group">
+                        <button class="icon-btn view" (click)="view.emit(student)">
+                            <i class="bi bi-eye-fill"></i>
+                        </button>
+
+                        <button class="icon-btn edit" (click)="edit.emit(student)">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+
+                        <button class="icon-btn delete" (click)="delete.emit(student.id)">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </div>
+                </td>
+
+                } @else {
+                <td class="attendance-cell">
+                    <button class="attendance-btn" [class.present]="student.status === 'PRESENT'"
+                        [class.absent]="student.status === 'ABSENT'"
+                        [class.locked]="student.attendanceId && !canModifyLocked"
+                        [disabled]="student.attendanceId && !canModifyLocked" (click)="toggleAttendance(student)"
+                        [title]="(student.attendanceId && !canModifyLocked) 
+                                     ? 'Locked by Admin' 
+                                     : 'Click to modify status'">
+
+                        @if (student.attendanceId && !canModifyLocked) {
+                        <i class="bi bi-lock-fill lock-icon"></i>
+                        }
+
+                        @if (student.attendanceId && canModifyLocked) {
+                        <i class="bi bi-pencil-fill edit-icon" style="font-size: 10px; opacity: 0.7;"></i>
+                        }
+
+                        <span class="status-text">{{ student.status }}</span>
+                    </button>
+                </td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

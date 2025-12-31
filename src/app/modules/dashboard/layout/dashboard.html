@@ -1,0 +1,19 @@
+<div class="app-container" [class.mobile-mode]="isMobile">
+
+    <div class="mobile-backdrop" *ngIf="isMobile && isMobileMenuOpen" (click)="closeMobileMenu()">
+    </div>
+
+    <header class="main-header">
+        <app-navbar (toggleMobile)="toggleMobileMenu()"></app-navbar>
+    </header>
+
+    <app-sidebar [isCollapsed]="isSidebarCollapsed" [isMobileOpen]="isMobileMenuOpen" (toggle)="toggleDesktopSidebar()">
+    </app-sidebar>
+
+    <main class="main-content" [class.expanded]="isSidebarCollapsed" [class.mobile-pushed]="isMobileMenuOpen">
+        <div class="content-wrapper">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+
+</div>

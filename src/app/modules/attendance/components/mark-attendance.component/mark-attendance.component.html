@@ -1,0 +1,46 @@
+<div class="main-container">
+
+    <div class="page-header">
+        <div class="header-content">
+            <h2>Students Attendance</h2>
+            <p class="subtitle">Manage student attendance.</p>
+        </div>
+    </div>
+
+    <div class="toolbar" [formGroup]="filterForm">
+        <div class="filters-group">
+            <select formControlName="classId" class="filter-select">
+                <option value="">Select Class</option>
+
+                @for (cls of classes$ | async; track cls.value) {
+                <option [value]="cls.value">{{ cls.label }}</option>
+                }
+            </select>
+
+            <select formControlName="section" class="filter-select">
+                <option value="">Select Section</option>
+
+                @for (sec of sections$ | async; track sec.value) {
+                <option [value]="sec.value">{{ sec.label }}</option>
+                }
+            </select>
+
+            <div class="filter-actions">
+                <button class="btn-search" (click)="loadAttendance()">Search</button>
+            </div>
+        </div>
+    </div>
+
+    @if (isLoading) {
+    <p>Loading students…</p>
+    }
+
+    @if (!isLoading && students.length) {
+    <app-student-table [students]="students" mode="ATTENDANCE" (attendanceChange)="onStatusChange($event)">
+    </app-student-table>
+
+    <button class="submit" [disabled]="isSaving || !hasChanges" (click)="submitAttendance()">
+        {{ isSaving ? 'Saving…' : 'Save Attendance' }}
+    </button>
+    }
+</div>

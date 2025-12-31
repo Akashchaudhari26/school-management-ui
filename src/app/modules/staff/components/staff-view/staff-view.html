@@ -1,0 +1,126 @@
+<div class="view-container" *ngIf="staff; else loading">
+
+    <div class="profile-header card">
+        <button class="back-btn" (click)="location.back()">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+
+        <div class="header-content">
+            <div class="avatar-large">
+                {{ staff.fullName.charAt(0) }}
+            </div>
+            <div class="main-info">
+                <h1>{{ staff.fullName }}</h1>
+                <div class="badges">
+                    <span class="badge class-badge">
+                        {{ staff.designation }}
+                    </span>
+                    <span class="badge id-badge">
+                        Code: {{ staff.employeeCode }}
+                    </span>
+                    <span class="badge" [ngClass]="{
+                        'class-badge': staff.staffType === 'TEACHER',
+                        'id-badge': staff.staffType !== 'TEACHER'
+                    }">
+                        {{ staff.staffType | titlecase }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <a [routerLink]="['/dashboard/staff/edit', staff.id]" [state]="{ data: staff }" class="btn-action edit">
+                    <i class="bi bi-pencil-fill"></i> Edit Profile
+                </a>
+                <button (click)="deleteStaff()" class="btn-action delete">
+                    <i class="bi bi-trash-fill"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="details-grid">
+
+        <div class="card">
+            <div class="card-title">Personal Details</div>
+            <div class="info-list">
+                <div class="info-item">
+                    <label>Mobile No.</label>
+                    <span>{{ staff.mobile }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Email Address</label>
+                    <span>{{ staff.email || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <label>DOB</label>
+                    <span>{{ staff.dateOfBirth | date:'mediumDate' }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Gender</label>
+                    <span>{{ staff.gender | titlecase }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Aadhaar No.</label>
+                    <span>{{ staff.aadhaar || 'N/A' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Professional Info</div>
+            <div class="info-list">
+                <div class="info-item">
+                    <label>Employee Code</label>
+                    <span>{{ staff.employeeCode }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Designation</label>
+                    <span>{{ staff.designation }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Joining Date</label>
+                    <span>{{ staff.joiningDate | date:'mediumDate' }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Role Type</label>
+                    <span>{{ staff.staffType | titlecase }}</span>
+                </div>
+            </div>
+        </div>
+
+        @if (staff.staffType === 'TEACHER') {
+        <div class="card full-width">
+            <div class="card-title">Teaching Profile</div>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <label>Assigned Classes</label>
+                    <div class="tag-container">
+                        @for (cls of staff.assignedClassIds; track cls) {
+                        <span class="simple-tag">{{ cls }}</span>
+                        } @empty {
+                        <span>No classes assigned.</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <label>Subjects Taught</label>
+                    <div class="tag-container">
+                        @for (sub of staff.subjects; track sub) {
+                        <span class="simple-tag">{{ sub }}</span>
+                        } @empty {
+                        <span>No subjects assigned.</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="loading-state">Loading Staff Profile...</div>
+</ng-template>

@@ -1,0 +1,120 @@
+<div class="view-container" *ngIf="student; else loading">
+
+    <div class="profile-header card">
+        <button class="back-btn" (click)="location.back()">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+
+        <div class="header-content">
+            <div class="avatar-large">
+                {{ student.firstName.charAt(0) }}
+            </div>
+            <div class="main-info">
+                <h1>{{ student.firstName }} {{ student.lastName }}</h1>
+                <div class="badges">
+                    <span class="badge class-badge">
+                        {{ student.currentClassId }} - {{ student.currentSection }}
+                    </span>
+                    <span class="badge id-badge">
+                        ID: {{ student.admissionNumber || 'N/A' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <a [routerLink]="['/dashboard/students/edit', student.id]" [state]="{ data: student }"
+                    class="btn-action edit">
+                    <i class="bi bi-pencil-fill"></i> Edit Profile
+                </a>
+                <button (click)="deleteStudent()" class="btn-action delete">
+                    <i class="bi bi-trash-fill"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="details-grid">
+
+        <div class="card">
+            <div class="card-title">Personal Details</div>
+            <div class="info-list">
+                <div class="info-item">
+                    <label>Full Name</label>
+                    <span>{{ student.firstName }} {{ student.middleName }} {{ student.lastName }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Date of Birth</label>
+                    <span>{{ student.dateOfBirth | date:'mediumDate' }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Gender</label>
+                    <span>{{ student.gender | titlecase }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Mobile</label>
+                    <span>{{ student.phone || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Email</label>
+                    <span>{{ student.email || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Adhaar No.</label>
+                    <span>{{ student.adharNumber || 'N/A' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Academic Info</div>
+            <div class="info-list">
+                <div class="info-item">
+                    <label>Current Class</label>
+                    <span>{{ student.currentClassId }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Section</label>
+                    <span>{{ student.currentSection }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Admission Year</label>
+                    <span>{{ student.admissionYear }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Academic Year</label>
+                    <span>{{ student.currentAcademicYear }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <div class="card-title">Guardian Details</div>
+
+            <div class="guardian-grid">
+                @for (g of student.guardians; track $index) {
+                <div class="guardian-box" [class.primary]="g.primary">
+                    <div class="g-header">
+                        <span class="g-relation">{{ g.relation | titlecase }}</span>
+                        <span class="g-badge" *ngIf="g.primary">Primary Contact</span>
+                    </div>
+                    <div class="g-name">{{ g.name }}</div>
+                    <div class="g-contact">
+                        <i class="bi bi-telephone"></i> {{ g.phone }}
+                    </div>
+                    <div class="g-contact" *ngIf="g.email">
+                        <i class="bi bi-envelope"></i> {{ g.email }}
+                    </div>
+                </div>
+                } @empty {
+                <p class="text-muted">No guardian details available.</p>
+                }
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<ng-template #loading>
+    <div class="loading-state">Loading Student Profile...</div>
+</ng-template>

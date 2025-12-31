@@ -1,0 +1,43 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed" [class.mobile-open]="isMobileOpen">
+
+    <div class="toggle-btn" (click)="onToggle()">
+        <i class="bi" [class.bi-chevron-left]="!isCollapsed" [class.bi-chevron-right]="isCollapsed"></i>
+    </div>
+
+    <ul class="nav-links">
+
+        @for (item of menuItems; track item.title) {
+
+        <li [class.has-submenu]="item.children">
+
+            <a [routerLink]="item.children ? null : item.link" [routerLinkActive]="item.children ? '' : 'active'"
+                [routerLinkActiveOptions]="{exact: item.exact || false}" (click)="handleItemClick(item)"
+                [class.active]="item.isOpen" [title]="item.title">
+
+                <i class="bi icon" [ngClass]="item.icon"></i>
+                <span class="link-text">{{ item.title }}</span>
+
+                @if (item.children && !isCollapsed) {
+                <i class="bi bi-chevron-down arrow" [class.rotate]="item.isOpen"></i>
+                }
+            </a>
+
+            @if (item.children && item.isOpen && !isCollapsed) {
+            <div class="submenu-container">
+                <ul class="sub-nav-links">
+                    @for (subItem of item.children; track subItem.title) {
+                    <li>
+                        <a [routerLink]="subItem.link" routerLinkActive="sub-active"
+                            [routerLinkActiveOptions]="{exact: true}">
+                            {{ subItem.title }}
+                        </a>
+                    </li>
+                    }
+                </ul>
+            </div>
+            }
+        </li>
+
+        }
+    </ul>
+</aside>

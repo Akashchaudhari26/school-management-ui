@@ -1,0 +1,259 @@
+/* Main Card Container */
+.form-container {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    max-width: 950px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1e293b;
+}
+
+/* Header Section */
+.form-header {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 20px;
+}
+
+.form-header h2 {
+    margin: 0 0 8px 0;
+    color: #0f172a;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.form-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Section Titles */
+.section-title {
+    margin-top: 35px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #334155;
+    border-left: 4px solid #3b82f6;
+    /* Accent bar on left */
+    padding-left: 12px;
+}
+
+/* Grid Layout */
+.grid-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Force 3 columns on desktop */
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+/* Form Inputs & Labels */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    background-color: #fff;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+    /* Ensures padding doesn't break width */
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #94a3b8;
+}
+
+/* Guardian Card Styling */
+.guardian-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 24px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    position: relative;
+    transition: border-color 0.2s;
+}
+
+.guardian-card:hover {
+    border-color: #cbd5e1;
+}
+
+.guardian-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.guardian-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Custom Checkbox Alignment */
+.checkbox-inline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-inline input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #3b82f6;
+    cursor: pointer;
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+    justify-content: flex-end;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-sm,
+.btn-danger-text {
+    font-family: inherit;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+    padding: 12px 32px;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 12px 24px;
+    font-size: 0.95rem;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.btn-sm {
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+}
+
+.btn-sm:hover {
+    background: #dbeafe;
+}
+
+.btn-danger-text {
+    background: transparent;
+    color: #ef4444;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+}
+
+.btn-danger-text:hover {
+    color: #dc2626;
+    background: #fef2f2;
+    border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .grid-row {
+        grid-template-columns: 1fr;
+        /* Stack on mobile */
+        gap: 16px;
+    }
+
+    .form-container {
+        padding: 20px;
+    }
+}
+
+/* ERROR STYLING */
+
+/* Turn border red when invalid and touched */
+.form-group input.ng-invalid.ng-touched,
+.form-group select.ng-invalid.ng-touched {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+/* Error message text */
+.error-text {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Optional: Add a subtle transition for the border color */
+.form-group input,
+.form-group select {
+    transition: border-color 0.2s, background-color 0.2s;
+}
