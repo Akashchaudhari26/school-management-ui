@@ -57,12 +57,43 @@
 .nav-links {
     list-style: none;
     padding: 0 12px;
-    /* Side padding so buttons don't touch edge */
     margin: 0;
     display: flex;
     flex-direction: column;
     gap: 6px;
-    /* Space between buttons */
+
+    /* --- 🚀 NEW SCROLLING LOGIC --- */
+    flex: 1;
+    /* Takes up all remaining height */
+    overflow-y: auto;
+    /* Enables vertical scrolling */
+    overflow-x: hidden;
+    /* Prevents horizontal scrollbars */
+    padding-bottom: 20px;
+    /* Adds breathing room at the very bottom */
+}
+
+/* Width */
+.nav-links::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track (Background) */
+.nav-links::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Handle (The moving part) */
+.nav-links::-webkit-scrollbar-thumb {
+    background: #334155;
+    /* Slate-700 - subtle grey */
+    border-radius: 4px;
+}
+
+/* Handle on hover */
+.nav-links::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+    /* Slightly lighter on hover */
 }
 
 .nav-links li a {

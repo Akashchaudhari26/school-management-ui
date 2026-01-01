@@ -8,6 +8,7 @@ import { DropdownOption, StudentService } from '../../../student/services/studen
 import { forkJoin, Observable } from 'rxjs';
 import { StudentSearchFilter } from '../../../student/models/student-filter';
 import { Auth } from '../../../../core/services/auth';
+import { DateUtils } from '../../../../core/utils/date.utils';
 
 @Component({
   standalone: true,
@@ -25,12 +26,13 @@ export class MarkAttendanceComponent {
   // Filters
   classId = '';
   sectionId = '';
-  date = new Date().toISOString().substring(0, 10);
+  date = DateUtils.getLocalISODate();
 
   filterForm = this.fb.group({
     keyword: [''],
     classId: [''],
     section: [''],
+    date: [DateUtils.getLocalISODate()],
     admissionYear: []
   });
 
@@ -50,8 +52,9 @@ export class MarkAttendanceComponent {
   loadAttendance() {
     const classId = this.filterForm.value.classId;
     const section = this.filterForm.value.section;
+    const selectedDate = this.filterForm.value.date;
 
-    if (!classId || !section) {
+    if (!classId || !section || !selectedDate) {
       alert('Please select both Class and Section.');
       return;
     }
@@ -59,6 +62,7 @@ export class MarkAttendanceComponent {
     // Update local variables for save payload
     this.classId = classId;
     this.sectionId = section;
+    this.date = selectedDate;
 
     this.isLoading = true;
     this.hasChanges = false; // Reset dirty flag on new search
@@ -86,6 +90,7 @@ export class MarkAttendanceComponent {
           students.content,
           attendance
         );
+        this.checkForChanges();
         this.isLoading = false;
       },
       error: () => this.isLoading = false
@@ -130,7 +135,8 @@ export class MarkAttendanceComponent {
   private checkForChanges() {
     // Check if ANY student's current status differs from their initial status
     this.hasChanges = this.students.some(s =>
-      s.status !== this.initialStatuses.get(s.id)
+      !s.attendanceId || // Enable if NEW (even if default Present)
+      s.status !== this.initialStatuses.get(s.id) // Enable if MODIFIED
     );
   }
 

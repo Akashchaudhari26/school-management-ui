@@ -1,0 +1,554 @@
+/* ========================
+   GLOBAL LAYOUT
+   ======================== */
+:host {
+    --primary: #4f46e5;
+    --border-color: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --bg-surface: #ffffff;
+}
+
+.main-container {
+    padding: 24px;
+    max-width: 100%;
+}
+
+/* HEADER */
+.page-header {
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--text-main);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* ========================
+   REPORT SELECTION GRID
+   ======================== */
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.report-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.report-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+}
+
+.icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.icon-box.blue {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.icon-box.red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.icon-box.orange {
+    background: #ffedd5;
+    color: #f97316;
+}
+
+.text-content h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    color: var(--text-main);
+}
+
+.text-content p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.action-icon {
+    margin-left: auto;
+    color: #cbd5e1;
+}
+
+/* ========================
+   TOOLBAR & FILTERS
+   ======================== */
+.report-header-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.report-header-bar h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.btn-back {
+    background: white;
+    border: 1px solid var(--border-color);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.toolbar {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.filters-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    /* Vertically center inputs */
+}
+
+.actions-group {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+    /* Push to right */
+}
+
+.filter-select {
+    height: 40px;
+    padding: 0 32px 0 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+    /* Custom Arrow */
+    appearance: none;
+    background-image: url("data:image/svg+xml,...");
+    /* Use same arrow from previous dashboard css */
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    min-width: 140px;
+}
+
+.filter-select,
+.btn-search,
+.btn-export {
+    height: 42px;
+    box-sizing: border-box;
+}
+
+.year-input {
+    width: 80px;
+    min-width: auto;
+    padding-right: 12px;
+}
+
+.btn-search {
+    height: 40px;
+    padding: 0 20px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-export {
+    height: 40px;
+    padding: 0 16px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ========================
+   DESKTOP TABLE
+   ======================== */
+.table-container {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    overflow-x: auto;
+    /* Allow scroll only if needed */
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    /* CRITICAL: Enforces column widths */
+}
+
+.report-table th {
+    background: #f8fafc;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.report-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+/* Column Widths Strategy */
+.report-table th:nth-child(1) {
+    width: 30%;
+    text-align: left;
+}
+
+/* Name */
+.report-table th:nth-child(2) {
+    width: 10%;
+}
+
+/* Total */
+.report-table th:nth-child(3) {
+    width: 10%;
+}
+
+/* Present */
+.report-table th:nth-child(4) {
+    width: 10%;
+}
+
+/* Absent */
+.report-table th:nth-child(5) {
+    width: 15%;
+}
+
+/* % */
+.report-table th:nth-child(6) {
+    width: 25%;
+    text-align: right;
+    padding-right: 24px;
+}
+
+/* Action */
+
+.report-table tr:last-child td {
+    border-bottom: none;
+}
+
+.student-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.student-cell .name {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 14px;
+}
+
+.student-cell .adm-no {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.fw-bold {
+    font-weight: 600;
+}
+
+.text-green {
+    color: #16a34a;
+}
+
+.text-red {
+    color: #dc2626;
+}
+
+/* Badges */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.badge-good {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.badge-avg {
+    background: #fef9c3;
+    color: #a16207;
+}
+
+.badge-poor {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: white;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background: #f1f5f9;
+    color: var(--primary);
+}
+
+/* ========================
+   MOBILE CARDS (The Beautification)
+   ======================== */
+.student-report-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.student-info .name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.student-info .adm-no {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.card-stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.stat-item {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-item .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.stat-item .value {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.btn-call-mobile {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    border: none;
+    background: #eff6ff;
+    color: var(--primary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* ========================
+   RESPONSIVENESS UTILS
+   ======================== */
+.desktop-only {
+    display: inline-block;
+}
+
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        padding: 16px;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: block !important;
+    }
+
+    /* Toolbar Stacking */
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filter-select {
+        width: 100%;
+    }
+
+    .actions-group {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .btn-search {
+        flex: 1;
+    }
+
+    .btn-export {
+        width: auto;
+    }
+
+    .btn-text {
+        display: none;
+    }
+
+    /* Hide "Export" text on mobile to save space */
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: row;
+    /* Side by side */
+    align-items: center;
+    /* Vertically center */
+    justify-content: center;
+    gap: 12px;
+    /* Space between icon and text */
+    padding: 30px;
+    color: #64748b;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.empty-icon {
+    font-size: 24px;
+    /* Smaller icon for inline */
+    color: #94a3b8;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.phone-text {
+    font-family: 'Courier New', monospace;
+    /* Monospace for readability */
+    font-weight: 600;
+    color: #475569;
+    letter-spacing: 0.5px;
+    padding-right: 12px;
+}
+
+.btn-call-mobile {
+    /* ... your existing styles ... */
+    text-decoration: none;
+    /* Add this */
+    display: flex;
+    /* Ensure icon and text align */
+    align-items: center;
+    justify-content: center;
+}

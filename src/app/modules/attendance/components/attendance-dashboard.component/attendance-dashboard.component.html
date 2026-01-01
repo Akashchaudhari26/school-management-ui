@@ -1,0 +1,97 @@
+<div class="main-container">
+    <div class="page-header">
+        <h2>Attendance Dashboard</h2>
+        <p class="subtitle">School-wide daily overview.</p>
+    </div>
+
+    <div class="controls-bar">
+        <div class="control-group">
+            <label>Date</label>
+            <input type="date" [(ngModel)]="selectedDate" (change)="loadStats()" class="date-input">
+        </div>
+
+        <div class="toggle-container">
+            <button class="toggle-btn" [class.active]="userType === 'STUDENT'" (click)="onTypeChange('STUDENT')">
+                Students
+            </button>
+            <button class="toggle-btn" [class.active]="userType === 'STAFF'" (click)="onTypeChange('STAFF')">
+                Staff
+            </button>
+        </div>
+    </div>
+
+    @if (isLoading) {
+    <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Fetching latest stats...</p>
+    </div>
+    } @else {
+
+    <div class="stats-grid">
+
+        <div class="stat-card total">
+            <div class="card-content">
+                <div class="stat-text">
+                    <span class="stat-value">{{ displayTotal }}</span>
+                    <span class="stat-label">Total {{ userType | titlecase }}s</span>
+                </div>
+                <div class="icon-box"><i class="bi bi-people-fill"></i></div>
+            </div>
+        </div>
+
+        <div class="stat-card present">
+            <div class="card-content">
+                <div class="stat-text">
+                    <span class="stat-value">{{ stats.present }}</span>
+                    <span class="stat-label">Present</span>
+                </div>
+                <div class="icon-box"><i class="bi bi-check-lg"></i></div>
+            </div>
+        </div>
+
+        <div class="stat-card absent">
+            <div class="card-content">
+                <div class="stat-text">
+                    <span class="stat-value">{{ stats.absent }}</span>
+                    <span class="stat-label">Absent</span>
+                </div>
+                <div class="icon-box"><i class="bi bi-x-lg"></i></div>
+            </div>
+        </div>
+
+        <div class="stat-card late">
+            <div class="card-content">
+                <div class="stat-text">
+                    <span class="stat-value">{{ stats.late }}</span>
+                    <span class="stat-label">Late</span>
+                </div>
+                <div class="icon-box"><i class="bi bi-clock-history"></i></div>
+            </div>
+        </div>
+
+        <div class="stat-card half-day">
+            <div class="card-content">
+                <div class="stat-text">
+                    <span class="stat-value">{{ stats.halfDay }}</span>
+                    <span class="stat-label">Half Day</span>
+                </div>
+                <div class="icon-box"><i class="bi bi-cloud-sun-fill"></i></div>
+            </div>
+        </div>
+
+        <div class="stat-card percentage">
+            <div class="card-content">
+                <div class="stat-text">
+                    <span class="stat-value">{{ stats.presencePercentage }}%</span>
+                    <span class="stat-label">Attendance Rate</span>
+                </div>
+                <div class="icon-box"><i class="bi bi-pie-chart-fill"></i></div>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" [style.width.%]="stats.presencePercentage"></div>
+            </div>
+        </div>
+
+    </div>
+    }
+</div>

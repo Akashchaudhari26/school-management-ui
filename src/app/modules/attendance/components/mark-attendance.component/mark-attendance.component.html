@@ -11,7 +11,6 @@
         <div class="filters-group">
             <select formControlName="classId" class="filter-select">
                 <option value="">Select Class</option>
-
                 @for (cls of classes$ | async; track cls.value) {
                 <option [value]="cls.value">{{ cls.label }}</option>
                 }
@@ -19,11 +18,12 @@
 
             <select formControlName="section" class="filter-select">
                 <option value="">Select Section</option>
-
                 @for (sec of sections$ | async; track sec.value) {
                 <option [value]="sec.value">{{ sec.label }}</option>
                 }
             </select>
+
+            <input type="date" formControlName="date" class="filter-input">
 
             <div class="filter-actions">
                 <button class="btn-search" (click)="loadAttendance()">Search</button>

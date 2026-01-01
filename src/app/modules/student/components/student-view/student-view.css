@@ -220,20 +220,100 @@
 
 /* Mobile Adjustments */
 @media (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-    }
 
-    .header-actions {
-        margin-left: 0;
+    /* 1. Container - Maximize space */
+    .view-container {
+        padding: 10px;
+        /* Less padding on edges */
         width: 100%;
-        justify-content: center;
+        /* Ensure it fits screen */
+        box-sizing: border-box;
+        overflow-x: hidden;
+        /* Prevent horizontal scroll */
     }
 
+    .card {
+        padding: 16px;
+        /* Less padding inside cards */
+    }
+
+    /* 2. Header - Stack Everything */
+    .header-content {
+        flex-direction: column !important;
+        /* Force column */
+        align-items: center !important;
+        text-align: center;
+        gap: 12px;
+    }
+
+    .main-info {
+        width: 100%;
+        /* Ensure text container doesn't overflow */
+    }
+
+    .main-info h1 {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+        word-wrap: break-word;
+        /* Handle long names */
+    }
+
+    /* 3. Badges - Allow Wrapping */
+    .badges {
+        display: flex;
+        flex-wrap: wrap;
+        /* CRITICAL: Wraps if too wide */
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        white-space: nowrap;
+        /* Keep badge text on one line */
+    }
+
+    /* 4. Action Buttons - Side by Side */
+    .header-actions {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-action {
+        flex: 1;
+        /* Split width 50/50 */
+        justify-content: center;
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    /* 5. Info List - Stack & Break Long Text */
     .info-list {
         grid-template-columns: 1fr;
+        /* 1 column */
+        gap: 16px;
     }
 
-    /* Stack info items */
+    .info-item {
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 8px;
+    }
+
+    .info-item span {
+        word-break: break-word;
+        /* CRITICAL: Breaks long emails */
+        display: block;
+        /* Ensures it takes full width */
+    }
+
+    /* 6. Tags (Classes/Subjects) */
+    .tag-container {
+        justify-content: flex-start;
+        /* Left align tags */
+    }
 }

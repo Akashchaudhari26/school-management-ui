@@ -1,0 +1,105 @@
+<div class="main-container">
+
+    <div class="page-header">
+        <h2>View Attendance</h2>
+        <p class="subtitle">Daily class attendance reports & statistics.</p>
+    </div>
+
+    <div class="toolbar" [formGroup]="filterForm">
+        <select formControlName="classId" class="filter-select">
+            <option value="">Select Class</option>
+            @for (cls of classes$ | async; track cls.value) {
+            <option [value]="cls.value">{{ cls.label }}</option>
+            }
+        </select>
+
+        <select formControlName="section" class="filter-select">
+            <option value="">Select Section</option>
+            @for (sec of sections$ | async; track sec.value) {
+            <option [value]="sec.value">{{ sec.label }}</option>
+            }
+        </select>
+
+        <input type="date" formControlName="date" class="filter-input">
+
+        <button class="btn-search" (click)="fetchReport()" [disabled]="isLoading">
+            {{ isLoading ? 'Loading...' : 'View Report' }}
+        </button>
+    </div>
+
+    @if (hasSearched && !isLoading) {
+
+    <div class="stats-grid">
+        <div class="stat-card total">
+            <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-info">
+                <span class="label">Total Students</span>
+                <span class="value">{{ stats.total }}</span>
+            </div>
+        </div>
+
+        <div class="stat-card present">
+            <div class="stat-icon"><i class="bi bi-check-circle-fill"></i></div>
+            <div class="stat-info">
+                <span class="label">Present</span>
+                <span class="value">{{ stats.present }}</span>
+            </div>
+        </div>
+
+        <div class="stat-card absent">
+            <div class="stat-icon"><i class="bi bi-x-circle-fill"></i></div>
+            <div class="stat-info">
+                <span class="label">Absent</span>
+                <span class="value">{{ stats.absent }}</span>
+            </div>
+        </div>
+
+        <div class="stat-card percentage">
+            <div class="stat-icon"><i class="bi bi-pie-chart-fill"></i></div>
+            <div class="stat-info">
+                <span class="label">Attendance</span>
+                <span class="value">{{ stats.percentage }}%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student Name</th>
+                    <th>Status</th>
+                    <th>Marked By</th>
+                    <th>Time</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (row of reportData; track row.studentId) {
+                <tr>
+                    <td class="text-muted">{{ row.admissionNumber }}</td>
+                    <td class="fw-bold">{{ row.name }}</td>
+                    <td>
+                        <span class="status-badge" [class.present]="row.status === 'PRESENT'"
+                            [class.absent]="row.status === 'ABSENT'" [class.pending]="row.status === 'NOT_MARKED'">
+                            {{ row.status === 'NOT_MARKED' ? 'PENDING' : row.status }}
+                        </span>
+                    </td>
+                    <td>{{ row.markedBy }}</td>
+                    <td class="text-muted text-sm">
+                        {{ row.markedAt ? (row.markedAt | date:'shortTime') : '-' }}
+                    </td>
+                    <td class="text-muted text-sm">{{ row.remarks }}</td>
+                </tr>
+                }
+                @empty {
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">No students found in this class.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+</div>

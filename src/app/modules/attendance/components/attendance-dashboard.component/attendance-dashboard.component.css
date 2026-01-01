@@ -1,0 +1,292 @@
+/* ========================
+   1. LAYOUT & HEADER
+   ======================== */
+:host {
+    --primary: #4f46e5;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+}
+
+.main-container {
+    padding: 24px;
+    max-width: 100%;
+}
+
+.page-header {
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--text-main);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* ========================
+   2. CONTROLS BAR (Mobile Fixed)
+   ======================== */
+.controls-bar {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+
+    /* Layout */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.date-input {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    color: var(--text-main);
+    cursor: pointer;
+    background: #f9fafb;
+}
+
+/* TOGGLE SWITCH */
+.toggle-container {
+    display: flex;
+    background-color: #f3f4f6;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.toggle-btn {
+    padding: 8px 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.toggle-btn.active {
+    background-color: white;
+    color: var(--primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================
+   3. STATS CARDS (Balanced Layout)
+   ======================== */
+.stats-grid {
+    display: grid;
+    /* Cards will never be smaller than 260px */
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    /* Content Top, Progress Bar Bottom */
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+}
+
+/* LEFT/RIGHT SPLIT */
+.card-content {
+    display: flex;
+    justify-content: space-between;
+    /* Pushes items to edges */
+    align-items: flex-start;
+    /* Align to top */
+    width: 100%;
+}
+
+.stat-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.1;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ICON BOX (Right Side Anchor) */
+.icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    /* Prevents shrinking */
+}
+
+/* PROGRESS BAR */
+.progress-track {
+    margin-top: 20px;
+    height: 6px;
+    background-color: #f3f4f6;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #9333ea;
+    border-radius: 10px;
+    transition: width 1s ease-out;
+}
+
+/* ========================
+   4. THEMES
+   ======================== */
+.stat-card.total .icon-box {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.stat-card.present .icon-box {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.stat-card.present .stat-value {
+    color: #16a34a;
+}
+
+.stat-card.absent .icon-box {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.stat-card.absent .stat-value {
+    color: #dc2626;
+}
+
+.stat-card.late .icon-box {
+    background: #ffedd5;
+    color: #f97316;
+}
+
+.stat-card.late .stat-value {
+    color: #f97316;
+}
+
+.stat-card.half-day .icon-box {
+    background: #cffafe;
+    color: #06b6d4;
+}
+
+.stat-card.half-day .stat-value {
+    color: #0891b2;
+}
+
+.stat-card.percentage .icon-box {
+    background: #f3e8ff;
+    color: #9333ea;
+}
+
+/* ========================
+   5. MOBILE FIXES (Crucial)
+   ======================== */
+@media (max-width: 600px) {
+
+    .main-container {
+        padding: 16px;
+    }
+
+    /* Stack Controls Vertically */
+    .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+        /* Full Width */
+        gap: 16px;
+    }
+
+    /* Date Input Full Width */
+    .control-group {
+        flex-direction: column;
+        /* Label on top of input */
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .date-input {
+        width: 100%;
+        /* Fill space */
+        height: 44px;
+        /* Taller for touch */
+        box-sizing: border-box;
+    }
+
+    /* Toggle Buttons Full Width */
+    .toggle-container {
+        width: 100%;
+        display: flex;
+    }
+
+    .toggle-btn {
+        flex: 1;
+        /* Both buttons take 50% width */
+        text-align: center;
+        height: 40px;
+    }
+}
+
+/* Loading State */
+.loading-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+.spinner {
+    /* Add your spinner css here if needed */
+}

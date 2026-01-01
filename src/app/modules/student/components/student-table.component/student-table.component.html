@@ -72,24 +72,25 @@
 
                 } @else {
                 <td class="attendance-cell">
-                    <button class="attendance-btn" [class.present]="student.status === 'PRESENT'"
-                        [class.absent]="student.status === 'ABSENT'"
-                        [class.locked]="student.attendanceId && !canModifyLocked"
-                        [disabled]="student.attendanceId && !canModifyLocked" (click)="toggleAttendance(student)"
-                        [title]="(student.attendanceId && !canModifyLocked) 
-                                     ? 'Locked by Admin' 
-                                     : 'Click to modify status'">
+                    <div *ngIf="student.attendanceId && !canModifyLocked" class="locked-badge"
+                        [class.present]="student.status === 'PRESENT'" [class.absent]="student.status === 'ABSENT'">
+                        <i class="bi bi-lock-fill"></i>
+                        {{ student.status }}
+                    </div>
 
-                        @if (student.attendanceId && !canModifyLocked) {
-                        <i class="bi bi-lock-fill lock-icon"></i>
-                        }
+                    <div *ngIf="!student.attendanceId || canModifyLocked" class="attendance-toggle-group">
 
-                        @if (student.attendanceId && canModifyLocked) {
-                        <i class="bi bi-pencil-fill edit-icon" style="font-size: 10px; opacity: 0.7;"></i>
-                        }
+                        <button type="button" class="toggle-btn present-btn"
+                            [class.active]="student.status === 'PRESENT'" (click)="setStatus(student, 'PRESENT')">
+                            P
+                        </button>
 
-                        <span class="status-text">{{ student.status }}</span>
-                    </button>
+                        <button type="button" class="toggle-btn absent-btn" [class.active]="student.status === 'ABSENT'"
+                            (click)="setStatus(student, 'ABSENT')">
+                            A
+                        </button>
+
+                    </div>
                 </td>
                 }
             </tr>

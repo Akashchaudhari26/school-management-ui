@@ -396,7 +396,7 @@
 }
 
 /* =========================
-   ATTENDANCE BUTTON BASE
+   ATTENDANCE CELL LAYOUT
 ========================= */
 .attendance-cell {
     text-align: center;
@@ -404,111 +404,84 @@
     padding: 8px !important;
 }
 
-.attendance-btn {
+/* =========================
+   TOGGLE GROUP (Container)
+   Looks like one pill split in two
+========================= */
+.attendance-toggle-group {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 16px;
-    min-width: 120px;
+    background-color: #f3f4f6;
+    /* Light gray track */
     border-radius: 50px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    border: 1px solid transparent;
-    transition: all 0.2s ease-in-out;
+    padding: 4px;
+    gap: 2px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* =========================
-   STATE 1: NEW / EDITABLE (Highlighted)
-   "Highlight if not marked" - These pop visually
+   COMMON BUTTON STYLES
 ========================= */
-.attendance-btn:not(:disabled) {
+.toggle-btn {
+    border: none;
+    width: 40px;
+    height: 32px;
+    border-radius: 50%;
+    /* Circle shape */
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* Lift effect */
+    background: transparent;
+    color: #9ca3af;
+    /* Inactive Text Gray */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* New/Editable Present - VIBRANT Green */
-.attendance-btn.present:not(:disabled) {
+.toggle-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* =========================
+   ACTIVE STATES (The Magic)
+========================= */
+
+/* Active PRESENT (Green Circle) */
+.toggle-btn.present-btn.active {
     background-color: #ffffff;
     color: #16a34a;
-    /* Vibrant Green */
-    border: 2px solid #16a34a;
-    /* Outline style to show it's active */
+    /* Green Text */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
 }
 
-.attendance-btn.present:not(:disabled):hover {
-    background-color: #16a34a;
-    color: #ffffff;
-}
-
-/* New/Editable Absent - VIBRANT Red */
-.attendance-btn.absent:not(:disabled) {
+/* Active ABSENT (Red Circle) */
+.toggle-btn.absent-btn.active {
     background-color: #ffffff;
     color: #dc2626;
-    /* Vibrant Red */
-    border: 2px solid #dc2626;
-}
-
-.attendance-btn.absent:not(:disabled):hover {
-    background-color: #dc2626;
-    color: #ffffff;
-}
-
-/* The Little Dot for New Items */
-.new-indicator {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: currentColor;
-    animation: pulse 1.5s infinite;
+    /* Red Text */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
 }
 
 /* =========================
-   STATE 2: LOCKED (Saved in DB)
-   "Should not be changed" - Looks static/permanent
+   LOCKED STATE (Static Badge)
 ========================= */
-.attendance-btn.locked {
-    cursor: not-allowed;
+.locked-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
     opacity: 0.8;
-    box-shadow: none;
-    border: 1px solid transparent;
-    /* No outline */
 }
 
-/* Locked Present - Solid, Calm Green */
-.attendance-btn.locked.present {
+.locked-badge.present {
     background-color: #dcfce7;
-    /* Pale Green Background */
     color: #15803d;
-    /* Dark Green Text */
 }
 
-/* Locked Absent - Solid, Calm Red */
-.attendance-btn.locked.absent {
+.locked-badge.absent {
     background-color: #fee2e2;
-    /* Pale Red Background */
     color: #991b1b;
-    /* Dark Red Text */
-}
-
-.lock-icon {
-    font-size: 14px;
-    opacity: 0.7;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 0.4;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0.4;
-    }
 }

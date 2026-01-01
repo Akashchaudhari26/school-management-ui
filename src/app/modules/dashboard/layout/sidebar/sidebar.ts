@@ -75,7 +75,7 @@ export class Sidebar {
         {
           title: 'Class Register',
           icon: '',
-          link: '/dashboard/attendance/register',
+          link: '/dashboard/attendance/class-register',
         },
         {
           title: 'Attendance Dashboard',

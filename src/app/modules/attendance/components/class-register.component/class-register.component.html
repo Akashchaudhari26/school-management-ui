@@ -1,0 +1,117 @@
+<div class="main-container">
+    <div class="page-header">
+        <h2>Class Register</h2>
+        <p class="subtitle">Monthly attendance overview.</p>
+    </div>
+
+    <div class="toolbar" [formGroup]="filterForm">
+        <select formControlName="classId" class="filter-select">
+            <option value="">Select Class</option>
+            @for (c of classes$ | async; track c.value) { <option [value]="c.value">{{ c.label }}</option> }
+        </select>
+
+        <select formControlName="section" class="filter-select">
+            <option value="">Section</option>
+            @for (s of sections$ | async; track s.value) { <option [value]="s.value">{{ s.label }}</option> }
+        </select>
+
+        <select formControlName="month" class="filter-select">
+            @for (m of months$|async; track m.value) { <option [value]="m.value">{{ m.label }}</option> }
+        </select>
+
+        <select formControlName="year" class="filter-select">
+            @for (y of years; track y) { <option [value]="y">{{ y }}</option> }
+        </select>
+
+        <button class="btn-search" (click)="loadRegister()" [disabled]="isLoading">
+            {{ isLoading ? 'Loading...' : 'Attendance Register' }}
+        </button>
+    </div>
+
+    @if (hasLoaded && !isLoading) {
+
+    <div class="register-container desktop-only">
+        <div class="table-scroll-wrapper">
+            <table class="register-table">
+                <thead>
+                    <tr>
+                        <th class="sticky-col name-col">Student Name</th>
+                        @for (day of daysInMonth; track day) {
+                        <th [class.weekend]="isWeekend(day)">{{ day }}</th>
+                        }
+                        <th class="stats-col">P</th>
+                        <th class="stats-col">A</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (row of registerRows; track row.admissionNo) {
+                    <tr>
+                        <td class="sticky-col name-col">
+                            <div class="student-info">
+                                <span class="name">{{ row.name }}</span>
+                                <span class="adm-no">{{ row.admissionNo }}</span>
+                            </div>
+                        </td>
+                        @for (status of row.days; track $index) {
+                        <td class="status-cell" [class.weekend]="isWeekend(daysInMonth[$index])">
+                            @if (status === 'PRESENT') {
+                            <span class="dot p" title="Present">P</span>
+                            } @else if (status === 'ABSENT') {
+                            <span class="dot a" title="Absent">A</span>
+                            } @else {
+                            <span class="dot dash">-</span>
+                            }
+                        </td>
+                        }
+                        <td class="stats-cell p-count">{{ row.stats.P }}</td>
+                        <td class="stats-cell a-count">{{ row.stats.A }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mobile-cards-container mobile-only">
+        @for (row of registerRows; track row.admissionNo) {
+        <div class="student-card">
+            <div class="card-header">
+                <div class="student-info">
+                    <span class="name">{{ row.name }}</span>
+                    <span class="adm-no">{{ row.admissionNo }}</span>
+                </div>
+                <div class="card-stats">
+                    <div class="stat-pill present">
+                        <span class="label">P</span>
+                        <span class="value">{{ row.stats.P }}</span>
+                    </div>
+                    <div class="stat-pill absent">
+                        <span class="label">A</span>
+                        <span class="value">{{ row.stats.A }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <details class="calendar-details">
+                <summary>View Monthly Calendar</summary>
+                <div class="calendar-grid">
+                    @for (day of daysInMonth; track day; let i = $index) {
+                    <div class="day-cell" [class.weekend]="isWeekend(day)">
+                        <span class="day-number">{{ day }}</span>
+                        @if (row.days[i] === 'PRESENT') {
+                        <span class="dot p">P</span>
+                        } @else if (row.days[i] === 'ABSENT') {
+                        <span class="dot a">A</span>
+                        } @else {
+                        <span class="dot dash">-</span>
+                        }
+                    </div>
+                    }
+                </div>
+            </details>
+        </div>
+        }
+    </div>
+
+    }
+</div>

@@ -19,4 +19,18 @@ export class Navbar {
   logout() {
     this.authService.logout();
   }
+
+  // Add this method inside your NavbarComponent class
+  getInitials(name: string | undefined): string {
+    if (!name) return 'U'; // Default to 'U' for User if null
+    const parts = name.trim().split(' ');
+
+    if (parts.length === 1) {
+      // Single name: "Akash" -> "A"
+      return parts[0].charAt(0).toUpperCase();
+    }
+
+    // Full name: "Akash Sharma" -> "AS"
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  }
 }

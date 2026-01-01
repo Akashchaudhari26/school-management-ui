@@ -1,0 +1,169 @@
+<div class="main-container">
+    <div class="page-header">
+        <h2>Attendance Reports</h2>
+        <p class="subtitle">Generate and export attendance insights.</p>
+    </div>
+
+    @if (!activeReport) {
+    <div class="reports-grid">
+        <div class="report-card" (click)="selectReport('MONTHLY_SUMMARY')">
+            <div class="icon-box blue"><i class="bi bi-calendar-month"></i></div>
+            <div class="text-content">
+                <h3>Monthly Summary</h3>
+                <p>Aggregated attendance stats for a whole class.</p>
+            </div>
+            <i class="bi bi-arrow-right action-icon"></i>
+        </div>
+
+        <div class="report-card red" (click)="selectReport('LOW_ATTENDANCE')">
+            <div class="icon-box red"><i class="bi bi-graph-down-arrow"></i></div>
+            <div class="text-content">
+                <h3>Low Attendance</h3>
+                <p>Students falling below 75% threshold.</p>
+            </div>
+            <i class="bi bi-arrow-right action-icon"></i>
+        </div>
+
+        <div class="report-card orange" (click)="selectReport('CONSECUTIVE_ABSENT')">
+            <div class="icon-box orange"><i class="bi bi-exclamation-triangle"></i></div>
+            <div class="text-content">
+                <h3>3+ Days Absent</h3>
+                <p>Consecutive absentees watchlist.</p>
+            </div>
+            <i class="bi bi-arrow-right action-icon"></i>
+        </div>
+    </div>
+    }
+
+    @if (activeReport) {
+    <div class="active-report-container">
+
+        <div class="report-header-bar">
+            <button class="btn-back" (click)="clearReport()">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+            <h3>{{ getReportTitle() }}</h3>
+        </div>
+
+        <div class="toolbar" [formGroup]="filterForm">
+            <div class="filters-group">
+                <select formControlName="classId" class="filter-select">
+                    <option value="">Select Class</option>
+                    @for (c of classes$ | async; track c.value) { <option [value]="c.value">{{ c.label }}</option> }
+                </select>
+
+                <select formControlName="section" class="filter-select">
+                    <option value="">Section</option>
+                    @for (s of sections$ | async; track s.value) { <option [value]="s.value">{{ s.label }}</option> }
+                </select>
+
+                @if (activeReport === 'MONTHLY_SUMMARY') {
+                <select formControlName="month" class="filter-select">
+                    @for (m of months$ | async; track m.value) { <option [value]="m.value">{{ m.label }}</option> }
+                </select>
+                <input type="number" formControlName="year" class="filter-select year-input" placeholder="Year">
+                }
+            </div>
+
+            <div class="actions-group">
+                <button class="btn-search" (click)="generateReport()" [disabled]="isLoading">
+                    {{ isLoading ? '...' : 'Generate' }}
+                </button>
+
+                <button class="btn-export" (click)="exportPdf()" *ngIf="reportData.length > 0">
+                    <i class="bi bi-file-earmark-pdf"></i> <span class="btn-text">Export</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container desktop-only" *ngIf="reportData.length > 0">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th style="width: 250px;">Student</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Present</th>
+                        <th class="text-center">Absent</th>
+                        <th class="text-center">Percentage</th>
+                        <th class="text-right">
+                            <span class="desktop-only">Phone</span>
+                            <span class="mobile-only">Action</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (row of reportData; track row.admissionNumber) {
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <span class="name">{{ row.studentName }}</span>
+                                <span class="adm-no">{{ row.admissionNumber }}</span>
+                            </div>
+                        </td>
+                        <td class="text-center">{{ row.totalWorkingDays }}</td>
+                        <td class="text-center text-green fw-bold">{{ row.presentDays }}</td>
+                        <td class="text-center text-red fw-bold">{{ row.absentDays }}</td>
+                        <td class="text-center">
+                            <span class="badge" [ngClass]="getBadgeClass(row.percentage)">
+                                {{ row.percentage }}%
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <span class="phone-text desktop-only">
+                                {{ row.parentPhone || 'N/A' }}
+                            </span>
+
+                            <a [href]="'tel:' + row.parentPhone" class="btn-icon mobile-only" title="Call Parent">
+                                <i class="bi bi-telephone">{{ row.parentPhone }}</i>
+                            </a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mobile-report-cards mobile-only" *ngIf="reportData.length > 0">
+            @for (row of reportData; track row.admissionNumber) {
+            <div class="student-report-card">
+                <div class="card-top">
+                    <div class="student-info">
+                        <span class="name">{{ row.studentName }}</span>
+                        <span class="adm-no">{{ row.admissionNumber }}</span>
+                    </div>
+                    <span class="badge" [ngClass]="getBadgeClass(row.percentage)">
+                        {{ row.percentage }}%
+                    </span>
+                </div>
+
+                <div class="card-stats-row">
+                    <div class="stat-item">
+                        <span class="label">Total</span>
+                        <span class="value">{{ row.totalWorkingDays }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Present</span>
+                        <span class="value text-green">{{ row.presentDays }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Absent</span>
+                        <span class="value text-red">{{ row.absentDays }}</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <a [href]="'tel:' + row.parentPhone" class="btn-call-mobile">
+                        <i class="bi bi-telephone-fill"></i> Call - {{ row.parentPhone }}
+                    </a>
+                </div>
+            </div>
+            }
+        </div>
+
+        <div *ngIf="!isLoading && reportData.length === 0" class="empty-state">
+            <div class="empty-icon"><i class="bi bi-search"></i></div>
+            <p>No records found. Try adjusting filters.</p>
+        </div>
+    </div>
+    }
+</div>

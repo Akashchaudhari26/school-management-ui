@@ -52,15 +52,19 @@ export class StudentTableComponent {
     return this.auth.hasRole('ADMIN') || this.auth.hasRole('PRINCIPAL');
   }
 
-  toggleAttendance(student: any) {
-    // 1. SAFETY CHECK:
-    // If ID exists AND user is NOT allowed to modify locked records, stop.
+  setStatus(student: any, status: 'PRESENT' | 'ABSENT') {
+    // 1. Safety Check (Locked)
     if (student.attendanceId && !this.canModifyLocked) {
       return;
     }
 
-    // Toggle Status
-    student.status = student.status === 'PRESENT' ? 'ABSENT' : 'PRESENT';
+    // 2. Optimization: Don't emit if clicking the same status
+    if (student.status === status) {
+      return;
+    }
+
+    // 3. Update & Emit
+    student.status = status;
 
     this.attendanceChange.emit({
       studentId: student.id,

@@ -72,6 +72,30 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./modules/attendance/components/mark-attendance.component/mark-attendance.component')
                         .then(m => m.MarkAttendanceComponent)
+            },
+            {
+                path: 'attendance/view',
+                loadComponent: () =>
+                    import('./modules/attendance/components/view-attendance.component/view-attendance.component')
+                        .then(m => m.ViewAttendanceComponent)
+            },
+            {
+                path: 'attendance/class-register',
+                loadComponent: () =>
+                    import('./modules/attendance/components/class-register.component/class-register.component')
+                        .then(m => m.ClassRegisterComponent)
+            },
+            {
+                path: 'attendance/dashboard',
+                loadComponent: () =>
+                    import('./modules/attendance/components/attendance-dashboard.component/attendance-dashboard.component')
+                        .then(m => m.AttendanceDashboardComponent)
+            },
+            {
+                path: 'attendance/reports',
+                loadComponent: () =>
+                    import('./modules/attendance/components/attendance-report.component/attendance-report.component')
+                        .then(m => m.AttendanceReportComponent)
             }
 
             // Future Modules will go here:
