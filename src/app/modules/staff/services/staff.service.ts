@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Page, Staff, StaffSearchFilter } from '../models/staff';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { DropdownOption } from '../../student/services/student.service';
 
 @Injectable({
@@ -35,7 +35,7 @@ export class StaffService {
   getStaffTypes(): Observable<DropdownOption[]> {
     // REAL API CALL: return this.http.get<DropdownOption[]>(`${environment.apiUrl}/master/classes`);
     return of([
-      { label: 'TEACHER', value: 'TEACHER' },
+      { label: 'TEACHING', value: 'TEACHING' },
       { label: 'NON_TEACHING', value: 'NON_TEACHING' },
       { label: 'ADMIN', value: 'ADMIN' },
     ]);

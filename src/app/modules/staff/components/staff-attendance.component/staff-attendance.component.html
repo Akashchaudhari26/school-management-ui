@@ -1,0 +1,190 @@
+<div class="main-container">
+
+    <div class="page-header">
+
+        <div class="header-content" *ngIf="currentView === 'MENU'">
+            <h2>Staff Attendance</h2>
+            <p class="subtitle">Select an action to proceed.</p>
+        </div>
+
+        <div *ngIf="currentView !== 'MENU'">
+            <div class="header-nav">
+                <button class="btn-back" (click)="backToMenu()">
+                    <i class="bi bi-arrow-left"></i> Back to Menu
+                </button>
+                <div>
+                    <h2 *ngIf="currentView === 'MARK'">Mark Daily Attendance</h2>
+                    <h2 *ngIf="currentView === 'MONTHLY'">Monthly Register</h2>
+                    <h2 *ngIf="currentView === 'LEAVE'">Leave Requests</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="reports-grid" *ngIf="currentView === 'MENU'">
+
+        <div class="report-card" (click)="navigateTo('MARK')">
+            <div class="icon-box blue"><i class="bi bi-calendar-check"></i></div>
+            <div class="text-content">
+                <h3>Mark Attendance</h3>
+                <p>Record daily presence for staff.</p>
+            </div>
+            <i class="bi bi-arrow-right action-icon"></i>
+        </div>
+
+        <div class="report-card" (click)="navigateTo('MONTHLY')">
+            <div class="icon-box purple"><i class="bi bi-calendar3"></i></div>
+            <div class="text-content">
+                <h3>Monthly Register</h3>
+                <p>View attendance grid (1-31).</p>
+            </div>
+            <i class="bi bi-arrow-right action-icon"></i>
+        </div>
+
+        <div class="report-card" (click)="navigateTo('LEAVE')">
+            <div class="icon-box orange"><i class="bi bi-envelope-paper"></i></div>
+            <div class="text-content">
+                <h3>Leave Requests</h3>
+                <p>Approve or reject leave applications.</p>
+            </div>
+            <i class="bi bi-arrow-right action-icon"></i>
+        </div>
+    </div>
+
+    <div *ngIf="currentView === 'MARK'">
+        <div class="toolbar" [formGroup]="markForm">
+            <div class="filters-group">
+                <select formControlName="staffType" class="filter-select">
+                    <option [value]="null">All Departments</option>
+                    @for (deg of designations$ | async; track deg.value) {
+                    <option [value]="deg.value">{{ deg.label }}</option>
+                    }
+                </select>
+
+                <input type="date" formControlName="date" class="filter-input">
+
+                <div class="filter-actions">
+                    <button class="btn-search" (click)="loadMarkAttendance()">
+                        {{ isLoading ? '...' : 'Search' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if (!isLoading && staffList.length) {
+        <app-staff-table [staff]="staffList" mode="ATTENDANCE" (attendanceChange)="onStatusChange($event)">
+        </app-staff-table>
+
+        <button class="submit" [disabled]="isSaving || !hasChanges" (click)="submitAttendance()">
+            {{ isSaving ? 'Saving...' : 'Save Attendance' }}
+        </button>
+        }
+
+        @if (!isLoading && staffList.length === 0) {
+        <div style="text-align: center; padding: 40px; color: #6b7280;">
+            <p>No records loaded. Select criteria and click Fetch List.</p>
+        </div>
+        }
+    </div>
+
+    <div *ngIf="currentView === 'MONTHLY'">
+        <div class="toolbar" [formGroup]="monthlyForm">
+            <div class="filters-group">
+                <select formControlName="staffType" class="filter-select">
+                    <option [value]="null">All Departments</option>
+                    @for (deg of designations$ | async; track deg.value) {
+                    <option [value]="deg.value">{{ deg.label }}</option>
+                    }
+                </select>
+
+                <select formControlName="month" class="filter-select">
+                    @for (m of months$|async; track m.value) { <option [value]="m.value">{{ m.label }}</option> }
+                </select>
+
+                <select formControlName="year" class="filter-select">
+                    @for (y of years; track y) { <option [value]="y">{{ y }}</option> }
+                </select>
+
+                <button class="btn-search" (click)="loadMonthlyRegister()">Generate</button>
+            </div>
+        </div>
+
+        @if (!isLoading && registerRows.length) {
+
+        <div class="register-wrapper desktop-only">
+            <table class="reg-table">
+                <thead>
+                    <tr>
+                        <th class="sticky-col">Staff</th>
+                        @for (d of daysInMonth; track d) { <th>{{d}}</th> }
+                        <th>P</th>
+                        <th>A</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (row of registerRows; track row.name) {
+                    <tr>
+                        <td class="sticky-col">{{ row.name }}<br><small class="text-muted">{{ row.designation }}</small>
+                        </td>
+                        @for (s of row.days; track $index) {
+                        <td>
+                            @if(s==='PRESENT'){<span class="dot p">P</span>}
+                            @else if(s==='ABSENT'){<span class="dot a">A</span>}
+                            @else if(s==='LATE'){<span class="dot l">L</span>}
+                            @else if(s==='HALF_DAY'){<span class="dot h">H</span>}
+                            @else {<span class="dot dash">-</span>}
+                        </td>
+                        }
+                        <td style="color: green; font-weight: bold;">{{row.stats.P}}</td>
+                        <td style="color: red; font-weight: bold;">{{row.stats.A}}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mobile-only">
+            @for (row of registerRows; track row.name) {
+            <div class="monthly-card">
+                <div class="m-card-header">
+                    <div>
+                        <div class="m-name">{{ row.name }}</div>
+                        <div class="m-role">{{ row.designation }}</div>
+                    </div>
+                    <div class="m-stats">
+                        <span class="stat-badge green">P: {{row.stats.P}}</span>
+                        <span class="stat-badge red">A: {{row.stats.A}}</span>
+                    </div>
+                </div>
+
+                <details class="calendar-details">
+                    <summary>View Calendar</summary>
+                    <div class="calendar-grid">
+                        @for (day of daysInMonth; track day; let i = $index) {
+                        <div class="day-cell">
+                            <span class="day-num">{{ day }}</span>
+                            @if(row.days[i]==='PRESENT'){<span class="dot p">P</span>}
+                            @else if(row.days[i]==='ABSENT'){<span class="dot a">A</span>}
+                            @else if(row.days[i]==='LATE'){<span class="dot l">L</span>}
+                            @else if(row.days[i]==='HALF_DAY'){<span class="dot h">H</span>}
+                            @else {<span class="dot dash">-</span>}
+                        </div>
+                        }
+                    </div>
+                </details>
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+    <div *ngIf="currentView === 'LEAVE'">
+        <div
+            style="text-align: center; padding: 60px; background: #f9fafb; border-radius: 12px; border: 1px dashed #ccc;">
+            <i class="bi bi-cone-striped" style="font-size: 2rem; color: orange;"></i>
+            <h3>Under Development</h3>
+            <p>The Leave Management module will be available soon.</p>
+        </div>
+    </div>
+
+</div>

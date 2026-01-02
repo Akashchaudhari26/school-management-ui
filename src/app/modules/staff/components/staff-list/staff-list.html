@@ -3,11 +3,11 @@
     <div class="page-header">
         <div class="header-content">
             <h2>Staff Directory</h2>
-            <p class="subtitle">Manage teachers and non-teaching staff.</p>
+            <p class="subtitle">Manage teachers and employees.</p>
         </div>
         <a routerLink="/dashboard/staff/new" class="btn-primary">
             <i class="bi bi-plus-lg"></i>
-            <span>Add Staff</span>
+            <span>Add New Staff</span>
         </a>
     </div>
 
@@ -23,14 +23,14 @@
             </div>
 
             <div class="filters-group">
-                <select formControlName="staffType" class="filter-select" (change)="onSearch()">
+                <select formControlName="staffType" class="filter-select">
                     <option value="">All Roles</option>
                     @for (role of roles | async; track role.value) {
                     <option [value]="role.value">{{ role.label }}</option>
                     }
                 </select>
 
-                <select formControlName="designation" class="filter-select" (change)="onSearch()">
+                <select formControlName="designation" class="filter-select">
                     <option value="">All Designations</option>
                     @for (deg of designations | async; track deg.value) {
                     <option [value]="deg.value">{{ deg.label }}</option>
@@ -46,96 +46,17 @@
             </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="premium-table">
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Profile</th>
-                        <th>Role</th>
-                        <th>Contact</th>
-                        <th>Gender</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (isLoading) {
-                    @for (item of [1,2,3,4,5]; track $index) {
-                    <tr class="skeleton-row">
-                        <td colspan="6">
-                            <div class="skeleton-bar"></div>
-                        </td>
-                    </tr>
-                    }
-                    } @else {
-                    @for (staff of staffList; track staff.id) {
-                    <tr>
-                        <td data-label="Code">
-                            <span class="id-badge">{{ staff.employeeCode || '#' }}</span>
-                        </td>
-
-                        <td class="mobile-profile-header">
-                            <div class="profile-cell">
-                                <div class="avatar-circle">
-                                    <span class="initials">{{ staff.fullName.charAt(0) }}</span>
-                                </div>
-                                <div class="profile-info">
-                                    <span class="name">{{ staff.fullName }}</span>
-                                    <span class="email">{{ staff.designation || 'Staff' }}</span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td data-label="Role">
-                            <span class="class-pill">{{ staff.staffType | titlecase }}</span>
-                        </td>
-
-                        <td data-label="Contact">
-                            <div class="guardian-info">
-                                <span class="g-name">{{ staff.mobile }}</span>
-                                <span class="g-rel">{{ staff.email || '-' }}</span>
-                            </div>
-                        </td>
-
-                        <td data-label="Gender">
-                            <span class="gender-text">{{ staff.gender | titlecase }}</span>
-                        </td>
-
-                        <td class="mobile-actions">
-                            <div class="action-group">
-                                <a [routerLink]="['/dashboard/staff/view', staff.id]" [state]="{ data: staff }"
-                                    class="icon-btn view" title="View Profile">
-                                    <i class="bi bi-eye-fill"></i>
-                                </a>
-                                <a [routerLink]="['/dashboard/staff/edit', staff.id]" [state]="{ data: staff }"
-                                    class="icon-btn edit">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>
-                                <button (click)="staff.id && deleteStaff(staff.id)" class="icon-btn delete">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    }
-                    @empty {
-                    <tr>
-                        <td colspan="6" class="empty-state">No staff found.</td>
-                    </tr>
-                    }
-                    }
-                </tbody>
-            </table>
-        </div>
+        <app-staff-table [staff]="staffList" mode="VIEW" (view)="onView($event)" (edit)="onEdit($event)"
+            (delete)="onDelete($event)">
+        </app-staff-table>
 
         <div class="pagination-footer">
             <span class="pagination-info">
                 Showing <strong>{{ currentPage * pageSize + 1 }}</strong> to
                 <strong>{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize
                     }}</strong>
-                of <strong>{{ totalElements }}</strong> results
+                of <strong>{{ totalElements }}</strong>
             </span>
-
             <div class="pagination-controls">
                 <button class="page-btn" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">
                     <i class="bi bi-chevron-left"></i> Previous

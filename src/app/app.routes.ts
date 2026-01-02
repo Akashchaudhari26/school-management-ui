@@ -68,6 +68,11 @@ export const routes: Routes = [
                 loadComponent: () => import('./modules/staff/components/staff-view/staff-view').then(m => m.StaffView)
             },
             {
+                path: 'staff/attendance',
+                // Assuming you will create this component next
+                loadComponent: () => import('./modules/staff/components/staff-attendance.component/staff-attendance.component').then(m => m.StaffAttendanceComponent)
+            },
+            {
                 path: 'attendance/mark',
                 loadComponent: () =>
                     import('./modules/attendance/components/mark-attendance.component/mark-attendance.component')

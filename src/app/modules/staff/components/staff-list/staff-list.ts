@@ -4,18 +4,20 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Staff, StaffSearchFilter } from '../../models/staff';
 import { finalize, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DropdownOption } from '../../../student/services/student.service';
+import { StaffTableComponent } from "../staff-table.component/staff-table.component";
 
 @Component({
   selector: 'app-staff-list',
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, StaffTableComponent],
   templateUrl: './staff-list.html',
   styleUrl: './staff-list.css',
 })
 export class StaffList {
   private staffService = inject(StaffService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
   staffList: Staff[] = [];
   isLoading = false;
@@ -89,4 +91,8 @@ export class StaffList {
       this.staffService.delete(id).subscribe(() => this.fetchStaff());
     }
   }
+
+  onView(staff: any) { this.router.navigate(['/dashboard/staff/view', staff.id]); }
+  onEdit(staff: any) { this.router.navigate(['/dashboard/staff/edit', staff.id]); }
+  onDelete(id: string) { /* delete logic */ }
 }

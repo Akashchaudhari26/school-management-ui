@@ -1,0 +1,96 @@
+<div class="table-responsive">
+    <table class="premium-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Profile</th>
+                <th>Department</th>
+                <th>Contact</th> @if (mode === 'VIEW') {
+                <th class="text-center">Actions</th>
+                } @else {
+                <th class="text-center">Attendance</th>
+                }
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (person of staff; track person.id) {
+            <tr>
+                <td data-label="ID">
+                    <span class="id-badge">{{ person.id }}</span>
+                </td>
+
+                <td class="mobile-profile-header">
+                    <div class="profile-cell">
+                        <div class="avatar-circle">
+                            <span class="initials">{{ person.fullName.charAt(0) }}</span>
+                        </div>
+                        <div class="profile-info">
+                            <span class="name">{{ person.fullName }}</span>
+                            <span class="sub-text" style="font-size: 0.8rem; color: #64748b;">
+                                {{ person.designation || 'Staff' }}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+
+                <td data-label="Department">
+                    <span class="class-pill">{{ person.staffType }}</span>
+                </td>
+
+                <td data-label="Contact">
+                    {{ person.mobile || '-' }}
+                </td>
+
+                @if (mode === 'VIEW') {
+                <td class="mobile-actions">
+                    <div class="action-group">
+                        <button class="icon-btn view" (click)="view.emit(person)">
+                            <i class="bi bi-eye-fill"></i>
+                        </button>
+                        <button class="icon-btn edit" (click)="edit.emit(person)">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button class="icon-btn delete" (click)="delete.emit(person.id)">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </div>
+                </td>
+
+                } @else {
+                <td class="attendance-cell">
+
+                    <div *ngIf="person.attendanceId && !canModifyLocked" class="locked-badge" [ngClass]="{
+                   'present': person.status === AttendanceStatus.PRESENT,
+                   'absent': person.status === AttendanceStatus.ABSENT,
+                   'late': person.status === AttendanceStatus.LATE,
+                   'half-day': person.status === AttendanceStatus.HALF_DAY
+                 }">
+                        <i class="bi bi-lock-fill"></i> {{ person.status }}
+                    </div>
+
+                    <div *ngIf="!person.attendanceId || canModifyLocked" class="attendance-toggle-group staff-toggle">
+
+                        <button (click)="setStatus(person, AttendanceStatus.PRESENT)"
+                            [class.active]="person.status === AttendanceStatus.PRESENT" class="toggle-btn present-btn"
+                            title="Present">P</button>
+
+                        <button (click)="setStatus(person, AttendanceStatus.ABSENT)"
+                            [class.active]="person.status === AttendanceStatus.ABSENT" class="toggle-btn absent-btn"
+                            title="Absent">A</button>
+
+                        <button (click)="setStatus(person, AttendanceStatus.LATE)"
+                            [class.active]="person.status === AttendanceStatus.LATE" class="toggle-btn late-btn"
+                            title="Late">L</button>
+
+                        <button (click)="setStatus(person, AttendanceStatus.HALF_DAY)"
+                            [class.active]="person.status === AttendanceStatus.HALF_DAY" class="toggle-btn half-day-btn"
+                            title="Half Day">H</button>
+                    </div>
+                </td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

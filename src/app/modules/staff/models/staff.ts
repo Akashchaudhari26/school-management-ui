@@ -24,7 +24,7 @@ export interface StaffSearchFilter {
   keyword?: string;
   staffType?: string;
   designation?: string;
-
+  status?: string;
   page: number;
   size: number;
   sortBy: string;
