@@ -2,7 +2,7 @@
     <table class="premium-table">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Employee Id</th>
                 <th>Profile</th>
                 <th>Department</th>
                 <th>Contact</th> @if (mode === 'VIEW') {
@@ -17,7 +17,7 @@
             @for (person of staff; track person.id) {
             <tr>
                 <td data-label="ID">
-                    <span class="id-badge">{{ person.id }}</span>
+                    <span class="id-badge">{{ person.employeeCode }}</span>
                 </td>
 
                 <td class="mobile-profile-header">

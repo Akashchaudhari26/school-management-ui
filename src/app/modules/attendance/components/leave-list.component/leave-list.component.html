@@ -1,0 +1,148 @@
+<div class="main-container">
+
+    <div class="page-header">
+        <div class="header-content">
+            <h2>Leave Requests</h2>
+            <p class="subtitle">Manage and track leave applications.</p>
+        </div>
+        <button class="btn-primary" (click)="openApplyModal()">
+            <i class="bi bi-plus-lg"></i> Apply Leave
+        </button>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn" [class.active]="activeTab === 'MY_LEAVES'" (click)="switchTab('MY_LEAVES')">
+            My Applications
+        </button>
+
+        @if (isAdmin) {
+        <button class="tab-btn" [class.active]="activeTab === 'PENDING'" (click)="switchTab('PENDING')">
+            Pending Approval
+        </button>
+
+        <button class="tab-btn" [class.active]="activeTab === 'HISTORY'" (click)="switchTab('HISTORY')">
+            All History
+        </button>
+        }
+    </div>
+
+    <div class="leaves-container">
+
+        @if (isLoading) { <div class="loading-state">Loading...</div> }
+
+        @if (!isLoading && leaves.length === 0) {
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>No records found.</p>
+        </div>
+        }
+
+        @for (leave of leaves; track leave.id) {
+        <div class="leave-card">
+
+            <div class="date-box">
+                <span class="month">{{ leave.startDate | date:'MMM' }}</span>
+                <span class="day">{{ leave.startDate | date:'dd' }}</span>
+                <span class="duration">{{ leave.days }} Days</span>
+            </div>
+
+            <div class="leave-details">
+                <div class="header-row">
+                    <h3 class="applicant-name">
+                        {{ leave.userName }}
+                        <span *ngIf="activeTab !== 'MY_LEAVES'" class="role-badge">{{ leave.role }}</span>
+                    </h3>
+                    <span class="status-badge" [ngClass]="getStatusClass(leave.status)">{{ leave.status }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="leave-type">{{ leave.leaveType }}</span>
+                    <span class="separator">•</span>
+                    <span class="date-range">{{ leave.startDate | date }} - {{ leave.endDate | date }}</span>
+                </div>
+
+                <p class="reason">"{{ leave.reason }}"</p>
+
+                @if (leave.status === 'REJECTED' && leave.rejectionReason) {
+                <p class="reject-reason"><strong>Admin Note:</strong> {{ leave.rejectionReason }}</p>
+                }
+            </div>
+
+            @if (isAdmin && activeTab === 'PENDING') {
+            <div class="actions">
+                <button class="btn-icon check" title="Approve" (click)="updateStatus(leave.id, 'APPROVED')">
+                    <i class="bi bi-check-lg"></i>
+                </button>
+                <button class="btn-icon cross" title="Reject" (click)="updateStatus(leave.id, 'REJECTED')">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            }
+
+            @if (activeTab === 'MY_LEAVES' && leave.status === 'PENDING') {
+            <div class="actions">
+                <button class="btn-icon trash" title="Withdraw Request" (click)="onWithdraw(leave)"
+                    [disabled]="leave.status !== 'PENDING'" [class.disabled]="leave.status !== 'PENDING'">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div> }
+
+        </div>
+        }
+    </div>
+
+</div>
+
+<div class="modal-overlay" *ngIf="showApplyModal">
+    <div class="modal-card">
+
+        <div class="modal-header">
+            <h3>Apply for Leave</h3>
+            <button class="close-btn" (click)="closeApplyModal()">&times;</button>
+        </div>
+
+        <div class="modal-body" [formGroup]="applyForm">
+
+            <div class="form-group">
+                <label>Leave Type</label>
+                <select formControlName="leaveType" class="form-control">
+                    <option value="CASUAL">Casual Leave (CL)</option>
+                    <option value="SICK">Sick Leave (SL)</option>
+                    <option value="EARNED">Earned Leave (EL)</option>
+                    <option value="UNPAID">Unpaid / LWP</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="form-group half">
+                    <label>From Date</label>
+                    <input type="date" formControlName="startDate" class="form-control">
+                </div>
+                <div class="form-group half">
+                    <label>To Date</label>
+                    <input type="date" formControlName="endDate" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Reason</label>
+                <textarea formControlName="reason" rows="3" class="form-control"
+                    placeholder="Brief reason for your absence...">
+        </textarea>
+                <div *ngIf="applyForm.get('reason')?.touched && applyForm.get('reason')?.invalid"
+                    style="color: red; font-size: 11px; margin-top: 4px;">
+                    Reason is required (min 5 chars).
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" (click)="closeApplyModal()">Cancel</button>
+            <button class="btn-submit" (click)="submitApplication()" [disabled]="applyForm.invalid">
+                Submit Request
+            </button>
+        </div>
+
+    </div>
+</div>

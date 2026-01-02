@@ -214,4 +214,19 @@ export class StaffAttendanceComponent implements OnInit {
       return { name: p.fullName, designation: p.designation, days, stats: { P, A } };
     });
   }
+
+  // Add this method to StaffAttendanceComponent
+
+  isWeekend(day: number): boolean {
+    const { month, year } = this.monthlyForm.value;
+    if (!month || !year) return false;
+
+    // month - 1 because JavaScript months are 0-indexed (0 = Jan, 11 = Dec)
+    const date = new Date(year, month - 1, day);
+    const dayOfWeek = date.getDay();
+
+    // 0 is Sunday, 6 is Saturday
+    return dayOfWeek === 0 || dayOfWeek === 6;
+  }
+
 }

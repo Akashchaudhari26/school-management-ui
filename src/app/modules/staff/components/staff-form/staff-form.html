@@ -69,8 +69,10 @@
             <div class="form-group">
                 <label>Staff Type *</label>
                 <select formControlName="staffType">
-                    <option *ngFor="let type of staffTypes" [value]="type">{{ type | titlecase }}</option>
+                    <option value="">Select Type</option>
+                    <option *ngFor="let type of staffTypes" [value]="type">{{ type }}</option>
                 </select>
+                <div *ngIf="f['staffType'].touched && f['staffType'].invalid" class="error-text">Required.</div>
             </div>
 
             <div class="form-group">
@@ -84,7 +86,7 @@
 
             <div class="form-group">
                 <label>Employee Code *</label>
-                <input type="text" formControlName="employeeCode" placeholder="e.g. EMP-001">
+                <input type="text" formControlName="employeeCode" placeholder="Auto-generated">
                 <div *ngIf="f['employeeCode'].touched && f['employeeCode'].invalid" class="error-text">Required.</div>
             </div>
         </div>

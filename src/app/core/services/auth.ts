@@ -5,12 +5,16 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { jwtDecode } from 'jwt-decode'; // Import this
 
+export type UserRole = 'ADMIN' | 'PRINCIPAL' | 'TEACHER' | 'STUDENT' | 'PARENT';
+
+
 export interface User {
   id: string;
   email: string;
   roleName: string;
   permissions: string[];
   tenantId?: string;
+  userId?: string;
 
   // 👇 ADD '?' HERE. This means "This field might be missing, and that's okay"
   fullName?: string;
@@ -87,6 +91,7 @@ export class Auth {
       roleName: decoded.roleName,
       permissions: decoded.permissions || [],
       tenantId: decoded.tenantId,
+      userId: decoded.userId,
 
       // Defaults or derived values
       fullName: decoded.email.split('@')[0], // Temporary name from email
@@ -108,5 +113,14 @@ export class Auth {
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('accessToken');
+  }
+
+  getRole(): UserRole {
+    const user = this.userSubject.value;
+    return (user?.roleName as UserRole) || ('' as UserRole);
+  }
+
+  getUser(): User | null {
+    return this.userSubject.value;
   }
 }

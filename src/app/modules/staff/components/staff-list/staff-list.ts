@@ -93,6 +93,6 @@ export class StaffList {
   }
 
   onView(staff: any) { this.router.navigate(['/dashboard/staff/view', staff.id]); }
-  onEdit(staff: any) { this.router.navigate(['/dashboard/staff/edit', staff.id]); }
+  onEdit(staff: any) { this.router.navigate(['/dashboard/staff/edit', staff.id], { state: { staff } }); }
   onDelete(id: string) { /* delete logic */ }
 }

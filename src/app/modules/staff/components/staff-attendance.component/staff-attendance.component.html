@@ -10,7 +10,7 @@
         <div *ngIf="currentView !== 'MENU'">
             <div class="header-nav">
                 <button class="btn-back" (click)="backToMenu()">
-                    <i class="bi bi-arrow-left"></i> Back to Menu
+                    <i class="bi bi-arrow-left"></i>
                 </button>
                 <div>
                     <h2 *ngIf="currentView === 'MARK'">Mark Daily Attendance</h2>
@@ -116,7 +116,9 @@
                 <thead>
                     <tr>
                         <th class="sticky-col">Staff</th>
-                        @for (d of daysInMonth; track d) { <th>{{d}}</th> }
+                        @for (d of daysInMonth; track d) {
+                        <th [class.weekend]="isWeekend(d)">{{d}}</th>
+                        }
                         <th>P</th>
                         <th>A</th>
                     </tr>
@@ -127,7 +129,7 @@
                         <td class="sticky-col">{{ row.name }}<br><small class="text-muted">{{ row.designation }}</small>
                         </td>
                         @for (s of row.days; track $index) {
-                        <td>
+                        <td [class.weekend]="isWeekend(daysInMonth[$index])">
                             @if(s==='PRESENT'){<span class="dot p">P</span>}
                             @else if(s==='ABSENT'){<span class="dot a">A</span>}
                             @else if(s==='LATE'){<span class="dot l">L</span>}
@@ -161,7 +163,7 @@
                     <summary>View Calendar</summary>
                     <div class="calendar-grid">
                         @for (day of daysInMonth; track day; let i = $index) {
-                        <div class="day-cell">
+                        <div class="day-cell" [class.weekend]="isWeekend(day)">
                             <span class="day-num">{{ day }}</span>
                             @if(row.days[i]==='PRESENT'){<span class="dot p">P</span>}
                             @else if(row.days[i]==='ABSENT'){<span class="dot a">A</span>}

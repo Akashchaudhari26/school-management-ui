@@ -1,4 +1,4 @@
-import { Router, Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, Routes } from '@angular/router';
 import { Auth } from './core/services/auth';
 import { inject } from '@angular/core';
 import { Login } from './modules/auth/components/login/login';
@@ -8,16 +8,30 @@ const authGuard = () => {
     const authService = inject(Auth);
     const router = inject(Router);
 
-    const isLoggedIn = authService.isLoggedIn();
-    console.log('AuthGuard Check - Is User Logged In?', isLoggedIn); // <--- DEBUG LOG
-
-    if (isLoggedIn) {
+    if (authService.isLoggedIn()) {
         return true;
     } else {
-        console.log('AuthGuard blocking navigation! Redirecting to login.');
         router.navigate(['/login']);
         return false;
     }
+};
+
+// --- 2. NEW ROLE GUARD (Checks permissions) ---
+const roleGuard = (route: ActivatedRouteSnapshot) => {
+    const authService = inject(Auth);
+    const router = inject(Router);
+    const userRole = authService.getRole();
+    const allowedRoles = route.data['roles'] as Array<string>;
+
+    if (!allowedRoles || allowedRoles.length === 0) {
+        return true;
+    }
+    if (allowedRoles.includes(userRole)) {
+        return true;
+    }
+
+    alert('Access Denied: You do not have permission to view this page.');
+    return false;
 };
 
 export const routes: Routes = [
@@ -43,37 +57,54 @@ export const routes: Routes = [
             },
             {
                 path: 'students/new',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN', 'PRINCIPAL'] },
                 loadComponent: () => import('./modules/student/components/student-form/student-form').then(m => m.StudentForm)
             },
             {
                 path: 'students/edit/:id',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN', 'PRINCIPAL'] },
                 loadComponent: () => import('./modules/student/components/student-form/student-form').then(m => m.StudentForm)
             },
             {
                 path: 'staff',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN', 'PRINCIPAL'] },
                 loadComponent: () => import('./modules/staff/components/staff-list/staff-list').then(m => m.StaffList)
             },
             {
                 path: 'staff/new',
-                // Assuming you will create this component next
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN'] },
                 loadComponent: () => import('./modules/staff/components/staff-form/staff-form').then(m => m.StaffForm)
             },
             {
                 path: 'staff/edit/:id',
-                // Assuming you will use the same form for edit
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN'] },
                 loadComponent: () => import('./modules/staff/components/staff-form/staff-form').then(m => m.StaffForm)
             },
             {
                 path: 'staff/view/:id',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN', 'PRINCIPAL'] },
                 loadComponent: () => import('./modules/staff/components/staff-view/staff-view').then(m => m.StaffView)
             },
             {
                 path: 'staff/attendance',
-                // Assuming you will create this component next
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN', 'PRINCIPAL'] },
                 loadComponent: () => import('./modules/staff/components/staff-attendance.component/staff-attendance.component').then(m => m.StaffAttendanceComponent)
             },
             {
+                path: 'attendance/leaves',
+                loadComponent: () => import('./modules/attendance/components/leave-list.component/leave-list.component').then(m => m.LeaveListComponent)
+            },
+            {
                 path: 'attendance/mark',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] },
                 loadComponent: () =>
                     import('./modules/attendance/components/mark-attendance.component/mark-attendance.component')
                         .then(m => m.MarkAttendanceComponent)
@@ -92,12 +123,16 @@ export const routes: Routes = [
             },
             {
                 path: 'attendance/dashboard',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN', 'PRINCIPAL'] },
                 loadComponent: () =>
                     import('./modules/attendance/components/attendance-dashboard.component/attendance-dashboard.component')
                         .then(m => m.AttendanceDashboardComponent)
             },
             {
                 path: 'attendance/reports',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN', 'PRINCIPAL'] },
                 loadComponent: () =>
                     import('./modules/attendance/components/attendance-report.component/attendance-report.component')
                         .then(m => m.AttendanceReportComponent)

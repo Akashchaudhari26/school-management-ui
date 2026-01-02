@@ -614,3 +614,40 @@ details[open] summary::after {
 .dot.dash {
     color: #cbd5e1;
 }
+
+/* =========================================
+   WEEKEND HIGHLIGHTING
+   ========================================= */
+
+/* 1. Desktop Header & Cells */
+.reg-table th.weekend {
+    background-color: #fef2f2;
+    /* Light Red Background */
+    color: #b91c1c;
+    /* Dark Red Text */
+    border-bottom: 2px solid #fecaca;
+}
+
+.reg-table td.weekend {
+    background-color: #fff1f2;
+    /* Very Light Red Background for body */
+    border-left: 1px solid #ffe4e6;
+    border-right: 1px solid #ffe4e6;
+}
+
+/* Hover effect for weekend cells */
+.reg-table tr:hover td.weekend {
+    background-color: #ffe4e6;
+}
+
+
+/* 2. Mobile Grid Cells */
+.day-cell.weekend {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+}
+
+.day-cell.weekend .day-num {
+    color: #b91c1c;
+    /* Make the number red */
+}

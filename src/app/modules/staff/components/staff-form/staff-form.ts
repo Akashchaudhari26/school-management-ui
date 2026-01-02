@@ -19,19 +19,16 @@ export class StaffForm {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private studentService = inject(StudentService);
-  public location = inject(Location); // Used for "Back" button
-
+  public location = inject(Location);
 
   staffForm: FormGroup;
   isEditMode = false;
   staffId: string | null = null;
   isLoading = false;
 
-  // Master Data (Move to Service later if dynamic)
-  staffTypes = ['TEACHER', 'NON_TEACHING', 'ADMIN'];
-  designations = ['Principal', 'Vice Principal', 'Teacher', 'Clerk', 'Peon', 'Driver', 'Security'];
+  staffTypes = ['TEACHING', 'NON_TEACHING', 'ADMIN'];
+  designations = ['PRINCIPAL', 'VICE PRINCIPAL', 'TEACHER', 'CLEARK', 'PEON', 'DRIVER', 'SECURITY'];
 
-  // Available Options for Checkboxes
   availableClasses: Observable<DropdownOption[]> = this.studentService.getClasses();
   availableSubjects = ['English', 'Mathematics', 'EVS', 'Hindi', 'Art & Craft', 'Music', 'Sports'];
 
@@ -43,14 +40,10 @@ export class StaffForm {
       gender: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       adhaar: ['', [Validators.pattern(/^[0-9]{12}$/)]],
-
-      // Professional Details
-      staffType: ['TEACHER', Validators.required],
+      staffType: ['', Validators.required],
       designation: ['', Validators.required],
-      joiningDate: [new Date().toISOString().split('T')[0], Validators.required], // Default today
-      employeeCode: ['', Validators.required],
-
-      // Lists (Handled as FormArrays for Multi-select)
+      joiningDate: [new Date().toISOString().split('T')[0], Validators.required],
+      employeeCode: [{ value: '', disabled: true }],
       subjects: this.fb.array([]),
       assignedClassIds: this.fb.array([])
     });
@@ -58,16 +51,50 @@ export class StaffForm {
 
   ngOnInit(): void {
     this.staffId = this.route.snapshot.paramMap.get('id');
+
     if (this.staffId) {
       this.isEditMode = true;
-      this.loadStaffData(this.staffId);
+
+      // 1. Check if data was passed via Router State (Optimized)
+      const navigationState = history.state;
+
+      if (navigationState && navigationState.staff) {
+        console.log('Loaded from State (No API Call)');
+        this.populateForm(navigationState.staff);
+      } else {
+        // 2. Fallback to API if page was refreshed or accessed directly
+        console.log('Loaded from API');
+        this.loadStaffData(this.staffId);
+      }
     }
   }
 
-  // Helper for Template
+  // --- Helper to Populate Form (Used by both State and API) ---
+  populateForm(data: Staff) {
+    // Patch simple fields
+    this.staffForm.patchValue(data);
+
+    // Patch Arrays (Clear first to avoid duplicates if re-populated)
+    const subjectsArray = this.staffForm.get('subjects') as FormArray;
+    subjectsArray.clear();
+    data.subjects?.forEach(sub => subjectsArray.push(this.fb.control(sub)));
+
+    const classesArray = this.staffForm.get('assignedClassIds') as FormArray;
+    classesArray.clear();
+    data.assignedClassIds?.forEach(cls => classesArray.push(this.fb.control(cls)));
+  }
+
+  loadStaffData(id: string) {
+    this.isLoading = true;
+    this.staffService.getById(id)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(data => {
+        this.populateForm(data);
+      });
+  }
+
   get f() { return this.staffForm.controls; }
 
-  // Helpers for Checkboxes
   onCheckChange(event: any, formArrayName: string) {
     const formArray: FormArray = this.staffForm.get(formArrayName) as FormArray;
     if (event.target.checked) {
@@ -78,27 +105,9 @@ export class StaffForm {
     }
   }
 
-  // Check if value exists in array (for Edit Mode)
   isChecked(value: string, formArrayName: string): boolean {
     const formArray = this.staffForm.get(formArrayName) as FormArray;
     return formArray.value.includes(value);
-  }
-
-  loadStaffData(id: string) {
-    this.isLoading = true;
-    this.staffService.getById(id)
-      .pipe(finalize(() => this.isLoading = false))
-      .subscribe(data => {
-        // Patch simple fields
-        this.staffForm.patchValue(data);
-
-        // Patch Arrays (Subjects & Classes) manually
-        const subjectsArray = this.staffForm.get('subjects') as FormArray;
-        data.subjects?.forEach(sub => subjectsArray.push(this.fb.control(sub)));
-
-        const classesArray = this.staffForm.get('assignedClassIds') as FormArray;
-        data.assignedClassIds?.forEach(cls => classesArray.push(this.fb.control(cls)));
-      });
   }
 
   onSubmit() {

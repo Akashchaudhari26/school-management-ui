@@ -1,0 +1,15 @@
+<div class="toast-container">
+    @for (toast of toastService.toasts(); track toast.id) {
+    <div class="toast-card" [ngClass]="toast.type" (click)="toastService.remove(toast.id)">
+
+        <div class="icon-box">
+            @if(toast.type === 'success') { <i class="bi bi-check-lg"></i> }
+            @else if(toast.type === 'error') { <i class="bi bi-x-octagon-fill"></i> }
+            @else if(toast.type === 'warning') { <i class="bi bi-exclamation-triangle-fill"></i> }
+            @else { <i class="bi bi-info-circle-fill"></i> }
+        </div>
+
+        <div class="message">{{ toast.message }}</div>
+    </div>
+    }
+</div>
