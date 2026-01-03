@@ -61,7 +61,7 @@ export class Login {
       error: (err) => {
         console.error('Login Failed:', err);
         this.isLoading = false;
-        this.errorMessage = 'Login failed. Please check your credentials.';
+        this.errorMessage = err?.error?.message || 'Login failed. Please try again.';
       }
     });
   }

@@ -14,45 +14,37 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         catchError((error: HttpErrorResponse) => {
             let errorMessage = 'An unexpected error occurred. Please try again.';
 
-            // 1. Handle Client-Side / Network Errors
+            // 1. Determine the Error Message
             if (error.error instanceof ErrorEvent) {
+                // Client-side / Network error
                 errorMessage = `Network connection error: ${error.error.message}`;
             }
-            // 2. Handle Server-Side Errors
+            else if (error.error && error.error.message) {
+                // Backend sent a specific error message (e.g., "Jwt expired")
+                errorMessage = error.error.message;
+            }
             else {
-                // Prioritize the message sent by your Spring Boot backend (if any)
-                if (error.error && error.error.message) {
-                    errorMessage = error.error.message;
-                } else {
-                    // Fallback based on Status Code
-                    switch (error.status) {
-                        case 401:
-                            errorMessage = 'Session expired. Please log in again.';
-                            // Your existing 401 logic
-                            authService.logout();
-                            router.navigate(['/login']);
-                            break;
-                        case 403:
-                            errorMessage = 'Access Denied: You do not have permission.';
-                            break;
-                        case 404:
-                            errorMessage = 'The requested resource was not found.';
-                            break;
-                        case 500:
-                            errorMessage = 'Internal Server Error. Please contact support.';
-                            break;
-                        default:
-                            errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-                    }
+                // Fallback messages if backend sent no specific message
+                switch (error.status) {
+                    case 401: errorMessage = 'Session expired. Please log in again.'; break;
+                    case 403: errorMessage = 'Access Denied: You do not have permission.'; break;
+                    case 404: errorMessage = 'The requested resource was not found.'; break;
+                    case 500: errorMessage = 'Internal Server Error. Please contact support.'; break;
+                    default: errorMessage = `Error Code: ${error.status}`;
                 }
             }
 
-            // 3. 🚨 GLOBAL ALERT
-            // This replaces the need to write .subscribe({ error: (err) => alert(...) }) everywhere
+            // 2. 🚨 Handle Critical Status Codes (Side Effects)
+            // We check this OUTSIDE the message logic so it always runs
+            if (error.status === 401) {
+                authService.logout(); // ✅ This will now run even if backend sent a message
+                router.navigate(['/login']);
+            }
+
+            // 3. Show Toast
             toast.show(errorMessage, 'error');
 
-            // 4. Propagate the error 
-            // This is important so specific components can still turn off loading spinners
+            // 4. Propagate the error
             return throwError(() => error);
         })
     );

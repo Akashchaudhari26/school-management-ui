@@ -1,0 +1,118 @@
+<div class="page-container">
+
+    <div class="list-header">
+        <div class="title-group">
+            <h2>User Management</h2>
+            <p>View, manage, and monitor system access.</p>
+        </div>
+        <button class="btn-primary" routerLink="/admin/create">
+            <i class="bi bi-plus-lg"></i> Add New User
+        </button>
+    </div>
+
+    <div class="filters-bar">
+        <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" [(ngModel)]="searchTerm" (input)="applyFilter()"
+                placeholder="Search by name, email or ID...">
+        </div>
+
+        <div class="filter-group">
+            <select [(ngModel)]="selectedRole" (change)="applyFilter()">
+                @for(role of roles; track role) {
+                <option [value]="role">{{ role }}</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="premium-table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>User Profile</th>
+                    <th>Role</th>
+                    <th>Mobile</th>
+                    <th>Status</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if(isLoading) {
+                <tr>
+                    <td colspan="6" class="text-center" style="padding: 40px; color: #64748b;">
+                        <span class="spinner-border"></span> Loading users...
+                    </td>
+                </tr>
+                }
+
+                @for (user of filteredUsers; track user.id) {
+                <tr>
+                    <td data-label="User ID">
+                        <span class="id-badge">{{ user.userId || '#' }}</span>
+                    </td>
+
+                    <td class="mobile-profile-header">
+                        <div class="profile-cell">
+                            <div class="avatar-circle" [class.admin]="user.roleName === 'ADMIN'">
+                                <span class="initials">{{ (user.fullName || '?').charAt(0) }}</span>
+                            </div>
+                            <div class="profile-info">
+                                <span class="name">{{ user.fullName }}</span>
+                                <span class="email">{{ user.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td data-label="Role">
+                        <span class="role-badge" [class.admin]="user.roleName === 'ADMIN'"
+                            [class.teacher]="user.roleName === 'TEACHER'" [class.student]="user.roleName === 'STUDENT'">
+                            {{ user.roleName }}
+                        </span>
+                    </td>
+
+                    <td data-label="Mobile">
+                        {{ user.mobile || '-' }}
+                    </td>
+
+                    <td data-label="Status">
+                        <span class="status-dot" [class.active]="user.status === 'ACTIVE'"
+                            [class.inactive]="user.status !== 'ACTIVE'">
+                        </span>
+                        {{ user.status | titlecase }}
+                    </td>
+
+                    <td data-label="Actions">
+                        <div class="action-group">
+                            <button class="icon-btn view" title="Toggle Status" (click)="onToggleStatus(user)">
+                                <i class="bi" [class.bi-toggle-on]="user.status === 'ACTIVE'"
+                                    [class.bi-toggle-off]="user.status !== 'ACTIVE'"></i>
+                            </button>
+
+                            <button class="icon-btn edit" title="Edit User"
+                                [routerLink]="['/dashboard/admin/edit', user.id]" [state]="{ user: user }">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+
+                            <button class="icon-btn delete" title="Delete User" (click)="onDelete(user)">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                }
+                @empty {
+                @if(!isLoading) {
+                <tr>
+                    <td colspan="6" class="text-center" style="padding: 40px;">
+                        No users found matching your criteria.
+                    </td>
+                </tr>
+                }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

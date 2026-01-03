@@ -19,8 +19,8 @@
                         Code: {{ staff.employeeCode }}
                     </span>
                     <span class="badge" [ngClass]="{
-                        'class-badge': staff.staffType === 'TEACHER',
-                        'id-badge': staff.staffType !== 'TEACHER'
+                        'class-badge': staff.staffType === 'TEACHING',
+                        'id-badge': staff.staffType !== 'TEACHING'
                     }">
                         {{ staff.staffType | titlecase }}
                     </span>
@@ -88,7 +88,7 @@
             </div>
         </div>
 
-        @if (staff.staffType === 'TEACHER') {
+        @if (staff.staffType === 'TEACHING') {
         <div class="card full-width">
             <div class="card-title">Teaching Profile</div>
 

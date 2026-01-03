@@ -1,0 +1,140 @@
+<div class="page-container">
+
+    <div class="header-nav">
+        <button class="btn-back" (click)="location.back()">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+    </div>
+
+    <div class="form-card">
+        <div class="card-header">
+            <h2>{{ isEditMode ? 'Edit User Details' : 'Create New User' }}</h2>
+            <p>{{ isEditMode ? 'Update the user information below.' : 'Fill in the details to register a new user.' }}
+            </p>
+        </div>
+
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+            <h4 class="section-title">1. Select User Role</h4>
+
+            <div class="role-grid">
+                @for(role of roles; track role.value) {
+                <label class="role-card" [class.selected]="userForm.get('roleName')?.value === role.value">
+                    <input type="radio" formControlName="roleName" [value]="role.value">
+                    <div class="role-content">
+                        <i class="bi" [class.bi-person-badge-fill]="role.value === 'ADMIN'"
+                            [class.bi-briefcase-fill]="role.value === 'PRINCIPAL'"
+                            [class.bi-person-video3]="role.value === 'TEACHER'"
+                            [class.bi-calculator-fill]="role.value === 'ACCOUNTANT'"
+                            [class.bi-people-fill]="role.value === 'PARENT'">
+                        </i>
+                        <span>{{ role.label }}</span>
+                    </div>
+                </label>
+                }
+            </div>
+
+            @if(isStaffRole) {
+            <div class="staff-search-section">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Search existing staff by name..." (input)="onSearch($event)">
+                </div>
+
+                @if(staffResults.length > 0) {
+                <div class="search-results">
+                    @for(staff of staffResults; track staff.id) {
+                    <div class="result-item" (click)="selectStaff(staff)">
+                        <div class="result-avatar">{{ staff.fullName.charAt(0) }}</div>
+                        <div class="result-info">
+                            <span class="r-name">{{ staff.fullName }}</span>
+                            <span class="r-sub">{{ staff.employeeCode }} • {{ staff.designation }}</span>
+                        </div>
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+            }
+
+            @if(userForm.get('roleName')?.value) {
+
+            <h4 class="section-title">2. User Details</h4>
+
+            <div class="form-group">
+                <label>Full Name <span class="req">*</span></label>
+                <input type="text" formControlName="fullName" placeholder="e.g. Rahul Verma">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Email Address <span class="req">*</span></label>
+                    <input type="email" formControlName="email" placeholder="user@school.com">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number <span class="req">*</span></label>
+                    <input type="tel" formControlName="mobile" placeholder="9876543210" maxlength="10">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Aadhaar Number <span class="req">*</span></label>
+                    <input type="text" formControlName="adharNumber" placeholder="12-digit Aadhaar" maxlength="12">
+                    @if (userForm.get('adharNumber')?.touched && userForm.get('adharNumber')?.invalid) {
+                    <small class="error-text">Must be exactly 12 digits</small>
+                    }
+                </div>
+                <div class="form-group">
+                    <label>User ID / Emp Code <span class="req">*</span></label>
+                    <input type="text" formControlName="userId" placeholder="e.g. TCH-001">
+                </div>
+            </div>
+
+            @if (showClassField || showDeptField) {
+            <div class="conditional-box">
+                @if (showClassField) {
+                <div class="form-group">
+                    <label>Assign Class</label>
+                    <input type="text" formControlName="classId" placeholder="Enter Class ID">
+                </div>
+                }
+                @if (showDeptField) {
+                <div class="form-group">
+                    <label>Department</label>
+                    <select formControlName="departmentId">
+                        <option value="">Select Department</option>
+                        <option value="SCIENCE">Science</option>
+                        <option value="MATHS">Mathematics</option>
+                        <option value="ENGLISH">English</option>
+                        <option value="ADMIN">Administration</option>
+                    </select>
+                </div>
+                }
+            </div>
+            }
+
+            <div class="form-group">
+                <label>Initial Password</label>
+                <input type="text" formControlName="password">
+                <small class="hint">Default set to 'School@123'</small>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn-cancel" routerLink="/dashboard/admin/view">Cancel</button>
+
+                <button type="submit" class="btn-submit" [disabled]="userForm.invalid || isLoading">
+                    @if(isLoading) {
+                    <span class="spinner"></span>
+                    {{ isEditMode ? 'Updating...' : 'Creating...' }}
+                    } @else {
+                    {{ isEditMode ? 'Update User' : 'Create User' }}
+                    }
+                </button>
+            </div>
+            }
+
+        </form>
+    </div>
+</div>

@@ -43,6 +43,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
         children: [
             // Default dashboard home view
+
             {
                 path: '',
                 loadComponent: () => import('./modules/dashboard/home/home').then(m => m.Home)
@@ -136,6 +137,25 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./modules/attendance/components/attendance-report.component/attendance-report.component')
                         .then(m => m.AttendanceReportComponent)
+            },
+
+            {
+                path: 'admin/create',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN'] },
+                loadComponent: () => import('./modules/admin/components/create-user.component/create-user.component').then(m => m.CreateUserComponent)
+            },
+            {
+                path: 'admin/view',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN'] },
+                loadComponent: () => import('./modules/admin/components/view-user.component/view-user.component').then(m => m.ViewUserComponent)
+            },
+            {
+                path: 'admin/edit/:id',
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN'] },
+                loadComponent: () => import('./modules/admin/components/create-user.component/create-user.component').then(m => m.CreateUserComponent)
             }
 
             // Future Modules will go here:

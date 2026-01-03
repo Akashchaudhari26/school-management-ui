@@ -99,6 +99,7 @@ export class Auth {
     };
   }
   logout() {
+    console.log('Logging out user');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
     this.userSubject.next(null);
@@ -122,5 +123,9 @@ export class Auth {
 
   getUser(): User | null {
     return this.userSubject.value;
+  }
+
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, userData);
   }
 }

@@ -1,0 +1,395 @@
+/* =========================================
+   1. PAGE LAYOUT
+   ========================================= */
+* {
+    box-sizing: border-box;
+    /* Critical for alignment */
+}
+
+.page-container {
+    padding: 24px;
+    background-color: #f8fafc;
+    min-height: 100vh;
+    /* Center content on huge screens */
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* =========================================
+   2. HEADER SECTION
+   ========================================= */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+    /* Allows wrapping on smaller tablets */
+}
+
+.title-group h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: -0.025em;
+}
+
+.title-group p {
+    margin: 4px 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+    white-space: nowrap;
+    /* Prevents text breaking */
+}
+
+.btn-primary:hover {
+    background: #4338ca;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px -1px rgba(79, 70, 229, 0.3);
+}
+
+/* =========================================
+   3. FILTERS BAR
+   ========================================= */
+.filters-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+    /* Important for mobile */
+}
+
+.search-box {
+    flex: 1;
+    /* Takes available space */
+    position: relative;
+    min-width: 250px;
+    /* Prevents becoming too small */
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 10px 10px 36px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.search-box input:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.filter-group {
+    min-width: 150px;
+}
+
+.filter-group select {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.95rem;
+    height: 100%;
+    /* Matches input height */
+}
+
+/* =========================================
+   4. DESKTOP TABLE STYLES
+   ========================================= */
+.table-responsive {
+    overflow-x: auto;
+    /* Scroll horizontally if needed */
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.premium-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.premium-table th {
+    background: #f8fafc;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.premium-table td {
+    padding: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    color: #334155;
+    font-size: 0.9rem;
+}
+
+.premium-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* User Profile Cell */
+.profile-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e0e7ff;
+    color: #4f46e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.avatar-circle.admin {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.4;
+}
+
+.name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.email {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+/* Badges & Dots */
+.id-badge {
+    background: #f1f5f9;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #475569;
+}
+
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #64748b;
+    display: inline-block;
+}
+
+.role-badge.admin {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.role-badge.teacher {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.role-badge.student {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    background: #cbd5e1;
+}
+
+.status-dot.active {
+    background: #22c55e;
+}
+
+.status-dot.inactive {
+    background: #ef4444;
+}
+
+/* Actions */
+.action-group {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.icon-btn.delete:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.icon-btn.edit:hover {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+/* =========================================
+   5. MOBILE RESPONSIVE (CARD VIEW)
+   ========================================= */
+@media (max-width: 768px) {
+    .page-container {
+        padding: 16px;
+    }
+
+    /* Stack Header */
+    .list-header {
+        flex-direction: column;
+        align-items: stretch;
+        /* Full width buttons */
+    }
+
+    .btn-primary {
+        justify-content: center;
+    }
+
+    /* Stack Filters */
+    .filters-bar {
+        flex-direction: column;
+        padding: 12px;
+    }
+
+    /* === CARD TRANSFORMATION === */
+    .premium-table thead {
+        display: none;
+        /* Hide Headers */
+    }
+
+    .premium-table,
+    .premium-table tbody,
+    .premium-table tr,
+    .premium-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .premium-table tr {
+        margin-bottom: 16px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .premium-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        min-height: 50px;
+    }
+
+    .premium-table td:last-child {
+        border-bottom: none;
+        background: #f8fafc;
+        /* Highlight actions row */
+        justify-content: center;
+    }
+
+    /* Use data-label to create pseudo-headers */
+    .premium-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin-right: 12px;
+    }
+
+    /* Special Fix for Profile Cell */
+    .premium-table td.mobile-profile-header {
+        justify-content: flex-start;
+        background: #f8fafc;
+        /* Light header for card */
+    }
+
+    .premium-table td.mobile-profile-header::before {
+        display: none;
+        /* Hide 'User Profile' label */
+    }
+
+    /* Make actions centered on mobile */
+    .action-group {
+        width: 100%;
+        justify-content: space-evenly;
+    }
+}

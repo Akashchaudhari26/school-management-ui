@@ -8,7 +8,7 @@ export interface Staff {
   dateOfBirth: string; // Java LocalDate becomes "YYYY-MM-DD" string
   aadhaar?: string;    // Matches your DTO
 
-  staffType: 'TEACHER' | 'NON_TEACHING' | 'ADMIN';
+  staffType: 'TEACHING' | 'NON_TEACHING' | 'ADMIN';
   designation: string;
   joiningDate: string;
   employeeCode: string;

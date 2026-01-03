@@ -32,6 +32,7 @@ export class Sidebar {
 
   // Master Menu Configuration
   private rawMenuItems: MenuItem[] = [
+
     {
       title: 'Dashboard',
       icon: 'bi-grid-1x2-fill',
@@ -126,6 +127,25 @@ export class Sidebar {
           allowedRoles: ['ADMIN']
         },
       ]
+    },
+    {
+      title: 'Admin Panel',
+      icon: 'bi-shield-lock-fill', // Professional Admin Icon
+      allowedRoles: ['ADMIN'], // <--- Key Property
+      isOpen: false,
+      children: [
+        {
+          title: 'Create User',
+          icon: '',
+          link: '/dashboard/admin/create',
+          allowedRoles: ['ADMIN']
+        },
+        {
+          title: 'View User',
+          icon: '',
+          link: '/dashboard/admin/view',
+          allowedRoles: ['ADMIN']
+        }]
     }
   ];
 
