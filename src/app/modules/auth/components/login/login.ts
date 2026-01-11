@@ -17,7 +17,7 @@ export class Login {
 
   // We keep 'username' in the form for the UI, but we won't send it directly
   loginForm: FormGroup = this.fb.group({
-    loginType: ['email', [Validators.required]], // Default to email
+    loginType: ['mobile', [Validators.required]], // Default to email
     identifier: ['', [Validators.required]],      // The actual value entered
     password: ['', [Validators.required]]
   });

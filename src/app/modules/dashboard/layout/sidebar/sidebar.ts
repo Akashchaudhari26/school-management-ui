@@ -31,7 +31,7 @@ export class Sidebar {
   // 2. The Master Configuration List
 
   // Master Menu Configuration
-  private rawMenuItems: MenuItem[] = [
+  private readonly rawMenuItems: MenuItem[] = [
 
     {
       title: 'Dashboard',
@@ -126,6 +126,50 @@ export class Sidebar {
           link: '/dashboard/attendance/settings',
           allowedRoles: ['ADMIN']
         },
+      ]
+    },
+    {
+      title: 'Fee Management',
+      icon: 'bi-currency-exchange',
+      isOpen: false,
+      allowedRoles: ['ADMIN', 'PRINCIPAL'],
+      children: [
+        {
+          title: 'Fee Structures',
+          icon: '',
+          link: '/dashboard/fees/create',
+          allowedRoles: ['ADMIN']
+        },
+        {
+          title: 'Collect Fees',
+          icon: '',
+          link: '/dashboard/fees/collect',
+          allowedRoles: ['ADMIN', 'PRINCIPAL']
+        },
+        {
+          title: 'Due Dashboard',
+          icon: '',
+          link: '/dashboard/fees/dues',
+          allowedRoles: ['ADMIN', 'PRINCIPAL']
+        },
+        {
+          title: 'Student History',
+          icon: '',
+          link: '/dashboard/fees/history',
+          allowedRoles: ['ADMIN', 'PRINCIPAL']
+        },
+        {
+          title: 'Bulk Fee Upload',
+          icon: '',
+          link: '/dashboard/fees/bulk-create',
+          allowedRoles: ['ADMIN', 'PRINCIPAL']
+        },
+        {
+          title: 'Fee Master Data',
+          icon: '',
+          link: '/dashboard/fees/fee-master',
+          allowedRoles: ['ADMIN', 'PRINCIPAL']
+        }
       ]
     },
     {

@@ -1,0 +1,161 @@
+<div class="container-fluid mt-4">
+    <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-outline-secondary me-3" (click)="goBack()">
+            <i class="bi bi-arrow-left me-1"></i> Back
+        </button>
+        <h4 class="mb-0 text-secondary border-start ps-3">Batch Fee Assignment</h4>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
+
+            <div *ngIf="responseSummary"
+                class="alert alert-success shadow-sm border-0 border-start border-5 border-success mb-4 animate-fade-in">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="alert-heading fw-bold"><i class="bi bi-check-circle-fill me-2"></i>Batch Processed!
+                        </h5>
+                        <div class="d-flex gap-4 mt-2">
+                            <div><strong class="fs-5">{{ responseSummary.totalStudentsFound }}</strong> <span
+                                    class="text-muted small text-uppercase">Students</span></div>
+                            <div class="text-success"><strong class="fs-5">+{{ responseSummary.successfullyCreated
+                                    }}</strong> <span class="small text-uppercase">Assigned</span></div>
+                            <div class="text-secondary"><strong class="fs-5">{{ responseSummary.skippedAlreadyExists
+                                    }}</strong> <span class="small text-uppercase">Skipped</span></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-success px-3 rounded-pill"
+                        (click)="responseSummary = null; bulkForm.reset()">
+                        Start New Batch
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="errorMessage" class="alert alert-danger shadow-sm border-0 border-start border-5 border-danger">
+                <i class="bi bi-exclamation-octagon-fill me-2"></i> {{ errorMessage }}
+            </div>
+
+            <div class="card border-0 shadow-lg overflow-hidden rounded-4">
+
+                <div class="card-header border-0 py-3 text-white d-flex align-items-center justify-content-between"
+                    style="background: linear-gradient(135deg, #2D6F86 0%, #1A4D60 100%);">
+                    <h6 class="mb-0 text-uppercase letter-spacing-1"><i
+                            class="bi bi-layers-fill me-2 opacity-50"></i>Configuration</h6>
+                    <span class="badge bg-white text-primary rounded-pill bg-opacity-25 backdrop-blur">Step 1 of
+                        1</span>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form [formGroup]="bulkForm" (ngSubmit)="onSubmit()">
+
+                        <div class="row g-3 mb-5">
+                            <div class="col-12">
+                                <h6 class="text-primary fw-bold mb-0 border-bottom pb-2">Target Group</h6>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="form-floating">
+                                    <select class="form-select fw-bold text-dark" id="classSelect"
+                                        formControlName="classId">
+                                        <option value="" disabled selected>Select a Class</option>
+                                        <option *ngFor="let c of classes" [value]="c">{{ c }}</option>
+                                    </select>
+                                    <label for="classSelect">Target Class</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-floating">
+                                    <select class="form-select" id="sectionSelect" formControlName="section">
+                                        <option value="">All Sections</option>
+                                        <option *ngFor="let s of sections" [value]="s">{{ s }}</option>
+                                    </select>
+                                    <label for="sectionSelect">Section (Optional)</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <select class="form-select bg-light" id="yearSelect" formControlName="academicYear">
+                                        <option value="2025-2026">2025-2026</option>
+                                        <option value="2024-2025">2024-2025</option>
+                                    </select>
+                                    <label for="yearSelect">Academic Year</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h6 class="text-primary fw-bold mb-0">Fee Structure</h6>
+                                <button type="button" class="btn btn-sm btn-light text-primary fw-bold border"
+                                    (click)="addFeeItem()">
+                                    <i class="bi bi-plus-circle-fill me-1"></i> Add Item
+                                </button>
+                            </div>
+
+                            <div class="bg-light rounded-3 p-3">
+                                <div formArrayName="feeItems">
+                                    <div *ngFor="let item of feeItems.controls; let i=index" [formGroupName]="i"
+                                        class="row g-2 align-items-center mb-2 animate-slide-down">
+
+                                        <div class="col-auto">
+                                            <span class="badge bg-secondary rounded-circle bg-opacity-25 text-dark"
+                                                style="width: 24px; height: 24px; line-height: 18px;">{{i + 1}}</span>
+                                        </div>
+
+                                        <div class="col">
+                                            <input type="text" class="form-control border-0 shadow-sm"
+                                                formControlName="name" placeholder="Fee Head (e.g., Tuition Fee)">
+                                        </div>
+
+                                        <div class="col-4 col-md-3">
+                                            <div class="input-group shadow-sm">
+                                                <span class="input-group-text bg-white border-0 text-muted">₹</span>
+                                                <input type="number" class="form-control border-0 fw-bold text-end"
+                                                    formControlName="amount" placeholder="0">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <button type="button" class="btn btn-link text-danger p-1 hover-scale"
+                                                (click)="removeFeeItem(i)" title="Remove Item">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="feeItems.length === 0" class="text-center py-4 text-muted">
+                                    <i class="bi bi-list-check fs-2 d-block opacity-25"></i>
+                                    <small>No fee items added. Click "Add Item" to begin.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="d-flex flex-column flex-md-row justify-content-between align-items-center bg-primary bg-opacity-10 p-4 rounded-3 mt-4 border border-primary border-opacity-10">
+                            <div class="mb-3 mb-md-0">
+                                <small class="text-uppercase text-muted fw-bold letter-spacing-1 d-block">Total
+                                    Allocation Per Student</small>
+                                <h2 class="mb-0 text-primary fw-bolder">₹ {{ getTotalAmount() | number }}</h2>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow-lg hover-lift"
+                                [disabled]="bulkForm.invalid || isSubmitting">
+                                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                                <span *ngIf="!isSubmitting">Assign Fees <i class="bi bi-arrow-right ms-2"></i></span>
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <small class="text-muted">Need help? Contact the IT Administrator.</small>
+            </div>
+
+        </div>
+    </div>
+</div>

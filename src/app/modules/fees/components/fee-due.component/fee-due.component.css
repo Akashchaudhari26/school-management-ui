@@ -1,0 +1,21 @@
+:host {
+    --bs-primary: #2D6F86;
+}
+
+.table> :not(caption)>*>* {
+    padding: 1rem 0.75rem;
+}
+
+.card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Hover effect for rows */
+tbody tr {
+    transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+    background-color: #f8fbfd;
+}

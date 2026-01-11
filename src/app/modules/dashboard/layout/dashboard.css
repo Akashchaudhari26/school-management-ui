@@ -1,29 +1,22 @@
-.app-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-    /* Prevent horizontal scroll on slide-in */
-}
+/* --- FIXED LAYOUT LOGIC --- */
 
-.main-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-}
-
-/* --- DESKTOP LAYOUT --- */
+/* We keep this custom because Bootstrap doesn't support 
+   sidebar width transitions out of the box.
+*/
 .main-content {
+    /* Matches Header Height */
     margin-top: 60px;
+
+    /* Default Desktop Sidebar Width */
     margin-left: 250px;
-    /* Default Desktop Width */
-    padding: 20px;
-    background-color: #f4f6f9;
-    min-height: calc(100vh - 60px);
+
+    /* Animation settings */
     transition: margin-left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    /* Structure */
+    min-height: calc(100vh - 60px);
+    padding: 20px;
+    /* You can use p-3 in HTML instead if preferred */
 }
 
 /* Desktop Collapsed State */
@@ -31,33 +24,16 @@
     margin-left: 60px;
 }
 
-.content-wrapper {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    min-height: 80vh;
-}
-
 /* --- MOBILE LAYOUT (< 768px) --- */
+/* Bootstrap 'md' breakpoint is 768px */
 @media (max-width: 768px) {
     .main-content {
         margin-left: 0 !important;
-        /* Content always full width on mobile */
         padding: 15px;
     }
 
-    /* The dark background overlay */
+    /* Animation for the backdrop */
     .mobile-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        /* Semi-transparent black */
-        z-index: 899;
-        /* Below sidebar, above content */
         animation: fadeIn 0.3s;
     }
 }

@@ -1,0 +1,177 @@
+<div class="container-fluid mt-4">
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold text-secondary">Fee Master Configuration</h4>
+            <p class="mb-0 text-muted small">Define standard fee structures for automated assignment.</p>
+        </div>
+
+        <div *ngIf="viewMode === 'LIST'">
+            <div class="d-flex gap-2">
+                <select class="form-select form-select-sm" [(ngModel)]="academicYear" (change)="fetchMasters()">
+                    <option *ngFor="let year of academicYears" [value]="year">
+                        {{ year }}
+                    </option>
+                </select>
+                <button class="btn btn-primary btn-sm shadow-sm" (click)="switchToCreate()">
+                    <i class="bi bi-plus-lg me-1"></i> New Structure
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="viewMode !== 'LIST'">
+            <button class="btn btn-outline-secondary btn-sm shadow-sm" (click)="switchToList()">
+                <i class="bi bi-x-lg me-1"></i> Cancel
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="viewMode === 'LIST'" class="animate-fade-in">
+
+        <div *ngIf="isLoading" class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+        </div>
+
+        <div class="row g-4" *ngIf="!isLoading">
+            <div class="col-md-6 col-xl-4" *ngFor="let m of masters">
+                <div class="card border-0 shadow-sm h-100 hover-lift position-relative group-action">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="fw-bold text-primary mb-0">{{ m.classId }}</h5>
+                                <small class="text-muted">{{ m.academicYear }}</small>
+                            </div>
+                            <button class="btn btn-sm btn-light text-primary rounded-circle shadow-sm"
+                                (click)="editMaster(m)" title="Edit Structure">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+
+                        <div class="border-top border-bottom py-2 my-3 bg-light rounded px-2">
+                            <div class="d-flex justify-content-between">
+                                <span class="small text-uppercase fw-bold text-muted">Total Fee</span>
+                                <span class="fw-bold fs-5">₹ {{ m.totalAmount | number }}</span>
+                            </div>
+                        </div>
+
+                        <ul class="list-unstyled mb-0 small">
+                            <li *ngFor="let item of (isExpanded(m.id) ? m.feeItems : m.feeItems.slice(0,3))"
+                                class="d-flex justify-content-between text-muted mb-1 border-bottom pb-1 border-light">
+                                <span>{{ item.name }}</span>
+                                <span class="fw-bold text-dark">₹ {{ item.amount | number }}</span>
+                            </li>
+
+                            <li *ngIf="m.feeItems.length > 3" class="text-center mt-2">
+                                <span class="badge bg-light text-primary border cursor-pointer hover-scale"
+                                    style="cursor: pointer;" (click)="toggleExpand(m.id)">
+
+                                    <span *ngIf="!isExpanded(m.id)">
+                                        + {{ m.feeItems.length - 3 }} more...
+                                    </span>
+
+                                    <span *ngIf="isExpanded(m.id)">
+                                        Show Less <i class="bi bi-chevron-up ms-1"></i>
+                                    </span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <div class="card border-2 border-dashed h-100 d-flex align-items-center justify-content-center bg-light text-muted"
+                    style="min-height: 200px; cursor: pointer;" (click)="switchToCreate()">
+                    <div class="text-center">
+                        <i class="bi bi-plus-circle fs-1 mb-2 opacity-50"></i>
+                        <h6 class="fw-bold">Create New Class Structure</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="viewMode !== 'LIST'" class="row justify-content-center animate-slide-up">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg overflow-hidden rounded-4">
+                <div class="card-header border-0 py-3 text-white"
+                    style="background: linear-gradient(135deg, #2D6F86, #1A4D60);">
+                    <h6 class="mb-0">
+                        <i class="bi" [ngClass]="viewMode === 'EDIT' ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
+                        {{ viewMode === 'EDIT' ? 'Edit Fee Structure' : 'Define New Fee Structure' }}
+                    </h6>
+                </div>
+
+                <div class="card-body p-4">
+                    <form [formGroup]="masterForm" (ngSubmit)="onSubmit()">
+
+                        <input type="hidden" formControlName="id">
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-8">
+                                <div class="form-floating">
+                                    <select class="form-select fw-bold" formControlName="classId">
+                                        <option value="" disabled>Select Class</option>
+                                        <option *ngFor="let c of classes" [value]="c">{{ c }}</option>
+                                    </select>
+                                    <label>Target Class</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light" formControlName="academicYear"
+                                        readonly>
+                                    <label>Year</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
+                            <label class="fw-bold text-muted small">FEE BREAKDOWN</label>
+                            <button type="button" class="btn btn-sm btn-link text-decoration-none fw-bold"
+                                (click)="addFeeItem()">
+                                + Add Row
+                            </button>
+                        </div>
+
+                        <div formArrayName="feeItems" class="mb-4">
+                            <div *ngFor="let item of feeItems.controls; let i=index" [formGroupName]="i"
+                                class="row g-2 mb-2 align-items-center">
+                                <div class="col-7">
+                                    <input type="text" class="form-control" formControlName="name"
+                                        placeholder="Head Name">
+                                </div>
+                                <div class="col-4">
+                                    <input type="number" class="form-control text-end" formControlName="amount"
+                                        placeholder="0">
+                                </div>
+                                <div class="col-1 text-center">
+                                    <button type="button" class="btn btn-link text-danger p-0"
+                                        (click)="removeFeeItem(i)">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div *ngIf="feeItems.length === 0"
+                                class="text-center text-muted py-3 border rounded bg-light">
+                                <small>No items defined. Add a row to start.</small>
+                            </div>
+                        </div>
+
+                        <div class="bg-light p-3 rounded d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-uppercase text-muted d-block fw-bold">Total Annual Fee</small>
+                                <span class="fs-3 fw-bold text-primary">₹ {{ getTotalAmount() | number }}</span>
+                            </div>
+                            <button type="submit" class="btn btn-primary px-4 rounded-pill shadow-sm"
+                                [disabled]="isSubmitting || masterForm.invalid">
+                                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                                {{ viewMode === 'EDIT' ? 'Update Configuration' : 'Save Configuration' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

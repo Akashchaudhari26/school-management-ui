@@ -1,17 +1,19 @@
-<div class="app-container" [class.mobile-mode]="isMobile">
+<div class="d-flex flex-column min-vh-100 position-relative overflow-hidden">
 
-    <div class="mobile-backdrop" *ngIf="isMobile && isMobileMenuOpen" (click)="closeMobileMenu()">
+    <div class="mobile-backdrop position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50" style="z-index: 1020;"
+        *ngIf="isMobile && isMobileMenuOpen" (click)="closeMobileMenu()">
     </div>
 
-    <header class="main-header">
+    <header class="fixed-top">
         <app-navbar (toggleMobile)="toggleMobileMenu()"></app-navbar>
     </header>
 
     <app-sidebar [isCollapsed]="isSidebarCollapsed" [isMobileOpen]="isMobileMenuOpen" (toggle)="toggleDesktopSidebar()">
     </app-sidebar>
 
-    <main class="main-content" [class.expanded]="isSidebarCollapsed" [class.mobile-pushed]="isMobileMenuOpen">
-        <div class="content-wrapper">
+    <main class="main-content bg-light" [class.expanded]="isSidebarCollapsed" [class.mobile-pushed]="isMobileMenuOpen">
+
+        <div class="bg-white rounded shadow-sm p-4" style="min-height: 80vh;">
             <router-outlet></router-outlet>
         </div>
     </main>

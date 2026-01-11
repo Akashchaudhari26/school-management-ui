@@ -25,4 +25,27 @@ export class DateUtils {
         const localDate = new Date(date.getTime() - offset);
         return localDate.toISOString().substring(0, 10);
     }
+
+    static getCurrentAcademicYear(): string {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1; // Jan = 1
+
+        if (month >= 4) {
+            return `${year}-${year + 1}`;
+        } else {
+            return `${year - 1}-${year}`;
+        }
+    }
+
+    static generateAcademicYears(count: number): string[] {
+        const years: string[] = [];
+        const current = DateUtils.getCurrentAcademicYear();
+        const startYear = parseInt(current.split('-')[0], 10);
+
+        for (let i = 0; i < count; i++) {
+            years.push(`${startYear - i}-${startYear - i + 1}`);
+        }
+        return years;
+    }
 }

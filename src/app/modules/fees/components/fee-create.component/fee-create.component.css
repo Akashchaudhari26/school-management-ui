@@ -1,0 +1,22 @@
+/* fee-create.component.css */
+
+/* Override Bootstrap Variables with Matrutva Colors */
+:host {
+    --bs-primary: #2D6F86;
+    /* Teal */
+    --bs-secondary: #F89A28;
+    /* Orange */
+}
+
+/* Optional: Slight custom tweak for the card if you want */
+.card {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    background-color: var(--bs-primary);
+    color: white;
+}
+
+/* That's it. No grids, no flexbox, no input widths. */
