@@ -9,8 +9,8 @@
         <div *ngIf="viewMode === 'LIST'">
             <div class="d-flex gap-2">
                 <select class="form-select form-select-sm" [(ngModel)]="academicYear" (change)="fetchMasters()">
-                    <option *ngFor="let year of academicYears" [value]="year">
-                        {{ year }}
+                    <option *ngFor="let year of academicYears" [value]="year.name">
+                        {{ year.name }} {{ year.active ? '(Current)' : '' }}
                     </option>
                 </select>
                 <button class="btn btn-primary btn-sm shadow-sm" (click)="switchToCreate()">
@@ -112,16 +112,20 @@
                                 <div class="form-floating">
                                     <select class="form-select fw-bold" formControlName="classId">
                                         <option value="" disabled>Select Class</option>
-                                        <option *ngFor="let c of classes" [value]="c">{{ c }}</option>
+                                        <option *ngFor="let c of classes" [value]="c.id">{{ c.displayName }}</option>
                                     </select>
                                     <label>Target Class</label>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control bg-light" formControlName="academicYear"
-                                        readonly>
-                                    <label>Year</label>
+                                    <select formControlName="academicYear" class="form-select fw-bold">
+                                        <option value="" disabled>Academic Year</option>
+                                        <option *ngFor="let year of academicYears" [value]="year.name">
+                                            {{ year.name }}
+                                        </option>
+                                    </select>
+                                    <label>Target Year</label>
                                 </div>
                             </div>
                         </div>

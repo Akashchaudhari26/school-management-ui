@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Page, Student } from '../models/student';
 import { StudentSearchFilter } from '../models/student-filter';
+import { SchoolConfigService } from '../../school-config/services/school-config.service';
 
 export interface DropdownOption {
   label: string;
@@ -15,6 +16,8 @@ export interface DropdownOption {
 })
 export class StudentService {
   private http = inject(HttpClient);
+  private configService = inject(SchoolConfigService);
+
   // Uses the centralized URL
   private apiUrl = `${environment.apiUrl}/students`;
 
@@ -41,27 +44,35 @@ export class StudentService {
   }
 
   getClasses(): Observable<DropdownOption[]> {
-    // REAL API CALL: return this.http.get<DropdownOption[]>(`${environment.apiUrl}/master/classes`);
-    return of([
-      { label: 'Nursery', value: 'NURSERY' },
-      { label: 'LKG', value: 'LKG' },
-      { label: 'UKG', value: 'UKG' },
-      { label: 'Class 1', value: '1' },
-      { label: 'Class 2', value: '2' },
-      { label: 'Class 3', value: '3' }
-    ]);
+    return this.configService.getAllClasses().pipe(
+      map(classes =>
+        classes
+          // 1. Sort by Order (Nursery -> LKG -> 1...)
+          .sort((a, b) => a.order - b.order)
+          // 2. Map to Dropdown Format
+          .map(c => ({
+            label: c.displayName,
+            value: c.id
+          }))
+      )
+    );
   }
 
-  // 🚀 DYNAMIC SECTIONS
-  getSections(): Observable<DropdownOption[]> {
-    // REAL API CALL: return this.http.get<DropdownOption[]>(`${environment.apiUrl}/master/sections`);
+  getSections(classId: string): Observable<DropdownOption[]> {
+    if (!classId) return of([]);
 
-    return of([
-      { label: 'Section A', value: 'A' },
-      { label: 'Section B', value: 'B' },
-      { label: 'Section C', value: 'C' },
-      { label: 'Section D', value: 'D' }
-    ]);
+    return this.configService.getAllClasses().pipe(
+      map(classes => {
+        const selectedClass = classes.find(c => c.id === classId);
+        if (selectedClass && selectedClass.sections) {
+          return selectedClass.sections.map(s => ({
+            label: s.name,
+            value: s.name
+          }));
+        }
+        return [];
+      })
+    );
   }
 
   getMonths(): Observable<DropdownOption[]> {

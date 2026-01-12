@@ -1,0 +1,42 @@
+/* Metrics Hero Card */
+.metrics-card {
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.opacity-10 {
+    opacity: 0.1;
+}
+
+.opacity-25 {
+    opacity: 0.25;
+}
+
+/* Class Item Card */
+.class-item-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.class-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08) !important;
+}
+
+/* Form Controls */
+.form-control,
+.form-select {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+
+    &:focus {
+        background-color: #fff;
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.1);
+    }
+}
+
+.text-xs {
+    font-size: 0.75rem;
+}

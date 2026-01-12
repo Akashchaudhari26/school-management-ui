@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ɵɵsetComponentScope } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FeeResponse, FeeCreateRequest, FeePaymentRequest, FeePayment } from '../models/fee.types';
@@ -58,6 +58,7 @@ export class FeeService {
     }
 
     getFeeMasters(academicYear: string): Observable<any[]> {
+        console.log('Fetching Fee Masters for Year:', academicYear);
         return this.http.get<any[]>(`${this.apiUrl}-masters/${academicYear}`);
     }
 }

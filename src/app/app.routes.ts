@@ -49,6 +49,10 @@ export const routes: Routes = [
                 path: 'admin',
                 loadChildren: () => import('./modules/admin/admin.route').then(m => m.ADMIN_ROUTES)
             },
+            {
+                path: 'config',
+                loadChildren: () => import('./modules/school-config/school-config.route').then(m => m.SCHOOL_CONFIG_ROUTES)
+            },
         ]
     },
 

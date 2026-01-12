@@ -12,6 +12,8 @@ import { FeeService } from '../../services/fee.service';
 import { FeeCreateRequest } from '../../models/fee.types';
 import { StudentService } from '../../../student/services/student.service';
 import { Student } from '../../../student/models/student';
+import { AcademicYear } from '../../../school-config/models/school-config';
+import { SchoolConfigService } from '../../../school-config/services/school-config.service';
 
 
 @Component({
@@ -35,20 +37,24 @@ export class FeeCreateComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
 
+  academicYears: AcademicYear[] = [];
+
   constructor(
     private fb: FormBuilder,
     private feeService: FeeService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private configService: SchoolConfigService
   ) {
     this.feeForm = this.fb.group({
       studentId: ['', Validators.required],
-      academicYear: ['2025-2026', Validators.required],
+      academicYear: ['', Validators.required],
       feeItems: this.fb.array([])
     });
   }
 
   ngOnInit(): void {
     this.addFeeItem();
+    this.loadAcademicYears();
   }
 
   // --- SEARCH LOGIC ---
@@ -151,6 +157,19 @@ export class FeeCreateComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = 'Failed to create fee. Please check details.';
+      }
+    });
+  }
+
+  loadAcademicYears() {
+    // Fetch all years so the admin can select a past year if needed
+    this.configService.getAllAcademicYears().subscribe(years => {
+      this.academicYears = years;
+
+      // 4. Find the ACTIVE year and set it as default
+      const activeYear = years.find(y => y.active); // Assuming 'active' is the boolean flag
+      if (activeYear) {
+        this.feeForm.patchValue({ academicYear: activeYear.name });
       }
     });
   }

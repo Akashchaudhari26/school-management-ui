@@ -1,0 +1,81 @@
+/* Color values inlined */
+.metrics-card {
+    background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.opacity-10 {
+    opacity: 0.1;
+}
+
+.opacity-25 {
+    opacity: 0.25;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}
+
+/* Custom Purple Button & Text */
+.text-purple {
+    color: #6f42c1 !important;
+}
+
+.bg-purple-subtle {
+    background-color: rgba(111, 66, 193, 0.1) !important;
+}
+
+.btn-purple {
+    background-color: #6f42c1;
+    color: white;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-purple:hover {
+    background-color: #5a32a3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(111, 66, 193, 0.2);
+}
+
+.btn-purple:disabled {
+    background-color: #d1c4e9;
+    transform: none;
+}
+
+/* Class Card Styling */
+.class-card {
+    transition: transform 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.class-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+}
+
+.list-group-sm {
+    font-size: 0.9rem;
+}
+
+/* Custom Background Utilities */
+.bg-purple-subtle {
+    background-color: #f3e5f5 !important;
+    /* Light Purple */
+}
+
+.text-purple {
+    color: #6f42c1 !important;
+    /* Deep Purple */
+}
+
+.bg-primary-subtle {
+    background-color: #e3f2fd !important;
+    /* Light Blue */
+}
+
+/* Ensure cards are clean */
+.card {
+    border-radius: 10px;
+}

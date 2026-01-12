@@ -3,7 +3,8 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AttendanceReportDTO } from '../../models/attendance-reports';
 import { ReportService } from '../../services/report.service';
-import { StudentService } from '../../../student/services/student.service';
+import { DropdownOption, StudentService } from '../../../student/services/student.service';
+import { Observable, of, startWith, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-attendance-report.component',
@@ -22,8 +23,21 @@ export class AttendanceReportComponent {
   reportData: AttendanceReportDTO[] = [];
 
   // Dropdown Data
-  classes$ = this.studentSvc.getClasses();
-  sections$ = this.studentSvc.getSections();
+  classes$: Observable<DropdownOption[]> = this.studentSvc.getClasses();
+  sections$: Observable<DropdownOption[]> = of([]);
+
+  ngOnInit() {
+    const classFilter = this.filterForm.get('classId');
+
+    if (classFilter) {
+      this.sections$ = classFilter.valueChanges.pipe(
+        startWith(classFilter.value || ''),
+        switchMap(id => this.studentSvc.getSections(id || ''))
+      );
+    }
+  }
+
+
   months$ = this.studentSvc.getMonths(); // Reusing from before
 
   // Form

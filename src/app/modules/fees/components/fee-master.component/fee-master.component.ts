@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FeeService } from '../../services/fee.service';
 import { DateUtils } from '../../../../core/utils/date.utils';
+import { AcademicYear, SchoolClass } from '../../../school-config/models/school-config';
+import { SchoolConfigService } from '../../../school-config/services/school-config.service';
 
 @Component({
   selector: 'app-fee-master.component',
@@ -16,7 +18,7 @@ export class FeeMasterComponent implements OnInit {
   // State
   viewMode: 'LIST' | 'CREATE' | 'EDIT' = 'LIST'; // Added 'EDIT' mode
   academicYear!: string;
-  academicYears: string[] = [];
+  academicYears: AcademicYear[] = [];
   isLoading = false;
   masters: any[] = [];
   editingId: string | null = null; // Track which ID is being edited
@@ -25,11 +27,12 @@ export class FeeMasterComponent implements OnInit {
   masterForm: FormGroup;
   isSubmitting = false;
 
-  classes = ['NURSERY', 'LKG', 'UKG', 'CLASS_1', 'CLASS_2', 'CLASS_3', 'CLASS_4', 'CLASS_5'];
+  classes: SchoolClass[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private feeService: FeeService
+    private feeService: FeeService,
+    private configService: SchoolConfigService
   ) {
     this.masterForm = this.fb.group({
       id: [null], // Hidden ID field for updates
@@ -40,9 +43,7 @@ export class FeeMasterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.academicYears = DateUtils.generateAcademicYears(5); // last 5 years
-    this.academicYear = DateUtils.getCurrentAcademicYear();
-    this.fetchMasters();
+    this.loadConfig();
   }
 
   fetchMasters() {
@@ -120,10 +121,6 @@ export class FeeMasterComponent implements OnInit {
 
     this.isSubmitting = true;
 
-    // Determine if we are creating or updating
-    // For this implementation, we reuse the saveFeeMaster endpoint. 
-    // If your backend distinguishes POST/PUT, add logic here.
-    // Assuming 'saveFeeMaster' handles upsert based on ID presence.
 
     this.feeService.saveFeeMaster(this.masterForm.value).subscribe({
       next: () => {
@@ -150,5 +147,22 @@ export class FeeMasterComponent implements OnInit {
 
   isExpanded(id: string): boolean {
     return this.expandedMasterIds.has(id);
+  }
+
+  loadConfig() {
+    this.configService.getAllClasses().subscribe(data => {
+      this.classes = data.sort((a, b) => a.order - b.order);
+    });
+
+    this.configService.getAllAcademicYears().subscribe(years => {
+      this.academicYears = years;
+
+      const active = years.find(y => y.active);
+      if (active) {
+        this.academicYear = active.name;
+        console.log('Active Academic Year:', this.academicYear);
+        this.fetchMasters();
+      }
+    });
   }
 }

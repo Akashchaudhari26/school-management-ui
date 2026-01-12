@@ -56,9 +56,11 @@
                             <div class="col-md-5">
                                 <div class="form-floating">
                                     <select class="form-select fw-bold text-dark" id="classSelect"
-                                        formControlName="classId">
+                                        formControlName="classId" (change)="onClassChange()">
                                         <option value="" disabled selected>Select a Class</option>
-                                        <option *ngFor="let c of classes" [value]="c">{{ c }}</option>
+                                        <option *ngFor="let cls of classes" [value]="cls.id">
+                                            {{ cls.displayName }}
+                                        </option>
                                     </select>
                                     <label for="classSelect">Target Class</label>
                                 </div>
@@ -68,7 +70,9 @@
                                 <div class="form-floating">
                                     <select class="form-select" id="sectionSelect" formControlName="section">
                                         <option value="">All Sections</option>
-                                        <option *ngFor="let s of sections" [value]="s">{{ s }}</option>
+                                        <option *ngFor="let sec of sections" [value]="sec.name">
+                                            {{ sec.name }}
+                                        </option>
                                     </select>
                                     <label for="sectionSelect">Section (Optional)</label>
                                 </div>
@@ -77,8 +81,11 @@
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <select class="form-select bg-light" id="yearSelect" formControlName="academicYear">
-                                        <option value="2025-2026">2025-2026</option>
-                                        <option value="2024-2025">2024-2025</option>
+                                        <option value="" disabled selected>Select an Academic Year</option>
+
+                                        <option *ngFor="let year of academicYears" [value]="year.name">
+                                            {{ year.name }} {{ year.active ? '(Current)' : '' }}
+                                        </option>
                                     </select>
                                     <label for="yearSelect">Academic Year</label>
                                 </div>

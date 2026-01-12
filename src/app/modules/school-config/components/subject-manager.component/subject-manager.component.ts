@@ -1,0 +1,126 @@
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { SchoolClass, Subject } from '../../models/school-config';
+import { SchoolConfigService } from '../../services/school-config.service';
+
+@Component({
+  selector: 'app-subject-manager.component',
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormsModule],
+  templateUrl: './subject-manager.component.html',
+  styleUrl: './subject-manager.component.css',
+})
+export class SubjectManagerComponent {
+
+  classes: SchoolClass[] = [];
+  allSubjects: Subject[] = [];
+
+  // Model for the "Step 1" Form
+  newSubject: Subject = { name: '', code: '', isOptional: false };
+
+  // Model for "Step 2" Bulk Assign
+  selectedClassId: string = '';
+  currentClass: SchoolClass | null = null;
+
+  isLoading = false;
+  isSaving = false;
+
+  constructor(private configService: SchoolConfigService) { }
+
+  ngOnInit(): void {
+    this.refreshData();
+  }
+
+  refreshData() {
+    this.isLoading = true;
+
+    // 1. Fetch Classes
+    this.configService.getAllClasses().subscribe(data => {
+      this.classes = data.sort((a, b) => a.order - b.order);
+    });
+
+    // 2. Fetch All Subjects (For the checklist)
+    this.configService.getAllSubjects().subscribe({
+      next: (data) => {
+        this.allSubjects = data;
+        this.isLoading = false;
+      },
+      error: () => this.isLoading = false
+    });
+  }
+
+  // --- Step 1: Create Subject ---
+  createSubject() {
+    if (!this.newSubject.code) return;
+    this.newSubject.id = `SUB_${this.newSubject.code.toUpperCase().replace(/\s/g, '')}`;
+
+    this.configService.createSubject(this.newSubject).subscribe({
+      next: (res) => {
+        alert('Subject Created!');
+        this.allSubjects.push(res); // Add to local list immediately
+        this.newSubject = { name: '', code: '', isOptional: false };
+      },
+      error: () => alert('Error: Subject Code might already exist.')
+    });
+  }
+
+  // --- Step 2: Manage Assignments ---
+
+  // When user changes the Class Dropdown
+  onClassSelect() {
+    this.currentClass = this.classes.find(c => c.id === this.selectedClassId) || null;
+  }
+
+  // Check if a subject is currently assigned to the selected class
+  isSubjectAssigned(subjectId: string | undefined): boolean {
+    if (!this.currentClass || !this.currentClass.subjectIds || !subjectId) return false;
+    return this.currentClass.subjectIds.includes(subjectId);
+  }
+
+  // Toggle Checkbox
+  toggleSubject(subjectId: string | undefined, event: any) {
+    if (!this.currentClass || !subjectId) return;
+
+    const isChecked = event.target.checked;
+
+    // Initialize array if null
+    if (!this.currentClass.subjectIds) {
+      this.currentClass.subjectIds = [];
+    }
+
+    if (isChecked) {
+      // Add if not present
+      if (!this.currentClass.subjectIds.includes(subjectId)) {
+        this.currentClass.subjectIds.push(subjectId);
+      }
+    } else {
+      // Remove if present
+      this.currentClass.subjectIds = this.currentClass.subjectIds.filter(id => id !== subjectId);
+    }
+  }
+
+  // Save the Entire Class Object
+  saveAssignments() {
+    if (!this.currentClass) return;
+
+    this.isSaving = true;
+    this.configService.updateClass(this.currentClass.id, this.currentClass).subscribe({
+      next: (updatedClass) => {
+        alert('Class Subjects Updated Successfully!');
+        this.isSaving = false;
+        // Update local list
+        const index = this.classes.findIndex(c => c.id === updatedClass.id);
+        if (index !== -1) this.classes[index] = updatedClass;
+      },
+      error: () => {
+        alert('Failed to update class.');
+        this.isSaving = false;
+      }
+    });
+  }
+
+  getTotalAssignments(): number {
+    return this.classes.reduce((sum, cls) => sum + (cls.subjectIds ? cls.subjectIds.length : 0), 0);
+  }
+}

@@ -5,7 +5,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { StudentTableComponent } from "../../../student/components/student-table.component/student-table.component";
 import { DropdownOption, StudentService } from '../../../student/services/student.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
+import { startWith, switchMap } from 'rxjs/operators'; // Add these
 import { StudentSearchFilter } from '../../../student/models/student-filter';
 import { Auth } from '../../../../core/services/auth';
 import { DateUtils } from '../../../../core/utils/date.utils';
@@ -39,15 +40,25 @@ export class MarkAttendanceComponent {
   isLoading = false;
   isSaving = false;
 
-  // Data
   students: any[] = [];
 
-  // Logic: Store original state to check for changes
   private initialStatuses = new Map<string, string>();
-  hasChanges = false; // Controls the Save Button
+  hasChanges = false;
 
   classes$: Observable<DropdownOption[]> = this.studentSvc.getClasses();
-  sections$: Observable<DropdownOption[]> = this.studentSvc.getSections();
+
+  sections$: Observable<DropdownOption[]> = of([]);
+
+  ngOnInit() {
+    const classFilter = this.filterForm.get('classId');
+
+    if (classFilter) {
+      this.sections$ = classFilter.valueChanges.pipe(
+        startWith(classFilter.value || ''),
+        switchMap(id => this.studentSvc.getSections(id || ''))
+      );
+    }
+  }
 
   loadAttendance() {
     const classId = this.filterForm.value.classId;

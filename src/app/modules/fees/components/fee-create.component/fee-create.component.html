@@ -65,8 +65,14 @@
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Academic Year <span class="text-danger">*</span></label>
                         <select class="form-select" formControlName="academicYear">
-                            <option value="2024-2025">2024-2025</option>
-                            <option value="2025-2026">2025-2026</option>
+                            <option value="" disabled>Select Year</option>
+
+                            @for (year of academicYears; track year.name) {
+                            <option [value]="year.name">
+                                {{ year.name }}
+                                {{ year.active ? '(Current)' : '' }}
+                            </option>
+                            }
                         </select>
                     </div>
                 </div>

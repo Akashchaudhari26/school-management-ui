@@ -4,6 +4,8 @@ import { FeeService } from '../../services/fee.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AcademicYear } from '../../../school-config/models/school-config';
+import { SchoolConfigService } from '../../../school-config/services/school-config.service';
 
 @Component({
   selector: 'app-fee-due',
@@ -15,7 +17,9 @@ import { FormsModule } from '@angular/forms';
 export class FeeDuesComponent implements OnInit {
 
   // State
-  academicYear: string = '2025-2026';
+  academicYear: string = '';
+  academicYears: AcademicYear[] = [];
+
   allDues: FeeResponse[] = [];      // The raw data from API
   filteredDues: FeeResponse[] = []; // The data shown in table
   isLoading = false;
@@ -31,11 +35,14 @@ export class FeeDuesComponent implements OnInit {
 
   constructor(
     private feeService: FeeService,
-    private router: Router
+    private router: Router,
+    private configService: SchoolConfigService
   ) { }
 
   ngOnInit(): void {
     this.fetchDues();
+    this.loadAcademicYears();
+
   }
 
   fetchDues() {
@@ -79,9 +86,6 @@ export class FeeDuesComponent implements OnInit {
     this.totalPendingAmount = this.filteredDues.reduce((sum, item) => sum + item.dueAmount, 0);
   }
 
-  // Navigation to Collect Page
-  // Note: This assumes you might add queryParam logic to 'collect' page later, 
-  // or just copy the ID manually.
   collectFrom(studentFeeResponse: FeeResponse) {
     this.router.navigate(['/dashboard/fees/collect'], {
       // We still pass queryParam as a fallback (good for bookmarking/refreshing)
@@ -89,6 +93,12 @@ export class FeeDuesComponent implements OnInit {
 
       // THE OPTIMIZATION: Pass the actual object in memory
       state: { feeData: studentFeeResponse }
+    });
+  }
+
+  loadAcademicYears() {
+    this.configService.getAllAcademicYears().subscribe(years => {
+      this.academicYears = years;
     });
   }
 }

@@ -1,0 +1,43 @@
+/* Hero Card for Active Year */
+.active-year-card {
+    background: linear-gradient(135deg, #198754 0%, #0f5132 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.icon-box {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.opacity-10 {
+    opacity: 0.1;
+}
+
+/* Form Styling */
+.form-control {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+
+    &:focus {
+        background-color: #fff;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    }
+}
+
+/* Table Styling */
+.table thead th {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom-width: 1px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+}

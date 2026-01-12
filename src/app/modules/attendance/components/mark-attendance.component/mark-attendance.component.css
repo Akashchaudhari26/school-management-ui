@@ -11,6 +11,16 @@
     --input-bg: #f9fafb;
 }
 
+.page-header {
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--text-main);
+}
+
 .main-container {
     padding: 24px;
     max-width: 100%;

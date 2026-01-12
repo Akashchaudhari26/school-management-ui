@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of, startWith, switchMap } from 'rxjs';
 import { StudentSearchFilter } from '../../../student/models/student-filter';
 import { DropdownOption, StudentService } from '../../../student/services/student.service';
 import { AttendanceService } from '../../services/attendance.service';
@@ -31,9 +31,20 @@ export class ViewAttendanceComponent {
 
   // Dropdowns
   classes$: Observable<DropdownOption[]> = this.studentSvc.getClasses();
-  sections$: Observable<DropdownOption[]> = this.studentSvc.getSections();
+  sections$: Observable<DropdownOption[]> = of([]);
 
-  // Search Form
+  ngOnInit() {
+    const classFilter = this.filterForm.get('classId');
+
+    if (classFilter) {
+      this.sections$ = classFilter.valueChanges.pipe(
+        startWith(classFilter.value || ''),
+        switchMap(id => this.studentSvc.getSections(id || ''))
+      );
+    }
+  }
+
+
   filterForm = this.fb.group({
     classId: [''],
     section: [''],

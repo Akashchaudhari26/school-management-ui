@@ -6,6 +6,8 @@ import { FeeService } from '../../services/fee.service';
 import { StudentService } from '../../../student/services/student.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Student } from '../../../student/models/student';
+import { SchoolConfigService } from '../../../school-config/services/school-config.service';
+import { AcademicYear } from '../../../school-config/models/school-config';
 
 @Component({
   selector: 'app-fee-collect',
@@ -24,8 +26,9 @@ export class FeeCollectComponent {
 
   // --- Fee Data State ---
   feeSummary: FeeResponse | null = null;
-  academicYear = '2025-2026';
+  academicYear = '';
   isLoadingSummary = false;
+  academicYears: AcademicYear[] = [];
 
   // --- Payment Form ---
   paymentForm: FormGroup;
@@ -33,12 +36,16 @@ export class FeeCollectComponent {
   successMessage = '';
   errorMessage = '';
   collectedBy: string;
+
+
   constructor(
     private fb: FormBuilder,
     private feeService: FeeService,
     private studentService: StudentService,
     private route: ActivatedRoute,
     private router: Router,
+    private configService: SchoolConfigService
+
   ) {
     const userStr = localStorage.getItem('user');
     this.collectedBy = userStr ? JSON.parse(userStr).fullName : '';
@@ -66,6 +73,8 @@ export class FeeCollectComponent {
         }
       });
     }
+    this.loadAcademicYears();
+
   }
   loadFromState(data: FeeResponse) {
     this.feeSummary = data;
@@ -78,7 +87,6 @@ export class FeeCollectComponent {
   goBack() {
     this.router.navigate(['/dashboard/fees/dues']);
   }
-
   // 1. SEARCH STUDENT
   onSearch() {
     if (!this.searchKeyword.trim()) return;
@@ -104,7 +112,6 @@ export class FeeCollectComponent {
       }
     });
   }
-
   // 2. SELECT STUDENT & FETCH FEES
   selectStudent(student: any) {
     this.showResults = false;
@@ -131,7 +138,6 @@ export class FeeCollectComponent {
       }
     });
   }
-
   // 3. SUBMIT PAYMENT
   onPay() {
     if (this.paymentForm.invalid || !this.feeSummary) return;
@@ -157,4 +163,16 @@ export class FeeCollectComponent {
     this.showResults = false;
   }
 
+  loadAcademicYears() {
+    // Fetch all years so the admin can select a past year if needed
+    this.configService.getAllAcademicYears().subscribe(years => {
+      this.academicYears = years;
+
+      // 4. Find the ACTIVE year and set it as default
+      const activeYear = years.find(y => y.active); // Assuming 'active' is the boolean flag
+      if (activeYear) {
+        this.paymentForm.patchValue({ academicYear: activeYear.name });
+      }
+    });
+  }
 }

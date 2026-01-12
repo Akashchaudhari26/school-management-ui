@@ -1,0 +1,135 @@
+<div class="container-fluid p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h4 text-dark fw-bold mb-0">Class & Section Management</h2>
+            <p class="text-muted small mb-0">Define organizational structure and capacity</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px; z-index: 1;">
+                <div class="card-header bg-white py-3 border-0">
+                    <h6 class="mb-0 fw-bold text-primary">
+                        <i class="bi bi-building-add me-2"></i>Add New Class
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form (ngSubmit)="createClass()">
+
+                        <div class="mb-3">
+                            <label class="form-label text-uppercase text-muted small fw-bold">Class ID (Unique)</label>
+                            <input type="text" class="form-control" placeholder="e.g. GRADE_1" [(ngModel)]="newClass.id"
+                                name="classId" required>
+                            <div class="form-text text-xs">Used internally (No spaces preferred).</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-uppercase text-muted small fw-bold">Display Name</label>
+                            <input type="text" class="form-control fw-bold" placeholder="e.g. Grade 1"
+                                [(ngModel)]="newClass.displayName" name="displayName" required>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label text-uppercase text-muted small fw-bold">Order</label>
+                                <input type="number" class="form-control" [(ngModel)]="newClass.order" name="order">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-uppercase text-muted small fw-bold">Program</label>
+                                <select class="form-select" [(ngModel)]="newClass.program" name="program">
+                                    <option value="Pre-Primary">Pre-Primary</option>
+                                    <option value="Primary">Primary</option>
+                                    <option value="Secondary">Secondary</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm"
+                            [disabled]="!newClass.id || !newClass.displayName">
+                            Create Class
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm mb-4 metrics-card position-relative overflow-hidden">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center position-relative z-1">
+                    <div>
+                        <h6 class="text-uppercase text-white-50 small fw-bold mb-1">Total Classes</h6>
+                        <h2 class="display-5 fw-bold text-white mb-0">{{ classes.length }}</h2>
+                    </div>
+                    <div class="vr bg-white opacity-25 mx-4"></div>
+                    <div>
+                        <h6 class="text-uppercase text-white-50 small fw-bold mb-1">Total Sections</h6>
+                        <h2 class="display-5 fw-bold text-white mb-0">{{ totalSections }}</h2>
+                    </div>
+                    <div class="vr bg-white opacity-25 mx-4"></div>
+                    <div>
+                        <h6 class="text-uppercase text-white-50 small fw-bold mb-1">Total Capacity</h6>
+                        <h2 class="display-5 fw-bold text-white mb-0">{{ totalCapacity }}</h2>
+                    </div>
+                    <i class="bi bi-grid-1x2 position-absolute text-white opacity-10"
+                        style="font-size: 8rem; right: -20px; bottom: -30px;"></i>
+                </div>
+            </div>
+
+            <div *ngIf="isLoading" class="text-center py-5">
+                <div class="spinner-border text-primary"></div>
+            </div>
+
+            <div *ngIf="!isLoading" class="row g-3">
+                <div class="col-md-6" *ngFor="let cls of classes">
+                    <div class="card h-100 border-0 shadow-sm class-item-card">
+
+                        <div
+                            class="card-header bg-white border-0 pt-3 pb-0 d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="badge bg-light text-secondary border mb-1">{{ cls.program }}</span>
+                                <h5 class="fw-bold text-dark mb-0">{{ cls.displayName }}</h5>
+                            </div>
+                            <span class="badge rounded-pill bg-primary-subtle text-primary fw-bold">
+                                Order: {{ cls.order }}
+                            </span>
+                        </div>
+
+                        <div class="card-body">
+                            <p class="text-muted small mb-2 fw-bold text-uppercase">Active Sections</p>
+
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <div *ngFor="let sec of cls.sections"
+                                    class="d-flex align-items-center bg-light border rounded px-2 py-1 small">
+                                    <span class="fw-bold text-dark me-2">{{ sec.name }}</span>
+                                    <span class="text-muted" style="font-size: 0.75rem;">({{ sec.capacity }})</span>
+                                </div>
+                                <span *ngIf="cls.sections.length === 0" class="text-muted small fst-italic">No sections
+                                    added yet.</span>
+                            </div>
+
+                            <div class="input-group input-group-sm mt-auto pt-2 border-top">
+                                <input type="text" class="form-control border-end-0" placeholder="New Section (e.g. C)"
+                                    [(ngModel)]="newSectionNames[cls.id]" (keyup.enter)="addSection(cls.id)">
+                                <button class="btn btn-outline-primary border-start-0" type="button"
+                                    (click)="addSection(cls.id)">
+                                    <i class="bi bi-plus-lg"></i> Add
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!isLoading && classes.length === 0" class="text-center py-5 text-muted">
+                <i class="bi bi-box-seam fs-1 d-block mb-3"></i>
+                No classes configured. Use the form to add your first class.
+            </div>
+
+        </div>
+    </div>
+</div>

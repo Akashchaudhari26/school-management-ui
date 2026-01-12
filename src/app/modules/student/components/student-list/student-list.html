@@ -23,7 +23,7 @@
             </div>
 
             <div class="filters-group">
-                <select formControlName="classId" class="filter-select" (change)="onSearch()">
+                <select formControlName="classId" class="filter-select">
                     <option value="">All Classes</option>
 
                     @for (cls of classes$ | async; track cls.value) {
@@ -31,7 +31,7 @@
                     }
                 </select>
 
-                <select formControlName="section" class="filter-select" (change)="onSearch()">
+                <select formControlName="section" class="filter-select">
                     <option value="">All Sections</option>
 
                     @for (sec of sections$ | async; track sec.value) {
@@ -39,8 +39,7 @@
                     }
                 </select>
 
-                <input type="number" formControlName="admissionYear" class="filter-input" placeholder="Year"
-                    (keyup.enter)="onSearch()">
+                <input type="number" formControlName="admissionYear" class="filter-input" placeholder="Year">
 
                 <div class="filter-actions">
                     <button class="btn-search" (click)="onSearch()">Search</button>

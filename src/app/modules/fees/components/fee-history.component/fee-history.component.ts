@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FeePayment, FeeResponse } from '../../models/fee.types';
 import { FeeService } from '../../services/fee.service';
 import { StudentService } from '../../../student/services/student.service';
 import { Student } from '../../../student/models/student';
+import { SchoolConfigService } from '../../../school-config/services/school-config.service';
+import { AcademicYear } from '../../../school-config/models/school-config';
 
 @Component({
   selector: 'app-fee-history.component',
@@ -12,7 +14,7 @@ import { Student } from '../../../student/models/student';
   templateUrl: './fee-history.component.html',
   styleUrl: './fee-history.component.css',
 })
-export class FeeHistoryComponent {
+export class FeeHistoryComponent implements OnInit {
 
   // --- Search State ---
   searchKeyword = '';
@@ -27,14 +29,20 @@ export class FeeHistoryComponent {
   // We also fetch the Summary to show "Total vs Paid" overview at the top
   feeSummary: FeeResponse | null = null;
 
-  academicYear = '2025-2026';
+  academicYear: string = '';
+  academicYears: AcademicYear[] = [];
   isLoading = false;
   errorMessage = '';
 
   constructor(
     private feeService: FeeService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private configService: SchoolConfigService
   ) { }
+
+  ngOnInit(): void {
+    this.loadAcademicYears();
+  }
 
   // --- 1. SEARCH STUDENT ---
   onSearch() {
@@ -105,4 +113,10 @@ export class FeeHistoryComponent {
   }
 
   closeSearch() { this.showResults = false; }
+
+  loadAcademicYears() {
+    this.configService.getAllAcademicYears().subscribe(years => {
+      this.academicYears = years;
+    });
+  }
 }

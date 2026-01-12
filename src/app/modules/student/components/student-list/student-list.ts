@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { finalize, Observable } from 'rxjs';
+import { finalize, Observable, of, startWith, switchMap } from 'rxjs';
 
 import { Student } from '../../models/student';
 import { DropdownOption, StudentService } from '../../services/student.service';
@@ -40,11 +40,22 @@ export class StudentList implements OnInit {
 
   // 🚀 Dynamic Data Streams
   classes$: Observable<DropdownOption[]> = this.studentService.getClasses();
-  sections$: Observable<DropdownOption[]> = this.studentService.getSections();
+  sections$: Observable<DropdownOption[]> = of([]);
 
   ngOnInit() {
     this.fetchStudents();
+
+    const classFilter = this.filterForm.get('classId');
+
+    if (classFilter) {
+      this.sections$ = classFilter.valueChanges.pipe(
+        startWith(classFilter.value || ''),
+        switchMap(id => this.studentService.getSections(id || ''))
+      );
+    }
+
   }
+
 
   // 1. Called when user clicks "Search" or hits Enter
   onSearch() {

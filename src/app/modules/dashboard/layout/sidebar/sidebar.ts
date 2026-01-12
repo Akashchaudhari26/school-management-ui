@@ -173,6 +173,17 @@ export class Sidebar {
       ]
     },
     {
+      title: 'School Configuration', // <--- I ADDED THIS FOR YOUR NEW MODULE
+      icon: 'bi-gear-fill',
+      allowedRoles: ['ADMIN'],
+      isOpen: false,
+      children: [
+        { title: 'Academic Years', icon: '', link: '/dashboard/config/years' },
+        { title: 'Classes & Sections', icon: '', link: '/dashboard/config/classes' },
+        { title: 'Subjects', icon: '', link: '/dashboard/config/subjects' },
+      ]
+    },
+    {
       title: 'Admin Panel',
       icon: 'bi-shield-lock-fill', // Professional Admin Icon
       allowedRoles: ['ADMIN'], // <--- Key Property

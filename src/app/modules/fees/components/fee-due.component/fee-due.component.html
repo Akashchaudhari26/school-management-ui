@@ -7,8 +7,14 @@
             <label class="me-2 fw-bold small text-muted">Academic Year:</label>
             <select class="form-select form-select-sm" style="width: 150px;" [(ngModel)]="academicYear"
                 (change)="fetchDues()">
-                <option value="2025-2026">2025-2026</option>
-                <option value="2024-2025">2024-2025</option>
+                <option value="" disabled>Select Year</option>
+
+                @for (year of academicYears; track year.name) {
+                <option [value]="year.name">
+                    {{ year.name }}
+                    {{ year.active ? '(Current)' : '' }}
+                </option>
+                }
             </select>
         </div>
     </div>

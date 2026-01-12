@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { StudentSearchFilter } from '../../../student/models/student-filter';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of, startWith, switchMap } from 'rxjs';
 import { DropdownOption, StudentService } from '../../../student/services/student.service';
 import { AttendanceService } from '../../services/attendance.service';
 
@@ -18,7 +18,7 @@ export class ClassRegisterComponent {
   private attendanceSvc = inject(AttendanceService);
 
   classes$: Observable<DropdownOption[]> = this.studentSvc.getClasses();
-  sections$: Observable<DropdownOption[]> = this.studentSvc.getSections();
+  sections$: Observable<DropdownOption[]> = of([]);
 
   // Years for dropdown (current year - 1 to current year + 1)
   years: number[] = [];
@@ -42,6 +42,15 @@ export class ClassRegisterComponent {
   ngOnInit() {
     const currentYear = new Date().getFullYear();
     this.years = [currentYear - 1, currentYear, currentYear + 1];
+
+    const classFilter = this.filterForm.get('classId');
+
+    if (classFilter) {
+      this.sections$ = classFilter.valueChanges.pipe(
+        startWith(classFilter.value || ''),
+        switchMap(id => this.studentSvc.getSections(id || ''))
+      );
+    }
   }
 
   loadRegister() {

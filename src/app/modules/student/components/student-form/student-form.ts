@@ -2,10 +2,11 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { finalize } from 'rxjs/operators'; // Import finalize for cleaner subscription
+import { finalize, startWith, switchMap } from 'rxjs/operators'; // Import finalize for cleaner subscription
 import { DropdownOption, StudentService } from '../../services/student.service';
 import { Gender } from '../../models/student';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { SchoolConfigService } from '../../../school-config/services/school-config.service';
 
 @Component({
   selector: 'app-student-form',
@@ -19,6 +20,8 @@ export class StudentForm implements OnInit {
   // Dependencies
   private fb = inject(FormBuilder);
   private studentService = inject(StudentService);
+  private schoolConfigService = inject(SchoolConfigService);
+
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
@@ -33,10 +36,11 @@ export class StudentForm implements OnInit {
 
   constructor() {
     this.initForm();
+    this.loadActiveYear();
   }
   // 🚀 Dynamic Data Streams
   classes$: Observable<DropdownOption[]> = this.studentService.getClasses();
-  sections$: Observable<DropdownOption[]> = this.studentService.getSections();
+  sections$: Observable<DropdownOption[]> = of([]);
 
   ngOnInit() {
     this.studentId = this.route.snapshot.paramMap.get('id');
@@ -47,6 +51,15 @@ export class StudentForm implements OnInit {
     } else {
       this.addGuardian(); // Default guardian for new admissions
     }
+    const classFilter = this.studentForm.get('currentClassId');
+
+    if (classFilter) {
+      this.sections$ = classFilter.valueChanges.pipe(
+        startWith(classFilter.value || ''),
+        switchMap(id => this.studentService.getSections(id || ''))
+      );
+    }
+
   }
 
   // --- Logic Helpers ---
@@ -115,7 +128,7 @@ export class StudentForm implements OnInit {
       admissionNumber: [''],
       currentClassId: ['', Validators.required],
       currentSection: ['A'],
-      currentAcademicYear: ['2025-2026', Validators.required],
+      currentAcademicYear: ['', Validators.required],
 
       guardians: this.fb.array([])
     }, { updateOn: 'blur' }); // Optimization: validate only on blur
@@ -174,5 +187,18 @@ export class StudentForm implements OnInit {
         next: () => this.router.navigate(['/dashboard/students']),
         error: (err) => console.error('Submission failed:', err)
       });
+  }
+
+  private loadActiveYear() {
+    this.schoolConfigService.getActiveAcademicYear().subscribe({
+      next: (year) => {
+        if (year) {
+          this.studentForm.patchValue({
+            currentAcademicYear: year.name // e.g., "2025-2026"
+          });
+        }
+      },
+      error: (err) => console.error('Failed to load active year', err)
+    });
   }
 }

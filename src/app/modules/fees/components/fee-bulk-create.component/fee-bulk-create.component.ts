@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FeeService } from '../../services/fee.service';
 import { Router } from '@angular/router';
+import { AcademicYear, SchoolClass, Section } from '../../../school-config/models/school-config';
+import { SchoolConfigService } from '../../../school-config/services/school-config.service';
 
 @Component({
   selector: 'app-fee-bulk-create.component',
@@ -18,14 +20,16 @@ export class FeeBulkCreateComponent {
   responseSummary: any = null; // Stores { totalStudentsFound, successfullyCreated, skippedAlreadyExists }
   errorMessage = '';
 
-  // Dropdown Data (You can fetch these from a ClassService if you have one)
-  classes = ['NURSERY', 'LKG', 'UKG', 'CLASS_1', 'CLASS_2'];
-  sections = ['A', 'B', 'C', 'D'];
+  // 🟢 2. Dynamic Data Models
+  classes: SchoolClass[] = [];
+  sections: Section[] = [];
+  academicYears: AcademicYear[] = [];
 
   constructor(
     private fb: FormBuilder,
     private feeService: FeeService,
-    private router: Router
+    private router: Router,
+    private configService: SchoolConfigService
   ) {
     this.bulkForm = this.fb.group({
       classId: ['', Validators.required],
@@ -37,6 +41,39 @@ export class FeeBulkCreateComponent {
 
   ngOnInit(): void {
     this.addFeeItem(); // Start with one empty row
+    this.loadConfig();
+  }
+
+  loadConfig() {
+    // A. Load Classes
+    this.configService.getAllClasses().subscribe(data => {
+      // Sort by order (Nursery, LKG, 1, 2...)
+      this.classes = data.sort((a, b) => a.order - b.order);
+    });
+
+    // B. Load Academic Years & Set Active
+    this.configService.getAllAcademicYears().subscribe(years => {
+      this.academicYears = years;
+      const activeYear = years.find(y => y.active);
+      if (activeYear) {
+        this.bulkForm.patchValue({ academicYear: activeYear.name });
+      }
+    });
+  }
+
+  onClassChange() {
+    const selectedClassId = this.bulkForm.get('classId')?.value;
+
+    // Reset section selection
+    this.sections = [];
+    this.bulkForm.patchValue({ section: '' });
+
+    if (selectedClassId) {
+      const selectedClass = this.classes.find(c => c.id === selectedClassId);
+      if (selectedClass) {
+        this.sections = selectedClass.sections;
+      }
+    }
   }
 
   // --- Dynamic Fee Items Logic ---
