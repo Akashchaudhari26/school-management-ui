@@ -37,6 +37,10 @@ export class FeeCollectComponent {
   errorMessage = '';
   collectedBy: string;
 
+  // New State variables
+  isEditMode = false;
+  editingReceiptNo: string | null = null;
+
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +62,8 @@ export class FeeCollectComponent {
   }
   ngOnInit(): void {
     // 1. Check for State Transfer (Optimization)
+    this.loadAcademicYears();
+
     const navigationState = history.state;
 
     if (navigationState && navigationState.feeData) {
@@ -73,7 +79,6 @@ export class FeeCollectComponent {
         }
       });
     }
-    this.loadAcademicYears();
 
   }
   loadFromState(data: FeeResponse) {
@@ -141,22 +146,38 @@ export class FeeCollectComponent {
   // 3. SUBMIT PAYMENT
   onPay() {
     if (this.paymentForm.invalid || !this.feeSummary) return;
-
     this.isSubmitting = true;
-    const request: FeePaymentRequest = this.paymentForm.value;
+    const request = this.paymentForm.value;
 
-    this.feeService.payFee(this.feeSummary.studentId, this.academicYear, request).subscribe({
-      next: (updatedFeeResponse) => {
-        this.isSubmitting = false;
-        this.successMessage = 'Payment Collected Successfully!';
-        this.feeSummary = updatedFeeResponse; // Update the summary UI instantly
-        this.paymentForm.reset({ mode: 'CASH', collectedBy: this.collectedBy }); // Reset form
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        this.errorMessage = 'Payment Failed. Server Error.';
-      }
-    });
+    if (this.isEditMode && this.editingReceiptNo) {
+      // --- UPDATE FLOW ---
+      this.feeService.updatePayment(this.editingReceiptNo, request).subscribe({
+        next: (res) => {
+          this.isSubmitting = false;
+          this.successMessage = 'Payment Updated Successfully!';
+          this.feeSummary = res; // Refresh UI
+          this.cancelEdit(); // Reset mode
+        },
+        error: () => {
+          this.isSubmitting = false;
+          this.errorMessage = 'Update Failed.';
+        }
+      });
+    } else {
+      // --- CREATE FLOW (Existing) ---
+      this.feeService.payFee(this.feeSummary.studentId, this.academicYear, request).subscribe({
+        next: (res) => {
+          this.isSubmitting = false;
+          this.successMessage = 'Payment Collected Successfully!';
+          this.feeSummary = res;
+          this.paymentForm.reset({ mode: 'CASH', collectedBy: this.collectedBy });
+        },
+        error: () => {
+          this.isSubmitting = false;
+          this.errorMessage = 'Payment Failed.';
+        }
+      });
+    }
   }
 
   closeSearch() {
@@ -172,7 +193,34 @@ export class FeeCollectComponent {
       const activeYear = years.find(y => y.active); // Assuming 'active' is the boolean flag
       if (activeYear) {
         this.paymentForm.patchValue({ academicYear: activeYear.name });
+        this.academicYear = activeYear.name;
       }
+    });
+  }
+
+  editPayment(payment: any) {
+    this.isEditMode = true;
+    this.editingReceiptNo = payment.receiptNo;
+
+    // Fill the form with existing data
+    this.paymentForm.patchValue({
+      amount: payment.amountPaid,
+      mode: payment.mode,
+      collectedBy: payment.collectedBy // Optional: keep original collector or update to current user
+    });
+
+    // Scroll to form (UX)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 5. CANCEL EDIT
+  cancelEdit() {
+    this.isEditMode = false;
+    this.editingReceiptNo = null;
+    this.paymentForm.reset({
+      mode: 'CASH',
+      collectedBy: this.collectedBy,
+      amount: this.feeSummary?.dueAmount // Reset to due amount
     });
   }
 }

@@ -42,13 +42,9 @@
                     <label class="form-label fw-bold small text-secondary">Academic Year</label>
                     <select class="form-select" [(ngModel)]="academicYear">
                         <option value="" disabled>Select Year</option>
-
-                        @for (year of academicYears; track year.name) {
-                        <option [value]="year.name">
-                            {{ year.name }}
-                            {{ year.active ? '(Current)' : '' }}
+                        <option *ngFor="let year of academicYears" [value]="year.name">
+                            {{ year.name }} {{ year.active ? '(Current)' : '' }}
                         </option>
-                        }
                     </select>
                 </div>
             </div>
@@ -73,7 +69,6 @@
                         </div>
                         <div class="ms-3">
                             <h5 class="mb-0 fw-bold">{{ feeSummary.studentName }}</h5>
-                            <!-- <small class="text-muted">ID: {{ feeSummary.studentId }}</small> -->
                         </div>
                     </div>
 
@@ -135,11 +130,15 @@
         <div class="col-md-7">
 
             <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-primary text-white py-3">
-                    <h5 class="mb-0"><i class="bi bi-wallet2 me-2"></i>Collect Payment</h5>
-                </div>
-                <div class="card-body p-4">
 
+                <div class="card-header text-white py-3" [ngClass]="isEditMode ? 'bg-warning' : 'bg-primary'">
+                    <h5 class="mb-0">
+                        <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-square' : 'bi-wallet2'"></i>
+                        {{ isEditMode ? 'Edit Payment (' + editingReceiptNo + ')' : 'Collect Payment' }}
+                    </h5>
+                </div>
+
+                <div class="card-body p-4">
                     <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
                         {{ successMessage }}
                         <button class="btn-close" (click)="successMessage=''"></button>
@@ -175,14 +174,22 @@
                             </div>
                         </div>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success btn-lg"
-                                [disabled]="paymentForm.invalid || isSubmitting || feeSummary.status === 'PAID'">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-lg"
+                                [ngClass]="isEditMode ? 'btn-warning text-dark' : 'btn-success'"
+                                [disabled]="paymentForm.invalid || isSubmitting || (!isEditMode && feeSummary.status === 'PAID')">
+
                                 <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-                                <span *ngIf="feeSummary.status !== 'PAID'">Confirm & Collect</span>
-                                <span *ngIf="feeSummary.status === 'PAID'">Fully Paid</span>
+                                {{ isEditMode ? 'Update Receipt' : (feeSummary.status === 'PAID' ? 'Fully Paid' :
+                                'Confirm & Collect') }}
+                            </button>
+
+                            <button *ngIf="isEditMode" type="button" class="btn btn-outline-secondary"
+                                (click)="cancelEdit()">
+                                Cancel Edit
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -198,7 +205,9 @@
                                 <th>Date</th>
                                 <th>Receipt No</th>
                                 <th>Mode</th>
+                                <th>Collected By</th>
                                 <th class="text-end">Amount</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -206,7 +215,14 @@
                                 <td>{{ p.paidAt | date:'mediumDate' }}</td>
                                 <td><span class="badge bg-light text-dark border">{{ p.receiptNo }}</span></td>
                                 <td>{{ p.mode }}</td>
+                                <td>{{ p.collectedBy }}</td>
                                 <td class="text-end fw-bold text-success">+ ₹ {{ p.amountPaid | number }}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-link text-primary p-0" (click)="editPayment(p)"
+                                        title="Edit this entry">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

@@ -27,6 +27,10 @@ export class FeeService {
             request
         );
     }
+    
+    updatePayment(receiptNo: string, paymentRequest: FeePaymentRequest): Observable<FeeResponse> {
+        return this.http.put<FeeResponse>(`${this.apiUrl}/payment/update/${receiptNo}`, paymentRequest);
+      }
 
     // 4. Get Defaulters (Dues)
     getPendingDues(academicYear: string): Observable<FeeResponse[]> {
