@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { forkJoin, Observable, of, startWith, switchMap } from 'rxjs';
 import { StudentSearchFilter } from '../../../student/models/student-filter';
 import { DropdownOption, StudentService } from '../../../student/services/student.service';
@@ -20,7 +20,7 @@ interface AttendanceRow {
 
 @Component({
   selector: 'app-view-attendance.component',
-  imports: [CommonModule, ReactiveFormsModule, DatePipe],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, FormsModule],
   templateUrl: './view-attendance.component.html',
   styleUrl: './view-attendance.component.css',
 })
@@ -55,6 +55,9 @@ export class ViewAttendanceComponent {
   isLoading = false;
   hasSearched = false;
   reportData: AttendanceRow[] = [];
+
+  activeTab: 'ALL' | 'PRESENT' | 'ABSENT' | 'PENDING' = 'ALL';
+  localSearchTerm: string = '';
 
   // Statistics
   stats = {
@@ -137,5 +140,26 @@ export class ViewAttendanceComponent {
       absent,
       percentage: total > 0 ? Math.round((present / total) * 100) : 0
     };
+  }
+
+  // --- GETTER FOR FILTERED DATA ---
+  get filteredReportData() {
+    return this.reportData.filter(row => {
+      // 1. Filter by Tab
+      const matchesTab = this.activeTab === 'ALL' ||
+        (this.activeTab === 'PENDING' ? row.status === 'NOT_MARKED' : row.status === this.activeTab);
+
+      // 2. Filter by Search
+      const term = this.localSearchTerm.toLowerCase();
+      const matchesSearch = !term ||
+        row.name.toLowerCase().includes(term) ||
+        (row.admissionNumber && row.admissionNumber.toLowerCase().includes(term));
+
+      return matchesTab && matchesSearch;
+    });
+  }
+
+  setActiveTab(tab: any) {
+    this.activeTab = tab;
   }
 }
