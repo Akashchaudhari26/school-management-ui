@@ -117,6 +117,7 @@ export class FeeHistoryComponent implements OnInit {
   loadAcademicYears() {
     this.configService.getAllAcademicYears().subscribe(years => {
       this.academicYears = years;
+      this.academicYear = years.find(y => y.active)?.id || '';
     });
   }
 }

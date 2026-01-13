@@ -1,43 +1,47 @@
-<aside class="sidebar" [class.collapsed]="isCollapsed" [class.mobile-open]="isMobileOpen">
+<aside class="sidebar d-flex flex-column" [class.collapsed]="isCollapsed" [class.mobile-open]="isMobileOpen">
 
-    <div class="toggle-btn" (click)="onToggle()">
-        <i class="bi" [class.bi-chevron-left]="!isCollapsed" [class.bi-chevron-right]="isCollapsed"></i>
+    <div class="sidebar-header d-flex justify-content-center align-items-center">
+        <img src="/assets/logo.svg" alt="Matrutva" class="sidebar-logo-img logo-white">
     </div>
 
-    <ul class="nav-links">
+    <div class="nav-scroll-content custom-scrollbar mt-3">
+        <ul class="nav flex-column gap-1 p-2">
+            @for (item of finalMenuItems; track item.title) {
+            <li class="nav-item">
+                <a [routerLink]="item.children ? null : item.link"
+                    class="nav-link d-flex align-items-center justify-content-between"
+                    [class.active]="item.isOpen || rla.isActive" #rla="routerLinkActive"
+                    [routerLinkActive]="item.children ? '' : 'active'"
+                    [routerLinkActiveOptions]="{exact: item.exact || false}" (click)="handleItemClick($event, item)"
+                    title="{{item.title}}">
 
-        @for (item of finalMenuItems; track item.title) {
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi nav-icon" [ngClass]="item.icon"></i>
+                        <span class="nav-text fade-in">{{ item.title }}</span>
+                    </div>
 
-        <li [class.has-submenu]="item.children">
-
-            <a [routerLink]="item.children ? null : item.link" [routerLinkActive]="item.children ? '' : 'active'"
-                [routerLinkActiveOptions]="{exact: item.exact || false}" (click)="handleItemClick(item)"
-                [class.active]="item.isOpen" [title]="item.title">
-
-                <i class="bi icon" [ngClass]="item.icon"></i>
-                <span class="link-text">{{ item.title }}</span>
+                    @if (item.children && !isCollapsed) {
+                    <i class="bi bi-chevron-right nav-arrow" [class.rotated]="item.isOpen"></i>
+                    }
+                </a>
 
                 @if (item.children && !isCollapsed) {
-                <i class="bi bi-chevron-down arrow" [class.rotate]="item.isOpen"></i>
+                <div class="submenu-wrapper" [class.expanded]="item.isOpen">
+                    <ul class="nav flex-column ms-3 ps-3 border-start border-white-10">
+                        @for (subItem of item.children; track subItem.title) {
+                        <li class="nav-item">
+                            <a [routerLink]="subItem.link" routerLinkActive="active-sub"
+                                [routerLinkActiveOptions]="{exact: true}" (click)="onSubItemClick()"
+                                class="nav-link sub-link">
+                                {{ subItem.title }}
+                            </a>
+                        </li>
+                        }
+                    </ul>
+                </div>
                 }
-            </a>
-
-            @if (item.children && item.isOpen && !isCollapsed) {
-            <div class="submenu-container">
-                <ul class="sub-nav-links">
-                    @for (subItem of item.children; track subItem.title) {
-                    <li>
-                        <a [routerLink]="subItem.link" routerLinkActive="sub-active"
-                            [routerLinkActiveOptions]="{exact: true}">
-                            {{ subItem.title }}
-                        </a>
-                    </li>
-                    }
-                </ul>
-            </div>
+            </li>
             }
-        </li>
-
-        }
-    </ul>
+        </ul>
+    </div>
 </aside>

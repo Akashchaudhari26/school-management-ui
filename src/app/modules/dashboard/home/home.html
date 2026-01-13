@@ -1,2 +1,82 @@
-<h2>Dashboard Overview</h2>
-<p>Welcome to Matrutva Little Buds School Management System.</p>
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold text-dark mb-1">Dashboard Overview</h4>
+            <span class="text-muted small">Welcome back, Admin! Here's what's happening today.</span>
+        </div>
+        <button class="btn btn-primary d-flex align-items-center gap-2" routerLink="students/new">
+            <i class="bi bi-plus-lg"></i>
+            <span>Quick Admission</span>
+        </button>
+    </div>
+
+    <div class="row g-4 mb-4">
+        @for (stat of stats; track stat.title) {
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 stat-card" [routerLink]="stat.link ? stat.link : '/dashboard'">
+                <div class="card-body d-flex align-items-center justify-content-between p-4">
+
+                    <div>
+                        <h6 class="text-muted text-uppercase fw-semibold small mb-2">{{ stat.title }}</h6>
+                        <h3 class="fw-bold mb-1 text-dark">{{ stat.value }}</h3>
+                        <small class="text-secondary" style="font-size: 0.8rem;">
+                            {{ stat.subtext }}
+                        </small>
+                    </div>
+
+                    <div class="icon-circle d-flex align-items-center justify-content-center"
+                        [ngClass]="[stat.bg, 'text-' + stat.color]">
+                        <i class="bi fs-4" [ngClass]="stat.icon"></i>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                    <h6 class="fw-bold mb-0">Recent Activity</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="activity-feed">
+                        @for (activity of recentActivities; track activity.text) {
+                        <div class="d-flex align-items-start mb-4 activity-item">
+                            <div class="activity-icon me-3">
+                                <i class="bi fs-5" [ngClass]="[activity.icon, activity.color]"></i>
+                            </div>
+                            <div>
+                                <p class="mb-1 text-dark small fw-medium">{{ activity.text }}</p>
+                                <small class="text-muted" style="font-size: 0.75rem;">{{ activity.time }}</small>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100 bg-primary text-white">
+                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="fw-bold mb-3">Notice Board</h5>
+                        <p class="mb-4 opacity-75 small">
+                            Tomorrow is a holiday for "Ganesh Chaturthi". Please ensure all parents are notified via
+                            SMS.
+                        </p>
+                    </div>
+                    <button class="btn btn-light text-primary fw-bold w-100">
+                        View All Notices
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

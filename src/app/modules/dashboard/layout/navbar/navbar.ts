@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Auth, User } from '../../../../core/services/auth';
 @Component({
@@ -8,12 +8,14 @@ import { Auth, User } from '../../../../core/services/auth';
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  @Output() toggleMobile = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>(); // Renamed from toggleMobile for clarity
+  @Input() isSidebarCollapsed = false;
+  @Input() isMobile = false;
   authService = inject(Auth);
   user$ = this.authService.user$;
 
-  onToggleMobile() {
-    this.toggleMobile.emit();
+  onToggleSidebar() {
+    this.toggleSidebar.emit();
   }
 
   logout() {

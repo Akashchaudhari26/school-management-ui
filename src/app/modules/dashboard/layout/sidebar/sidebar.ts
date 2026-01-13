@@ -25,12 +25,9 @@ export class Sidebar {
   @Input() isMobileOpen = false;
   @Output() toggle = new EventEmitter<void>();
 
-  currentUserRole: UserRole = 'ADMIN'; // Default for testing, get real one from Auth Service
+  currentUserRole: UserRole = 'ADMIN';
   finalMenuItems: MenuItem[] = [];
 
-  // 2. The Master Configuration List
-
-  // Master Menu Configuration
   private readonly rawMenuItems: MenuItem[] = [
 
     {
@@ -211,22 +208,14 @@ export class Sidebar {
     this.finalMenuItems = this.filterMenuByRole(this.rawMenuItems, this.currentUserRole);
   }
 
-  // --- RECURSIVE FILTER LOGIC ---
   filterMenuByRole(items: MenuItem[], role: string): MenuItem[] {
     return items.filter(item => {
-      // Step A: Check if this item has an 'allowedRoles' restriction
-      // If allowedRoles is undefined, everyone sees it.
-      // If defined, the user's role MUST be in the array.
       const isAllowed = !item.allowedRoles || item.allowedRoles.includes(role as any);
 
       if (!isAllowed) return false;
 
-      // Step B: Filter children recursively
       if (item.children && item.children.length > 0) {
         item.children = this.filterMenuByRole(item.children, role);
-
-        // Step C: Cleanup - If a parent has no children left after filtering, 
-        // and it has no link itself (it was just a group header), hide it.
         if (item.children.length === 0 && !item.link) {
           return false;
         }
@@ -248,17 +237,27 @@ export class Sidebar {
   }
 
   // 2. New Main Handler for ALL clicks
-  handleItemClick(item: MenuItem) {
+  handleItemClick(event: Event, item: MenuItem) {
     if (item.children) {
       // If it's a parent, run the toggle logic
+      event.preventDefault();
+      event.stopPropagation();
       this.toggleSubmenu(item);
     } else {
       // If it's a direct link (Dashboard, Fees, etc.), close all dropdowns
       this.closeAllSubmenus();
+      if (this.isMobileOpen) {
+        this.toggle.emit(); // Close the sidebar
+      }
     }
   }
 
-  // 3. Generic Toggle for ANY Submenu
+  onSubItemClick() {
+    if (this.isMobileOpen) {
+      this.toggle.emit();
+    }
+  }
+
   toggleSubmenu(item: MenuItem) {
     if (!item.children) return;
 
@@ -266,14 +265,9 @@ export class Sidebar {
       this.toggle.emit();
       item.isOpen = true;
     } else {
-      // 1. Toggle the clicked item
       const wasOpen = item.isOpen;
 
-      // 2. 🚀 THE FIX: Close ALL other menus first
       this.closeAllSubmenus();
-
-      // 3. If it was closed before, open it now. 
-      // (If it was already open, step 2 closed it, so we leave it closed)
       if (!wasOpen) {
         item.isOpen = true;
       }

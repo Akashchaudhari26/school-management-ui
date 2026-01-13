@@ -34,13 +34,12 @@ export class Dashboard {
   }
 
   // Called by Navbar Hamburger (Mobile)
-  toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-  }
-
-  // Called by Sidebar Arrow (Desktop)
-  toggleDesktopSidebar() {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  onToggleSidebar() {
+    if (this.isMobile) {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    } else {
+      this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    }
   }
 
   // Called when clicking the dark overlay

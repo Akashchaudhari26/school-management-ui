@@ -40,8 +40,8 @@ export class FeeDuesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fetchDues();
     this.loadAcademicYears();
+    this.fetchDues();
 
   }
 
@@ -99,6 +99,7 @@ export class FeeDuesComponent implements OnInit {
   loadAcademicYears() {
     this.configService.getAllAcademicYears().subscribe(years => {
       this.academicYears = years;
+      this.academicYear = years.find(y => y.active)?.id || '';
     });
   }
 }

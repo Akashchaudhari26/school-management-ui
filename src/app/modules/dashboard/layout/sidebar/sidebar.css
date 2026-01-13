@@ -1,169 +1,229 @@
-/* --- BASE SIDEBAR --- */
+/* --- VARIABLES --- */
+:host {
+    --sb-bg: #1e293b;
+    --sb-width: 260px;
+    --sb-collapsed-width: 0px;
+
+    /* 🔴 THESE WERE MISSING - ADD THEM BACK */
+    --sb-text: #94a3b8;
+    --sb-text-hover: #ffffff;
+    --sb-active-bg: rgba(59, 130, 246, 0.1);
+    /* Faint Blue Background */
+    --sb-accent: #3b82f6;
+    /* Bright Blue */
+}
+
+/* --- CONTAINER --- */
 .sidebar {
-    width: 260px;
+    width: var(--sb-width);
     height: 100vh;
-    /* Premium Dark Theme (Slate 900) */
-    background: #0f172a;
-    color: #94a3b8;
-    /* Muted text color */
-    display: flex;
-    flex-direction: column;
+    background-color: var(--sb-bg);
     position: fixed;
-    left: 0;
     top: 0;
-    padding-top: 80px;
-    /* Space for navbar */
-    z-index: 900;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow */
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    left: 0;
+    z-index: 2000;
+    /* Lower than the button (2001) */
+    transition: width 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
 }
 
-/* --- COLLAPSED STATE --- */
-.sidebar.collapsed {
-    width: 72px;
+.sidebar-header {
+    height: 70px;
+    /* Same height as Navbar */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* Padding left (ps-5) is handled in HTML class to clear the button */
 }
 
-.sidebar.collapsed .menu-header,
-.sidebar.collapsed .link-text {
-    display: none;
-}
-
-.sidebar.collapsed .nav-links li a {
-    justify-content: center;
-    padding: 12px 0;
-    margin: 4px 10px;
-    /* Centered square when collapsed */
-}
-
-.sidebar.collapsed .icon {
-    margin-right: 0;
-    font-size: 1.4rem;
-}
-
-/* --- LINKS STYLING (The Premium Part) --- */
-.menu-header {
-    padding: 0 24px;
-    margin-bottom: 16px;
-    font-size: 0.7rem;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: #475569;
-    /* Darker grey header */
+.sidebar-brand {
+    color: white;
     font-weight: 700;
+    font-size: 1.2rem;
+    font-family: 'Inter', sans-serif;
 }
 
-.nav-links {
-    list-style: none;
-    padding: 0 12px;
-    margin: 0;
+.sidebar-header {
+    height: 70px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+}
 
-    /* --- 🚀 NEW SCROLLING LOGIC --- */
+.sidebar-logo-img {
+    max-height: 50px;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .sidebar-logo-img {
+        max-height: 35px;
+    }
+}
+
+.logo-white {
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    border: none;
+}
+
+/* --- SCROLLABLE AREA --- */
+.nav-scroll-content {
     flex: 1;
-    /* Takes up all remaining height */
     overflow-y: auto;
-    /* Enables vertical scrolling */
     overflow-x: hidden;
-    /* Prevents horizontal scrollbars */
     padding-bottom: 20px;
-    /* Adds breathing room at the very bottom */
 }
 
-/* Width */
-.nav-links::-webkit-scrollbar {
-    width: 6px;
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
 }
 
-/* Track (Background) */
-.nav-links::-webkit-scrollbar-track {
+.custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
 }
 
-/* Handle (The moving part) */
-.nav-links::-webkit-scrollbar-thumb {
+.custom-scrollbar::-webkit-scrollbar-thumb {
     background: #334155;
-    /* Slate-700 - subtle grey */
-    border-radius: 4px;
+    border-radius: 10px;
 }
 
-/* Handle on hover */
-.nav-links::-webkit-scrollbar-thumb:hover {
-    background: #475569;
-    /* Slightly lighter on hover */
-}
-
-.nav-links li a {
-    display: flex;
-    align-items: center;
+/* --- NAVIGATION ITEMS --- */
+.nav-link {
+    color: var(--sb-text);
     padding: 12px 16px;
-    color: #cbd5e1;
-    text-decoration: none;
-    /* Rounded Corners = Premium Feel */
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    font-weight: 500;
+    margin-bottom: 4px;
+    border-radius: 6px;
     font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    /* Prepare for active border */
+    position: relative;
+    cursor: pointer;
 }
 
-/* Hover Effect */
-.nav-links li a:hover {
-    background: rgba(255, 255, 255, 0.08);
+/* Hover State */
+.nav-link:hover {
+    color: var(--sb-text-hover);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Active State (The New Professional Look) */
+.nav-link.active {
     color: #ffffff;
+    background-color: var(--sb-active-bg);
+    border-left-color: var(--sb-accent);
+    /* The blue strip on the left */
 }
 
-/* Active State (Floating Pill) */
-.nav-links li a.active {
-    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
-    /* Blue Gradient */
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-    /* Soft Blue Glow */
-    font-weight: 600;
-}
-
-.icon {
-    margin-right: 12px;
+/* Icon Styling */
+.nav-icon {
     font-size: 1.1rem;
-    width: 20px;
+    min-width: 24px;
     text-align: center;
 }
 
-/* --- TOGGLE BUTTON (Floating Circle) --- */
-.toggle-btn {
+/* Arrow Animation */
+.nav-arrow {
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+}
+
+.rotated {
+    transform: rotate(90deg);
+}
+
+/* --- SUBMENU ANIMATION --- */
+.submenu-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+.submenu-wrapper.expanded {
+    max-height: 500px;
+    /* Arbitrary large number for slide effect */
+}
+
+.border-white-10 {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.sub-link {
+    padding: 8px 0 8px 10px;
+    font-size: 0.85rem;
+    border-left: none;
+    /* No border for sub items */
+}
+
+.sub-link.active-sub {
+    color: var(--sb-accent) !important;
+    /* Force Blue Text */
+    font-weight: 700;
+    background: rgba(59, 130, 246, 0.05);
+    /* Optional: Very subtle background glow */
+    border-radius: 4px;
+}
+
+.sub-link:hover {
+    color: var(--sb-text-hover);
+}
+
+/* --- TOGGLE BUTTON --- */
+.toggle-wrapper {
     position: absolute;
-    top: 85px;
-    /* Aligned near top */
-    right: -14px;
-    /* Halfway sticking out */
-    background: #0f172a;
-    /* Same as sidebar bg */
-    color: #94a3b8;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+    bottom: 20px;
+    width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 1001;
-    border: 1px solid #334155;
-    /* Thin border */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+    background: var(--sb-bg);
+    /* Covers scroll content */
 }
 
-.toggle-btn:hover {
-    background: #3b82f6;
-    /* Blue on hover */
-    border-color: #3b82f6;
+.btn-icon {
+    color: var(--sb-text);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.btn-icon:hover {
     color: white;
+    background: var(--sb-accent);
 }
 
-/* --- MOBILE --- */
+/* --- COLLAPSED STATE LOGIC --- */
+.sidebar.collapsed {
+    width: var(--sb-collapsed-width);
+}
+
+.sidebar.collapsed .nav-text,
+.sidebar.collapsed .nav-arrow,
+.sidebar.collapsed .submenu-wrapper {
+    display: none;
+}
+
+.sidebar.collapsed .nav-link {
+    justify-content: center;
+    padding: 12px 0;
+    border-left: none;
+    /* Remove border in collapsed mode */
+}
+
+/* --- MOBILE LOGIC --- */
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
@@ -172,102 +232,4 @@
     .sidebar.mobile-open {
         transform: translateX(0);
     }
-
-    .toggle-btn {
-        display: none;
-    }
-}
-
-/* ... existing CSS ... */
-
-/* 🚀 DROPDOWN ARROW */
-.arrow {
-    margin-left: auto;
-    /* Pushes arrow to right */
-    font-size: 0.8rem;
-    transition: transform 0.3s ease;
-}
-
-.rotate {
-    transform: rotate(180deg);
-}
-
-/* 🚀 SUBMENU CONTAINER */
-.submenu-container {
-    padding-left: 28px;
-    /* Aligns with the parent icon */
-    margin-top: 4px;
-    overflow: hidden;
-    animation: slideDown 0.3s ease-out;
-}
-
-/* 🚀 SUBMENU LIST (The Timeline) */
-.sub-nav-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
-    /* The vertical grey line */
-    margin-left: 11px;
-    /* Align line with parent icon center */
-    padding-left: 15px;
-    /* Space between line and text */
-}
-
-.sub-nav-links li a {
-    padding: 8px 0;
-    font-size: 0.85rem;
-    color: #94a3b8;
-    text-decoration: none;
-    display: block;
-    position: relative;
-    transition: all 0.2s;
-}
-
-.sub-nav-links li a:hover {
-    color: #ffffff;
-    background: transparent;
-    /* No bg on hover for sub-items, just text color */
-    transform: translateX(4px);
-}
-
-/* 🚀 ACTIVE SUB-ITEM (The Blue Dot Effect) */
-.sub-nav-links li a.sub-active {
-    color: #3b82f6;
-    /* Blue text */
-    font-weight: 600;
-}
-
-/* The Blue Dot */
-.sub-nav-links li a.sub-active::before {
-    content: '';
-    position: absolute;
-    left: -20px;
-    /* Moves dot onto the vertical line */
-    top: 50%;
-    transform: translateY(-50%);
-    width: 8px;
-    height: 8px;
-    background-color: #3b82f6;
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
-    /* Glow effect */
-}
-
-/* Animation for smooth opening */
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Hide submenu completely when collapsed to avoid UI breaking */
-.sidebar.collapsed .submenu-container {
-    display: none;
 }

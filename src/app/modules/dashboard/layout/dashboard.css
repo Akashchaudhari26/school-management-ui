@@ -1,49 +1,70 @@
-/* --- FIXED LAYOUT LOGIC --- */
+/* --- GLOBAL LAYOUT VARIABLES --- */
+:host {
+    --header-height: 70px;
+    --sidebar-width: 260px;
+    --transition-speed: 0.3s;
+}
 
-/* We keep this custom because Bootstrap doesn't support 
-   sidebar width transitions out of the box.
-*/
+.bg-light-gray {
+    background-color: #f3f4f6;
+}
+
+/* --- THE FLOATING TOGGLE BUTTON --- */
+.global-toggle-btn {
+    position: fixed;
+    top: 15px;
+    /* Aligns vertically with Navbar text */
+    left: 20px;
+    /* Aligns horizontally */
+    z-index: 2001;
+    /* HIGHER than Sidebar (1050) and Navbar */
+    border: none;
+    background: transparent;
+    transition: color 0.3s ease;
+    padding: 0;
+}
+
+.global-toggle-btn:focus {
+    box-shadow: none;
+}
+
+/* --- TRANSITIONS --- */
+.header-transition,
 .main-content {
-    /* Matches Header Height */
-    margin-top: 60px;
-
-    /* Default Desktop Sidebar Width */
-    margin-left: 250px;
-
-    /* Animation settings */
-    transition: margin-left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-
-    /* Structure */
-    min-height: calc(100vh - 60px);
-    padding: 20px;
-    /* You can use p-3 in HTML instead if preferred */
+    transition: margin-left var(--transition-speed) ease-in-out;
 }
 
-/* Desktop Collapsed State */
-.main-content.expanded {
-    margin-left: 60px;
+.main-content {
+    padding-top: var(--header-height);
+    min-height: 100vh;
 }
 
-/* --- MOBILE LAYOUT (< 768px) --- */
-/* Bootstrap 'md' breakpoint is 768px */
-@media (max-width: 768px) {
-    .main-content {
-        margin-left: 0 !important;
-        padding: 15px;
-    }
-
-    /* Animation for the backdrop */
-    .mobile-backdrop {
-        animation: fadeIn 0.3s;
-    }
+/* Mobile Overlay */
+.mobile-backdrop {
+    animation: fadeOverlay 0.3s ease-in-out;
+    backdrop-filter: blur(2px);
 }
 
-@keyframes fadeIn {
+@keyframes fadeOverlay {
     from {
         opacity: 0;
     }
 
     to {
         opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .header-transition,
+    .main-content {
+        margin-left: 0 !important;
+    }
+
+    /* On Mobile, button should always be dark because sidebar slides OVER it */
+    .global-toggle-btn {
+        color: #0d6efd !important;
+        /* Bootstrap Primary Blue */
     }
 }

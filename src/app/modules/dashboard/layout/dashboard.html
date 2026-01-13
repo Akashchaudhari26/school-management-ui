@@ -1,19 +1,25 @@
-<div class="d-flex flex-column min-vh-100 position-relative overflow-hidden">
+<div class="d-flex flex-column min-vh-100 position-relative bg-light-gray">
 
-    <div class="mobile-backdrop position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50" style="z-index: 1020;"
-        *ngIf="isMobile && isMobileMenuOpen" (click)="closeMobileMenu()">
+    <button class="btn global-toggle-btn" [class.text-white]="!isSidebarCollapsed && !isMobile"
+        [class.text-primary]="isSidebarCollapsed || isMobile" (click)="onToggleSidebar()">
+        <i class="bi bi-list fs-4"></i>
+    </button>
+
+    <div class="mobile-backdrop position-fixed top-0 start-0 w-100 h-100 bg-dark"
+        style="--bs-bg-opacity: .5; z-index: 1040;" *ngIf="isMobileMenuOpen" (click)="closeMobileMenu()">
     </div>
 
-    <header class="fixed-top">
-        <app-navbar (toggleMobile)="toggleMobileMenu()"></app-navbar>
+    <header class="fixed-top header-transition" [style.margin-left.px]="!isMobile ? (isSidebarCollapsed ? 0 : 260) : 0">
+        <app-navbar [isSidebarCollapsed]="isSidebarCollapsed" [isMobile]="isMobile"></app-navbar>
     </header>
 
-    <app-sidebar [isCollapsed]="isSidebarCollapsed" [isMobileOpen]="isMobileMenuOpen" (toggle)="toggleDesktopSidebar()">
+    <app-sidebar [isCollapsed]="isSidebarCollapsed" [isMobileOpen]="isMobileMenuOpen" (toggle)="onToggleSidebar()">
     </app-sidebar>
 
-    <main class="main-content bg-light" [class.expanded]="isSidebarCollapsed" [class.mobile-pushed]="isMobileMenuOpen">
+    <main class="main-content header-transition"
+        [style.margin-left.px]="!isMobile ? (isSidebarCollapsed ? 0 : 260) : 0">
 
-        <div class="bg-white rounded shadow-sm p-4" style="min-height: 80vh;">
+        <div class="container-fluid p-4">
             <router-outlet></router-outlet>
         </div>
     </main>

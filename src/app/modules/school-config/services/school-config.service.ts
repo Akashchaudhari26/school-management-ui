@@ -87,7 +87,9 @@ export class SchoolConfigService {
 
     addSection(classId: string, section: Section): Observable<SchoolClass> {
         // Backend: @PostMapping("/classes/{classId}/sections")
-        return this.http.post<SchoolClass>(`${this.apiUrl}/classes/${classId}/sections`, section);
+        return this.http.post<SchoolClass>(`${this.apiUrl}/classes/${classId}/sections`, section).pipe(
+            tap(() => this.classesCache$ = null) // Clear cache on update
+        );
     }
 
     // ==========================================

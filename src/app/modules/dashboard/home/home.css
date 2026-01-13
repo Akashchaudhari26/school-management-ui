@@ -1,0 +1,26 @@
+/* Stats Cards */
+.stat-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 12px;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    /* Soft Square (Squircle) */
+}
+
+/* Activity Feed */
+.activity-item:last-child {
+    margin-bottom: 0 !important;
+}
+
+.activity-icon {
+    margin-top: -2px;
+}

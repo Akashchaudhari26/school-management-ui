@@ -1,30 +1,29 @@
-<nav class="navbar">
-    <div class="navbar-left">
-        <button class="icon-btn hamburger-btn" (click)="onToggleMobile()">
-            <i class="bi bi-list"></i>
-        </button>
-        <span class="brand-name">Matrutva Little Buds</span>
+<nav class="navbar d-flex justify-content-between align-items-center px-4">
+
+    <div class="d-flex align-items-center gap-3" *ngIf="isSidebarCollapsed || isMobile" style="margin-left: 40px;">
+    
+        <img src="/assets/logo.svg" alt="Matrutva Little Buds" class="navbar-logo-img">
+    
     </div>
 
-    <div class="navbar-right" *ngIf="user$ | async as user">
+    <div *ngIf="!isSidebarCollapsed && !isMobile"></div>
 
-        <div class="user-info">
-            <span class="user-name">{{ user.fullName?.toLocaleUpperCase() }}</span>
-            <span class="user-role">{{ user.roleName }}</span>
+    <div class="d-flex align-items-center gap-3" *ngIf="user$ | async as user">
+        <div class="d-none d-md-flex flex-column text-end">
+            <span class="fw-bold text-dark small">{{ user.fullName }}</span>
+            <span class="badge bg-primary-subtle text-primary rounded-pill role-badge">
+                {{ user.roleName }}
+            </span>
         </div>
-
-        <div class="avatar">
-            @if (user.profileImageUrl) {
-            <img [src]="user.profileImageUrl" alt="User">
-            } @else {
-            <div class="avatar-initials">
+        <div class="avatar-wrapper">
+            <img *ngIf="user.profileImageUrl" [src]="user.profileImageUrl" alt="Profile" class="avatar-img">
+            <div *ngIf="!user.profileImageUrl" class="avatar-initials">
                 {{ getInitials(user.fullName) }}
             </div>
-            }
         </div>
-        <button (click)="logout()" class="logout-btn" title="Logout">
-            <i class="bi bi-power"></i>
-            <span class="btn-text">Logout</span>
+        <div class="vr mx-2 d-none d-md-block"></div>
+        <button (click)="logout()" class="btn btn-outline-danger btn-sm border-0 rounded-circle">
+            <i class="bi bi-box-arrow-right"></i>
         </button>
     </div>
 </nav>
