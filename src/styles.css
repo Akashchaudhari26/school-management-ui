@@ -35,3 +35,46 @@ h6 {
     margin-bottom: 15px;
     padding: 0;
 }
+
+/* 1. The dark overlay backing must be higher than the Sidebar (2000) & Toggle Button (2001) */
+.modal-backdrop {
+    z-index: 2050 !important;
+}
+
+/* 2. The Modal Content itself must be the highest element */
+.modal {
+    z-index: 2060 !important;
+}
+
+@media print {
+
+    /* 1. Hide Global Layout Elements */
+    button,
+    app-navbar,
+    app-sidebar,
+    app-footer,
+    .navbar,
+    .sidebar,
+    header,
+    footer {
+        display: none !important;
+    }
+
+    /* 2. Reset Body Layout */
+    body,
+    html {
+        background-color: white !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* 3. Ensure Main Content Takes Full Width */
+    app-root,
+    .main-content,
+    .content-wrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}

@@ -75,6 +75,23 @@ export class StudentService {
     );
   }
 
+  getSubjects(classId: string): Observable<DropdownOption[]> {
+    if (!classId) return of([]);
+    console.log('Fetching subjects for classId:', classId);
+    return this.configService.getAllClasses().pipe(
+      map(classes => {
+        const selectedClass = classes.find(c => c.id === classId);
+        if (selectedClass && selectedClass.subjectNames) {
+          return selectedClass.subjectNames.map(s => ({
+            label: s,
+            value: s
+          }));
+        }
+        return [];
+      })
+    );
+  }
+
   private readonly MONTHS: DropdownOption[] = [
     { label: 'January', value: '1' },
     { label: 'February', value: '2' },
@@ -93,5 +110,9 @@ export class StudentService {
 
   getMonths(): Observable<DropdownOption[]> {
     return of(this.MONTHS);
+  }
+
+  promoteStudents(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/promote`, data);
   }
 }

@@ -1,0 +1,318 @@
+/* =========================================================
+   1. COMPONENT ROOT
+   ========================================================= */
+:host {
+    display: block;
+    background-color: #f8f9fa;
+    /* Light gray background */
+    min-height: 100vh;
+}
+
+/* =========================================================
+   2. EXAM LIST TABLE (MAIN PAGE)
+   ========================================================= */
+.table-hover tbody tr {
+    transition: background-color 0.2s ease;
+    cursor: default;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Badge styling */
+.badge {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding: 0.5em 0.8em;
+}
+
+/* =========================================================
+   3. MODAL & TOOLBARS
+   ========================================================= */
+/* The Batch Set Toolbar */
+.bg-primary.bg-opacity-10 {
+    background-color: rgba(13, 110, 253, 0.08) !important;
+    border-bottom: 1px solid rgba(13, 110, 253, 0.15) !important;
+}
+
+/* Apply buttons */
+.btn-white {
+    background-color: #ffffff;
+    border-color: #dee2e6;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-white:hover {
+    background-color: #0d6efd;
+    color: #ffffff !important;
+    border-color: #0d6efd;
+}
+
+/* Loading State Container */
+.spinner-container {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================================
+   4. SCROLLBARS & TABLE UTILS
+   ========================================================= */
+.table-responsive {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Webkit (Chrome/Edge) */
+.table-responsive::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+}
+
+/* Sticky Header */
+thead.sticky-top th {
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 0 #dee2e6;
+    z-index: 5;
+}
+
+/* =========================================================
+   5. FORM INPUTS (GLOBAL)
+   ========================================================= */
+input.form-control-sm {
+    border-radius: 4px;
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+}
+
+input.form-control-sm:focus {
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.15);
+    border-color: #0d6efd;
+}
+
+/* Disabled input state */
+input.form-control-sm[disabled] {
+    background-color: transparent;
+    border-color: transparent;
+    color: #adb5bd;
+    pointer-events: none;
+}
+
+/* =========================================================
+   6. PARENT ROW STATES (CLASS LIST)
+   ========================================================= */
+tr {
+    transition: opacity 0.2s ease;
+}
+
+/* Unselected class row dimming */
+tr.bg-light {
+    opacity: 0.75;
+    background-color: #fafafa !important;
+}
+
+tr.bg-light .form-check-input {
+    opacity: 0.7;
+}
+
+/* Expand Button Column */
+td button.btn-link {
+    color: #6c757d;
+    transition: color 0.2s ease;
+}
+
+td button.btn-link:hover {
+    color: #0d6efd;
+}
+
+/* =========================================================
+   7. NESTED SUBJECT TABLE (THE FIX)
+   ========================================================= */
+
+/* The Container Div inside the expanded row */
+tr td[colspan]>div {
+    background: #ffffff;
+    border-left: 4px solid #0d6efd;
+    border-radius: 0 0.5rem 0.5rem 0;
+    padding: 1rem !important;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
+    animation: expandFade 0.2s ease-out;
+}
+
+@keyframes expandFade {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* The Table Itself */
+tr td[colspan] table {
+    font-size: 0.85rem;
+    width: 100%;
+    /* Fixed layout ensures columns respect the widths we set below */
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+}
+
+/* Header Cells */
+tr td[colspan] table thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 10px;
+    border-bottom: 2px solid #e9ecef;
+    vertical-align: middle;
+}
+
+/* Body Cells */
+tr td[colspan] table td {
+    padding: 6px 8px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+tr td[colspan] table tbody tr:hover td {
+    background-color: #f8f9fa;
+}
+
+/* --- COLUMN WIDTHS (Percentage Based for fluidity) --- */
+
+/* 1. Subject Name */
+tr td[colspan] table th:nth-child(1),
+tr td[colspan] table td:nth-child(1) {
+    width: 18%;
+    color: #343a40;
+    font-weight: 600;
+}
+
+/* 2. Date */
+tr td[colspan] table th:nth-child(2),
+tr td[colspan] table td:nth-child(2) {
+    width: 16%;
+}
+
+/* 3. Start Time */
+tr td[colspan] table th:nth-child(3),
+tr td[colspan] table td:nth-child(3) {
+    width: 14%;
+}
+
+/* 4. Duration */
+tr td[colspan] table th:nth-child(4),
+tr td[colspan] table td:nth-child(4) {
+    width: 12%;
+}
+
+/* 5. Syllabus (Gets the most space) */
+tr td[colspan] table th:nth-child(5),
+tr td[colspan] table td:nth-child(5) {
+    width: 30%;
+}
+
+/* 6. Max Marks (Small fixed column) */
+tr td[colspan] table th:last-child,
+tr td[colspan] table td:last-child {
+    width: 10%;
+    text-align: center;
+}
+
+/* --- NESTED INPUT STYLING --- */
+
+tr td[colspan] input.form-control-sm {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    min-height: 32px;
+    border-color: #dee2e6;
+}
+
+/* Syllabus Input Polish */
+tr td[colspan] input[formControlName="syllabus"] {
+    background-color: #f8f9fa;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    text-overflow: ellipsis;
+}
+
+tr td[colspan] input[formControlName="syllabus"]:focus {
+    background-color: #fff;
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.1);
+}
+
+/* Max Marks Input Highlight */
+tr td[colspan] input[formControlName="subjectMaxMarks"] {
+    text-align: center;
+    font-weight: 600;
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.05);
+    border: 1px solid rgba(13, 110, 253, 0.2);
+}
+
+tr td[colspan] input[formControlName="subjectMaxMarks"]:focus {
+    background-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.1);
+}
+
+/* =========================================================
+   8. RESPONSIVE UTILS
+   ========================================================= */
+.width-mark-col {
+    width: 120px;
+}
+
+@media (max-width: 576px) {
+    .width-mark-col {
+        width: 85px;
+    }
+
+    .table-sm {
+        font-size: 0.85rem;
+    }
+
+    input.form-control-sm {
+        padding: 0.2rem 0.3rem;
+    }
+
+    /* Modal Fullscreen on Mobile */
+    .modal-fullscreen-sm-down {
+        width: 100vw;
+        max-width: none;
+        height: 100%;
+        margin: 0;
+    }
+
+    .modal-fullscreen-sm-down .modal-content {
+        height: 100%;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .modal-body {
+        padding: 1rem !important;
+    }
+}

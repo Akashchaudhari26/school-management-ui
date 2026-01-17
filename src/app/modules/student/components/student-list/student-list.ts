@@ -8,6 +8,7 @@ import { Student } from '../../models/student';
 import { DropdownOption, StudentService } from '../../services/student.service';
 import { StudentSearchFilter } from '../../models/student-filter';
 import { StudentTableComponent } from "../student-table.component/student-table.component";
+import { AcademicYear } from '../../../school-config/models/school-config';
 
 @Component({
   selector: 'app-student-list',
@@ -18,6 +19,7 @@ import { StudentTableComponent } from "../student-table.component/student-table.
 })
 export class StudentList implements OnInit {
   private studentService = inject(StudentService);
+  academicYears: AcademicYear[] = [];
 
   // UI State
   students: Student[] = [];

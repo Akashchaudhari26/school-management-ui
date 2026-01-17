@@ -1,0 +1,68 @@
+/* Screen Styles */
+:host {
+    display: block;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Timetable Table Styles */
+.timetable-table thead th {
+    background-color: #f8f9fa;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.timetable-table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* Print Specific Styles */
+@media print {
+
+    /* Hide everything marked d-print-none */
+    .d-print-none {
+        display: none !important;
+    }
+
+    /* Reset background and remove shadows for ink saving */
+    :host {
+        background-color: white;
+        height: auto;
+    }
+
+    .container-fluid {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Force Table Borders to be visible in print */
+    .table-bordered {
+        border: 1px solid #000 !important;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #000 !important;
+    }
+
+    /* Ensure text colors print correctly */
+    .text-primary {
+        color: #000 !important;
+        /* Print blue text as black usually looks better */
+    }
+
+    .badge {
+        border: 1px solid #ccc !important;
+        color: #000 !important;
+        background: transparent !important;
+    }
+
+    
+}

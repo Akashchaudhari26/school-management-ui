@@ -17,7 +17,9 @@ export class Dashboard {
 
   ngOnInit() {
     this.checkScreenSize();
+
   }
+
 
   // Listen for window resize to auto-adjust
   @HostListener('window:resize', [])

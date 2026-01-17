@@ -1,0 +1,225 @@
+/* ========================================================= 
+   1. VARIABLES & UTILITIES 
+   ========================================================= */
+:root {
+    --a4-width: 210mm;
+    --a4-height: 297mm;
+    --backdrop-z: 1050;
+    --modal-z: 2055;
+    --print-z: 9999;
+}
+
+/* Typography Helpers */
+.letter-spacing-1 {
+    letter-spacing: 1px;
+}
+
+.letter-spacing-2 {
+    letter-spacing: 2px;
+}
+
+/* ========================================================= 
+   2. REPORT CARD PAPER 
+   ========================================================= */
+.report-card-paper {
+    position: relative;
+    width: var(--a4-width);
+    min-height: var(--a4-height);
+    margin: 0 auto;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+/* Watermark Layer */
+.watermark-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.watermark-img {
+    width: 70%;
+    max-width: 120mm;
+    opacity: 0.15;
+}
+
+/* Ensure content sits on top of watermark */
+.report-card-paper>*:not(.watermark-layer) {
+    position: relative;
+    z-index: 2;
+}
+
+.report-card-paper table th,
+.report-card-paper table td {
+    padding: 6px 8px;
+    background-color: transparent !important;
+}
+
+/* ========================================================= 
+   3. MODAL & BACKDROP (SAFE MODE)
+   ========================================================= */
+
+/* Only target modals that are actually OPEN (.show) or the specific print modal */
+.modal.show {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999 !important;
+    /* Higher than Sidebar (1000) & Navbar (1030) */
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998 !important;
+    /* Just below the modal */
+}
+
+/* Cinematic Blur - Only applies when body has 'modal-open' class */
+body.modal-open>*:not(.modal-backdrop):not(.modal) {
+    filter: blur(4px) grayscale(0.3);
+    transition: filter 0.3s ease;
+}
+
+/* ========================================================= 
+   4. PRINT STYLES (SAFE VISIBILITY STRATEGY)
+   ========================================================= */
+@media print {
+
+    /* 1. Reset Page */
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
+
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        filter: none !important;
+        backdrop-filter: none !important;
+    }
+
+    body.modal-open,
+    body.modal-open>* {
+        filter: none !important;
+        backdrop-filter: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    /* 2. Hide everything by default using visibility (Safer than display:none) */
+    body>* {
+        display: none !important;
+    }
+
+    /* 3. Un-hide the App Root so logic still runs, but keep it invisible */
+    app-root {
+        visibility: hidden;
+        display: block !important;
+    }
+
+    /* 4. Hide specific UI elements completely to save space */
+    app-sidebar,
+    app-navbar,
+    header,
+    nav,
+    footer,
+    .sidebar,
+    .header-transition,
+    .global-toggle-btn,
+    .mobile-backdrop,
+    .modal-backdrop,
+    /* Hide the dark overlay */
+    .modal-header,
+    .modal-footer,
+    .d-print-none {
+        display: none !important;
+    }
+
+    /* 5. SHOW ONLY THE PRINT SECTION */
+    /* We make the print section visible and position it at the very top-left of the paper */
+    #print-section,
+    #bulk-print-section {
+        display: block !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 210mm !important;
+        /* Force A4 width */
+        margin: 0 auto !important;
+        z-index: 9999 !important;
+        visibility: visible !important;
+    }
+
+    /* 6. Ensure children of the print section are visible */
+    #print-section *,
+    #bulk-print-section * {
+        visibility: visible !important;
+    }
+
+    #print-section {
+        position: static !important;
+    }
+
+    #print-section,
+    .report-card-paper {
+        width: 100% !important;
+        margin: 0 !important;
+        overflow: visible !important;
+    }
+
+    /* 7. Print Specific Adjustments */
+    .report-card-paper {
+        width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+        filter: none !important;
+        outline: none !important;
+    }
+
+    .modal,
+    .modal-dialog,
+    .modal-content,
+    .modal-body {
+        position: static !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        overflow: visible !important;
+    }
+
+    .bg-light,
+    thead {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}

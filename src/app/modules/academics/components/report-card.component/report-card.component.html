@@ -1,0 +1,265 @@
+<div class="container-fluid mt-4 pb-5">
+
+    <div class="d-print-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="mb-0 fw-bold text-secondary">Student Report Card</h4>
+                <p class="text-muted small mb-0">Select a class to generate reports.</p>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body bg-light rounded p-4">
+                <form [formGroup]="filterForm" class="row g-3 align-items-end">
+
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small fw-bold text-muted">Year</label>
+                        <select formControlName="academicYear" class="form-select form-select-sm">
+                            <option value="" disabled>Select</option>
+                            @for (y of academicYears; track y.name) { <option [value]="y.name">{{ y.name }}</option> }
+                        </select>
+                    </div>
+
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small fw-bold text-muted">Class</label>
+                        <select formControlName="classId" class="form-select form-select-sm">
+                            <option value="">Select</option>
+                            @for (c of classes$ | async; track c.value) { <option [value]="c.value">{{ c.label }}
+                            </option> }
+                        </select>
+                    </div>
+
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small fw-bold text-muted">Section</label>
+                        <select formControlName="section" class="form-select form-select-sm">
+                            @for (s of sections$ | async; track s.value) { <option [value]="s.value">{{ s.label }}
+                            </option> }
+                        </select>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                        <label class="form-label small fw-bold text-muted">Exam Name</label>
+                        <select class="form-select form-select-sm" formControlName="examName">
+                            <option value="" disabled>Select Exam</option>
+
+                            @for(exam of filteredExams; track exam.id) {
+                            <option [value]="exam.name">{{ exam.name }}</option>
+                            }
+
+                            @if(filteredExams.length === 0 && filterForm.get('classId')?.value) {
+                            <option value="" disabled>No exams found for this class</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-3 d-flex gap-2">
+                        <button class="btn btn-primary btn-sm w-50 fw-bold shadow-sm" (click)="fetchStudents()"
+                            [disabled]="filterForm.invalid || isLoading">
+                            @if (isLoading) { <span class="spinner-border spinner-border-sm"></span> }
+                            @else { <i class="bi bi-people-fill me-1"></i> Students }
+                        </button>
+
+                        <button class="btn btn-dark btn-sm w-50 fw-bold shadow-sm" (click)="printAllReports()"
+                            [disabled]="filterForm.invalid || isLoading">
+                            <i class="bi bi-printer-fill me-1"></i> Print Class
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (studentList.length > 0) {
+    <div class="card border-0 shadow-sm animate-slide-up d-print-none">
+        <div class="card-header bg-white py-3">
+            <h6 class="mb-0 fw-bold text-primary">
+                {{ filterForm.get('classId')?.value }} - {{ filterForm.get('section')?.value }} Student List
+            </h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted small text-uppercase">
+                    <tr>
+                        <th class="ps-4">Admission No</th>
+                        <th>Student Name</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (student of studentList; track student.id) {
+                    <tr>
+                        <td class="ps-4 fw-bold text-muted small">{{ student.admissionNumber }}</td>
+                        <td class="fw-bold text-dark">{{ student.firstName }} {{ student.lastName }}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-dark rounded-pill px-3"
+                                (click)="viewReport(student.id)" [disabled]="isGenerating">
+                                <i class="bi bi-file-earmark-text me-1"></i> View Report
+                            </button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+
+    @if (showModal && reportCard) {
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" style="overflow-y: auto;">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="max-width: 220mm;">
+            <div class="modal-content border-0 shadow-lg">
+
+                <div
+                    class="modal-header bg-white border-bottom py-3 px-4 d-print-none d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="modal-title fw-bold text-dark mb-0">
+                            <i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>Report Preview
+                        </h5>
+                        <small class="text-muted">Review details before printing.</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-dark btn-sm px-3 shadow-sm" (click)="printReport()">
+                            <i class="bi bi-printer-fill me-2"></i>Print Report
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm px-3" (click)="closeModal()">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-body bg-light p-4 d-flex justify-content-center">
+                    <div id="print-section">
+                        <ng-container
+                            *ngTemplateOutlet="reportCardTemplate; context: { report: reportCard, isBulk: false }"></ng-container>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div> }
+
+    @if (showBulkModal && bulkReports.length > 0) {
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" style="overflow-y: auto;">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg">
+
+                <div
+                    class="modal-header bg-white border-bottom py-3 px-4 d-print-none d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="modal-title fw-bold text-dark mb-0">
+                            <i class="bi bi-stack text-primary me-2"></i>Class Report Preview
+                        </h5>
+                        <small class="text-muted">Generated {{ bulkReports.length }} report cards.</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-dark btn-sm px-4 shadow-sm" (click)="triggerBulkPrint()">
+                            <i class="bi bi-printer-fill me-2"></i>Print All
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm px-3" (click)="closeBulkModal()">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-body bg-light p-0">
+                    <div id="bulk-print-section">
+                        @for (reportItem of bulkReports; track reportItem.admissionNumber) {
+                        <ng-container
+                            *ngTemplateOutlet="reportCardTemplate; context: { report: reportItem, isBulk: true }"></ng-container>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div> }
+
+</div>
+
+<ng-template #reportCardTemplate let-data="report" let-isBulk="isBulk">
+    <div class="report-card-paper p-5 position-relative bg-white shadow-sm overflow-hidden" [class.page-break]="isBulk"
+        [class.mx-auto]="isBulk" [class.my-4]="isBulk">
+
+        <div class="watermark-layer">
+            <img src="assets/m.svg" alt="Watermark" class="watermark-img">
+        </div>
+
+        <div class="text-center border-bottom pb-4 mb-4 position-relative" style="z-index: 2;">
+            <img src="assets/logo.svg" alt="Matrutva Little Buds" class="mb-2" style="height: 80px; max-width: 100%;">
+            <p class="text-muted small mb-3">Sangrampur, Maharashtra - 444202</p>
+            <h5 class="fw-bold text-uppercase d-inline-block px-4 py-1 rounded border">Report Card</h5>
+        </div>
+
+        <div class="row mb-4 small text-uppercase fw-bold text-secondary position-relative" style="z-index: 2;">
+            <div class="col-6">
+                <p class="mb-1">Student: <span class="text-dark ms-2 fs-6">{{ data.studentName }}</span></p>
+                <p class="mb-1">Admission No: <span class="text-dark ms-2">{{ data.admissionNumber }}</span></p>
+            </div>
+            <div class="col-6 text-end">
+                <p class="mb-1">Class: <span class="text-dark ms-2">{{ data.className }} - {{ data.section }}</span></p>
+                <p class="mb-1">Exam: <span class="text-dark ms-2">{{ data.examName }} ({{ data.academicYear }})</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="position-relative" style="z-index: 2;">
+            <table class="table table-bordered border-dark mb-4 text-center align-middle small">
+                <thead>
+                    <tr>
+                        <th class="text-start ps-3">Subject</th>
+                        <th style="width: 80px;">Max</th>
+                        <th style="width: 80px;">Obtained</th>
+                        <th style="width: 60px;">Grade</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (sub of data.subjects; track sub.subjectName) {
+                    <tr>
+                        <td class="text-start ps-3 fw-bold">{{ sub.subjectName }}</td>
+                        <td>{{ sub.totalMarks }}</td>
+                        <td>{{ sub.marksObtained }}</td>
+                        <td class="fw-bold">{{ sub.grade }}</td>
+                        <td class="small text-muted fst-italic">{{ sub.remarks || '-' }}</td>
+                    </tr>
+                    }
+                    <tr class="fw-bold">
+                        <td class="text-start ps-3">GRAND TOTAL</td>
+                        <td>{{ data.maxTotalMarks }}</td>
+                        <td>{{ data.totalMarksObtained }}</td>
+                        <td>{{ data.finalGrade }}</td>
+                        <td>{{ data.resultStatus }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mb-5 position-relative" style="z-index: 2;">
+            <div class="col-8">
+                <div class="border p-2 small text-muted">
+                    <strong>Grading:</strong> A+ (90-100), A (80-89), B (70-79), C (50-69), D (&lt;50)
+                </div>
+            </div>
+            <div class="col-4 text-end">
+                <div class="p-2 border rounded text-center">
+                    <small class="text-uppercase text-muted fw-bold">Percentage</small>
+                    <h4 class="mb-0 fw-bold">{{ data.percentage }}%</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5 pt-5 text-center small fw-bold position-relative" style="z-index: 2;">
+            <div class="col-4">
+                <div class="border-top border-dark w-75 mx-auto pt-2">Class Teacher</div>
+            </div>
+            <div class="col-4">
+                <div class="border-top border-dark w-75 mx-auto pt-2">Parent</div>
+            </div>
+            <div class="col-4">
+                <div class="border-top border-dark w-75 mx-auto pt-2">Principal</div>
+            </div>
+        </div>
+    </div>
+</ng-template>

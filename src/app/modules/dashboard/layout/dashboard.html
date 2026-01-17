@@ -9,11 +9,13 @@
         style="--bs-bg-opacity: .5; z-index: 1040;" *ngIf="isMobileMenuOpen" (click)="closeMobileMenu()">
     </div>
 
-    <header class="fixed-top header-transition" [style.margin-left.px]="!isMobile ? (isSidebarCollapsed ? 0 : 260) : 0">
+    <header class="fixed-top header-transition"
+        [style.margin-left.px]="!isMobile ? (isSidebarCollapsed ? 0 : 260) : 0">
         <app-navbar [isSidebarCollapsed]="isSidebarCollapsed" [isMobile]="isMobile"></app-navbar>
     </header>
 
-    <app-sidebar [isCollapsed]="isSidebarCollapsed" [isMobileOpen]="isMobileMenuOpen" (toggle)="onToggleSidebar()">
+    <app-sidebar [isCollapsed]="isSidebarCollapsed" [isMobileOpen]="isMobileMenuOpen"
+        (toggle)="onToggleSidebar()">
     </app-sidebar>
 
     <main class="main-content header-transition"

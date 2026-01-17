@@ -17,7 +17,7 @@ export interface SchoolClass {
     program: string;   // "Pre-Primary", "Primary"
     order: number;     // For sorting: 1, 2, 3
     sections: Section[];
-    subjectIds: string[]; // List of Subject IDs
+    subjectNames: string[]; // List of Subject IDs
 }
 
 export interface AcademicYear {

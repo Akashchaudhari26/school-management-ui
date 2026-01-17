@@ -1,0 +1,137 @@
+<div class="container-fluid mt-4">
+
+    <div class="d-flex align-items-center mb-4">
+        <h4 class="mb-0 text-secondary border-start ps-3 fw-bold">Student Promotion Management</h4>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-light py-3">
+            <h6 class="mb-0 text-primary fw-bold"><i class="bi bi-sliders me-2"></i>Promotion Settings</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+
+                <div class="col-md-5 border-end">
+                    <small class="text-muted fw-bold text-uppercase mb-2 d-block">Promote From (Source)</small>
+                    <form [formGroup]="filterForm" class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small">Current Class</label>
+                            <select formControlName="classId" class="form-select bg-light">
+                                @for (cls of classes$ | async; track cls.value) {
+                                <option [value]="cls.value">{{ cls.label }}</option> }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small">Section</label>
+                            <select formControlName="section" class="form-select bg-light">
+                                @for (sec of sections$ | async; track sec.value) {
+                                <option [value]="sec.value">{{ sec.label }}</option> }
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-dark w-100" (click)="fetchStudents()" [disabled]="isLoading">
+                                <i class="bi bi-search me-2"></i> Fetch Students
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-1 d-none d-md-flex align-items-center justify-content-center text-muted">
+                    <i class="bi bi-arrow-right-circle-fill fs-1 opacity-25"></i>
+                </div>
+
+                <div class="col-md-6">
+                    <small class="text-muted fw-bold text-uppercase mb-2 d-block">Promote To (Target)</small>
+                    <form [formGroup]="targetForm" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small">Next Class</label>
+                            <select formControlName="targetClassId" class="form-select border-primary">
+                                @for (cls of targetClasses$ | async; track cls.value) {
+                                <option [value]="cls.value">{{ cls.label }}</option> }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Next Section</label>
+                            <select formControlName="targetSection" class="form-select border-primary">
+                                @for (sec of targetSections$ | async; track sec.value) {
+                                <option [value]="sec.value">{{ sec.label }}</option> }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">New Academic Year</label>
+                            <select formControlName="targetYear" class="form-select fw-bold text-primary">
+                                <option value="" disabled>Select Year</option>
+                                <option *ngFor="let year of academicYears" [value]="year.name">
+                                    {{ year.name }} {{ year.active ? '(Current)' : '' }}
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="studentList.length > 0" class="card border-0 shadow-sm animate-fade-in">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 fw-bold">Select Students to Promote</h6>
+            <span class="badge bg-light text-dark border">{{ studentList.length }} Students Found</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light small text-uppercase text-muted">
+                    <tr>
+                        <th class="ps-3" style="width: 40px;">
+                            <input type="checkbox" class="form-check-input" checked (change)="toggleAll($event)">
+                        </th>
+                        <th>Admission No</th>
+                        <th>Student Name</th>
+                        <th>Status</th>
+                        <th>Target Class (Override)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (s of studentList; track s.id) {
+                    <tr [class.table-warning]="s.action === 'RETAIN'">
+                        <td class="ps-3">
+                            <input type="checkbox" class="form-check-input" [(ngModel)]="s.selected">
+                        </td>
+                        <td class="small fw-bold text-muted">{{ s.admissionNumber }}</td>
+                        <td class="fw-bold">{{ s.firstName }} {{ s.lastName }}</td>
+                        <td>
+                            <select [(ngModel)]="s.action" class="form-select form-select-sm w-auto fw-bold" [ngClass]="{
+                                        'text-success border-success': s.action === 'PROMOTE',
+                                        'text-danger border-danger': s.action === 'RETAIN',
+                                        'text-warning border-warning': s.action === 'DEMOTE'
+                                    }">
+                                <option value="PROMOTE">PROMOTE</option>
+                                <option value="RETAIN">RETAIN (Fail)</option>
+                                <option value="DEMOTE">DEMOTE</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select *ngIf="s.action !== 'RETAIN'" [(ngModel)]="s.overrideClass"
+                                class="form-select form-select-sm text-muted">
+                                <option [ngValue]="null">Use Batch Default</option>
+                                @for (cls of classes$ | async; track cls.value) {
+                                <option [value]="cls.value">{{ cls.label }}</option> }
+                            </select>
+                            <span *ngIf="s.action === 'RETAIN'" class="small text-muted fst-italic">
+                                Stays in {{ filterForm.get('classId')?.value }}
+                            </span>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer bg-white p-3 text-end">
+            <button class="btn btn-success btn-lg px-5 shadow" (click)="onPromote()" [disabled]="isSubmitting">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                Confirm Promotion
+            </button>
+        </div>
+    </div>
+</div>

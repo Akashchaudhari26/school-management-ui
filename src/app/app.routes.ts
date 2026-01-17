@@ -38,6 +38,10 @@ export const routes: Routes = [
                 loadChildren: () => import('./modules/student/student.route').then(m => m.STUDENT_ROUTES)
             },
             {
+                path: 'exams',
+                loadChildren: () => import('./modules/academics/academics-route').then(m => m.STUDENT_ROUTES)
+            },
+            {
                 path: 'staff',
                 loadChildren: () => import('./modules/staff/staff.route').then(m => m.STAFF_ROUTES)
             },

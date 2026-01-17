@@ -1,0 +1,129 @@
+<div class="container-fluid p-3 p-md-4">
+
+    <div class="d-print-none mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold text-dark mb-1">Exam Timetable</h4>
+                <p class="text-muted small mb-0">View and print schedules for specific classes.</p>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm" (click)="printTimetable()" [disabled]="!selectedExam">
+                <i class="bi bi-printer me-2"></i> Print Schedule
+            </button>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body bg-light rounded p-4">
+                <form [formGroup]="filterForm" class="row g-3 align-items-end">
+
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-muted">Academic Year</label>
+                        <select formControlName="academicYear" class="form-select form-select-sm">
+                            @for (year of academicYears; track year.name) {
+                            <option [value]="year.name">{{ year.name }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-muted">Select Exam</label>
+                        <select formControlName="examId" class="form-select form-select-sm">
+                            <option value="" disabled>Choose Exam...</option>
+                            @for (exam of exams; track exam.id) {
+                            <option [value]="exam.id">{{ exam.name }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-muted">Select Class</label>
+                        <select formControlName="classId" class="form-select form-select-sm">
+                            <option value="" disabled>Choose Class...</option>
+                            @for (cls of classes; track cls.value) {
+                            <option [value]="cls.value">{{ cls.label }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button class="btn btn-primary btn-sm w-100 fw-bold" (click)="generateTimetable()"
+                            [disabled]="filterForm.invalid || isLoading">
+                            <i class="bi bi-calendar-check me-2"></i> Show Timetable
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (selectedExam && selectedClassSchedule.length > 0) {
+    <div class="card border-0 shadow-lg animate-slide-up print-area">
+
+        <div class="card-header bg-white border-bottom-0 pt-4 px-4 text-center">
+            <h3 class="fw-bold text-dark text-uppercase mb-1">{{ selectedExam.name }}</h3>
+            <h5 class="text-primary fw-bold mb-2">{{ selectedClassName }}</h5>
+            <p class="text-muted small">
+                Academic Session: {{ selectedExam.academicYear }}
+                @if(selectedExam.startDate) {
+                | Dates: {{ selectedExam.startDate | date:'mediumDate' }} - {{ selectedExam.endDate | date:'mediumDate'
+                }}
+                }
+            </p>
+        </div>
+
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0 timetable-table">
+                    <thead class="bg-light text-uppercase small text-secondary">
+                        <tr>
+                            <th style="width: 15%">Date</th>
+                            <th style="width: 15%">Time</th>
+                            <th style="width: 20%">Subject</th>
+                            <th style="width: 35%">Syllabus</th>
+                            <th style="width: 15%" class="text-center">Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (subject of selectedClassSchedule; track subject.subjectName) {
+                        <tr>
+                            <td class="fw-bold text-dark bg-light-subtle">
+                                {{ subject.examDate | date:'EEEE' }}<br>
+                                <span class="small text-muted fw-normal">{{ subject.examDate | date:'mediumDate'
+                                    }}</span>
+                            </td>
+                            <td class="fw-bold text-primary">
+                                {{ subject.startTime }}
+                            </td>
+                            <td>
+                                <span
+                                    class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 px-3 py-2 rounded-pill">
+                                    {{ subject.subjectName }}
+                                </span>
+                            </td>
+                            <td class="small text-muted fst-italic">
+                                {{ subject.syllabus || 'As per curriculum' }}
+                            </td>
+                            <td class="text-center fw-bold text-secondary">
+                                {{ subject.duration }}
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 pt-3 border-top text-center text-muted small d-none d-print-block">
+                <p>Note: Students must report 15 minutes before the scheduled time.</p>
+                <!-- <p>Generated on {{ currentDate | date:'medium' }}</p> -->
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (selectedExam && selectedClassSchedule.length === 0) {
+    <div class="text-center py-5 text-muted d-print-none">
+        <i class="bi bi-calendar-x display-4 opacity-50"></i>
+        <p class="mt-2">No schedule configured for this class yet.</p>
+    </div>
+    }
+
+</div>

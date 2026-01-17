@@ -65,6 +65,44 @@ export class Sidebar {
       ]
     },
     {
+      title: 'Academics & Exams',
+      icon: 'bi-journal-bookmark-fill',
+      isOpen: false,
+      allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER', 'STUDENT', 'PARENT'],
+      children: [
+        {
+          title: 'Time Table',
+          icon: '',
+          link: '/dashboard/exams/time-table',
+          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER', 'PARENT'] // Students can't enter marks
+        },
+        {
+          title: 'Enter Marks',
+          icon: '',
+          link: '/dashboard/exams/entry',
+          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] // Students can't enter marks
+        },
+        {
+          title: 'View Mark Sheet',
+          icon: '',
+          link: '/dashboard/exams/sheet',
+          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] // Teachers review class performance
+        },
+        {
+          title: 'Report Cards',
+          icon: '',
+          link: '/dashboard/exams/reports',
+          // Everyone can see this (Logic: Teachers see Class, Student sees Self)
+        },
+        {
+          title: 'Exam Settings',
+          icon: '',
+          link: '/dashboard/exams/settings',
+          allowedRoles: ['ADMIN'] // To configure Grade Rules (A+ > 90), Exam Names
+        }
+      ]
+    },
+    {
       title: 'Staff',
       icon: 'bi-person-workspace',
       isOpen: false,

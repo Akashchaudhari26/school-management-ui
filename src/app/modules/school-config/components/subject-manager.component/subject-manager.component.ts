@@ -74,8 +74,8 @@ export class SubjectManagerComponent {
 
   // Check if a subject is currently assigned to the selected class
   isSubjectAssigned(subjectId: string | undefined): boolean {
-    if (!this.currentClass || !this.currentClass.subjectIds || !subjectId) return false;
-    return this.currentClass.subjectIds.includes(subjectId);
+    if (!this.currentClass || !this.currentClass.subjectNames || !subjectId) return false;
+    return this.currentClass.subjectNames.includes(subjectId);
   }
 
   // Toggle Checkbox
@@ -85,18 +85,18 @@ export class SubjectManagerComponent {
     const isChecked = event.target.checked;
 
     // Initialize array if null
-    if (!this.currentClass.subjectIds) {
-      this.currentClass.subjectIds = [];
+    if (!this.currentClass.subjectNames) {
+      this.currentClass.subjectNames = [];
     }
 
     if (isChecked) {
       // Add if not present
-      if (!this.currentClass.subjectIds.includes(subjectId)) {
-        this.currentClass.subjectIds.push(subjectId);
+      if (!this.currentClass.subjectNames.includes(subjectId)) {
+        this.currentClass.subjectNames.push(subjectId);
       }
     } else {
       // Remove if present
-      this.currentClass.subjectIds = this.currentClass.subjectIds.filter(id => id !== subjectId);
+      this.currentClass.subjectNames = this.currentClass.subjectNames.filter(id => id !== subjectId);
     }
   }
 
@@ -121,6 +121,24 @@ export class SubjectManagerComponent {
   }
 
   getTotalAssignments(): number {
-    return this.classes.reduce((sum, cls) => sum + (cls.subjectIds ? cls.subjectIds.length : 0), 0);
+    return this.classes.reduce((sum, cls) => sum + (cls.subjectNames ? cls.subjectNames.length : 0), 0);
+  }
+
+  subjectSearchTerm: string = '';
+
+  // Add this Getter to filter subjects in real-time
+  get filteredSubjects() {
+    // If search is empty, return everything
+    if (!this.subjectSearchTerm.trim()) {
+      return this.allSubjects;
+    }
+
+    const term = this.subjectSearchTerm.toLowerCase();
+
+    // Filter by Name OR Code (e.g., "Math" or "NUR_MATH")
+    return this.allSubjects.filter(sub =>
+      sub.name.toLowerCase().includes(term) ||
+      sub.code.toLowerCase().includes(term)
+    );
   }
 }

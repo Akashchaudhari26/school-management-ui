@@ -22,4 +22,10 @@ export const STUDENT_ROUTES: Routes = [
         data: { roles: ['ADMIN', 'PRINCIPAL'] },
         loadComponent: () => import('./components/student-form/student-form').then(m => m.StudentForm)
     },
+    {
+        path: 'promote',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] },
+        loadComponent: () => import('./components/promote-student.component/promote-student.component').then(m => m.PromoteStudentComponent)
+    }
 ];

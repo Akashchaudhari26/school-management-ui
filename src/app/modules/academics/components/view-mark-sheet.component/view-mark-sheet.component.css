@@ -1,0 +1,35 @@
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Print Styling: Hide Sidebar/Filters when printing */
+@media print {
+
+    .card-body.bg-light,
+    button {
+        display: none !important;
+    }
+
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Expand table for print */
+    .table-responsive {
+        overflow: visible !important;
+        max-height: none !important;
+    }
+}

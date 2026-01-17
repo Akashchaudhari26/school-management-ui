@@ -26,7 +26,7 @@ export class ClassManagerComponent {
     program: 'Pre-Primary',
     order: 0,
     sections: [],
-    subjectIds: []
+    subjectNames: []
   };
 
   // Helper for adding sections (mapped by class ID)
@@ -66,7 +66,7 @@ export class ClassManagerComponent {
     this.configService.createClass(this.newClass).subscribe({
       next: (res) => {
         alert('Class Created Successfully!');
-        this.newClass = { id: '', displayName: '', program: 'Pre-Primary', order: this.classes.length + 1, sections: [], subjectIds: [] };
+        this.newClass = { id: '', displayName: '', program: 'Pre-Primary', order: this.classes.length + 1, sections: [], subjectNames: [] };
         this.loadClasses();
       },
       error: (err) => alert('Error: Class ID might already exist.')
