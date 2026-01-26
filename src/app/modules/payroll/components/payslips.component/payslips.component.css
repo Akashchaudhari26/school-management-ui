@@ -1,0 +1,19 @@
+/* Smooth hover effect for cards */
+.transition-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.transition-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+}
+
+/* Background refinement */
+.bg-light-subtle {
+    background-color: #f8f9fa !important;
+}
+
+/* Custom Scrollbar for chart container if needed */
+canvas {
+    max-height: 300px;
+}

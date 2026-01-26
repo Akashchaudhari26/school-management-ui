@@ -57,6 +57,10 @@ export const routes: Routes = [
                 path: 'config',
                 loadChildren: () => import('./modules/school-config/school-config.route').then(m => m.SCHOOL_CONFIG_ROUTES)
             },
+            {
+                path: 'payroll',
+                loadChildren: () => import('./modules/payroll/payroll.route').then(m => m.PAYROLL_ROUTES)
+            },
         ]
     },
 

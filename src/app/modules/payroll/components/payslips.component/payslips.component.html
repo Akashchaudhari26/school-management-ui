@@ -1,0 +1,176 @@
+<div class="container-fluid p-3 p-md-5 bg-light-subtle min-vh-100">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold m-0 text-dark">Financial Overview</h3>
+            <p class="text-muted small m-0">Track your earnings and salary history</p>
+        </div>
+        <button class="btn btn-primary shadow-sm" (click)="refresh()" [disabled]="isLoading">
+            <i class="bi" [ngClass]="isLoading ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
+            <span class="d-none d-md-inline ms-2">Refresh Data</span>
+        </button>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100 border-start border-4 border-success">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-success-subtle p-3 rounded-circle text-success me-3">
+                            <i class="bi bi-wallet2 fs-4"></i>
+                        </div>
+                        <div>
+                            <p class="text-muted small text-uppercase mb-1 fw-bold">Total Earnings (Selected Period)</p>
+                            <h4 class="fw-bold m-0 text-success">{{ ytdEarnings | currency:'INR' }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100 border-start border-4 border-primary">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary-subtle p-3 rounded-circle text-primary me-3">
+                            <i class="bi bi-graph-up-arrow fs-4"></i>
+                        </div>
+                        <div>
+                            <p class="text-muted small text-uppercase mb-1 fw-bold">Average Net Pay</p>
+                            <h4 class="fw-bold m-0 text-primary">{{ avgNetPay | currency:'INR' }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm h-100 bg-primary text-white">
+                <div class="card-body">
+                    <p class="small text-white-50 text-uppercase mb-1 fw-bold">Latest Payslip</p>
+                    <div *ngIf="filteredHistory.length > 0; else noData">
+                        <h4 class="fw-bold m-0">{{ filteredHistory[filteredHistory.length-1].month }}</h4>
+                        <div class="badge bg-white text-primary mt-2">
+                            {{ filteredHistory[filteredHistory.length-1].status }}
+                        </div>
+                    </div>
+                    <ng-template #noData>
+                        <h5 class="m-0">No Data Available</h5>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold">Salary Trend</h6>
+                </div>
+                <div class="card-body">
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas #salaryChart></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold">Filters</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Year</label>
+                        <select class="form-select" [(ngModel)]="selectedYear" (change)="applyFilters()">
+                            <option value="ALL">All Time</option>
+                            <option *ngFor="let y of availableYears" [value]="y">{{ y }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Payment Status</label>
+                        <select class="form-select" [(ngModel)]="selectedStatus" (change)="applyFilters()">
+                            <option value="ALL">All Statuses</option>
+                            <option value="PAID">Paid Only</option>
+                            <option value="DRAFT">Generated (Pending)</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-light border small text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Showing <strong>{{ filteredHistory.length }}</strong> records based on current filters.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h5 class="fw-bold mb-3">Payslip History</h5>
+
+    <div class="row g-3">
+        <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of filteredHistory">
+            <div class="card shadow-sm border-0 h-100 transition-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h6 class="fw-bold m-0 text-dark">{{ item.month }} {{ item.year }}</h6>
+                            <small class="text-muted">ID: {{ item.id.substring(0,8) }}...</small>
+                        </div>
+                        <span class="badge rounded-pill"
+                            [ngClass]="item.status === 'PAID' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'">
+                            {{ item.status }}
+                        </span>
+                    </div>
+
+                    <div class="bg-light rounded p-3 mb-3 border border-light-subtle">
+                        <div class="row g-2">
+                            <div class="col-6 border-end">
+                                <small class="text-muted d-block" style="font-size: 0.75rem;">EARNINGS</small>
+                                <span class="fw-bold text-dark">{{ item.totalEarnings | currency:'INR':'symbol':'1.0-0'
+                                    }}</span>
+                            </div>
+                            <div class="col-6 ps-3">
+                                <small class="text-muted d-block" style="font-size: 0.75rem;">DEDUCTIONS</small>
+                                <span class="fw-bold text-danger">-{{ item.totalDeductions |
+                                    currency:'INR':'symbol':'1.0-0' }}</span>
+                            </div>
+                        </div>
+                        <div class="border-top mt-2 pt-2 d-flex justify-content-between align-items-center">
+                            <small class="fw-bold text-secondary">NET PAY</small>
+                            <span class="fs-5 fw-bold text-success">{{ item.netPayable | currency:'INR' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button class="btn btn-outline-primary btn-sm" (click)="downloadSlip(item)">
+                            <i class="bi bi-download me-2"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12" *ngIf="filteredHistory.length === 0 && !isLoading">
+            <div class="text-center py-5">
+                <img src="assets/no-data.svg" alt="" style="width: 100px; opacity: 0.5;" class="mb-3">
+                <h5 class="text-muted">No records found</h5>
+                <p class="text-muted small">Try adjusting your filters or check back later.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div style="position: absolute; left: -9999px; top: 0;">
+    <div id="my-payslip-template" class="bg-white p-5"
+        style="width: 210mm; min-height: 297mm; color: #000; font-family: 'Segoe UI', sans-serif;">
+        <div class="text-center border-bottom border-2 border-dark pb-3 mb-4">
+            <h2 class="fw-bold m-0 text-uppercase" style="letter-spacing: 1px;">{{ schoolProfile.name }}</h2>
+            <p class="m-0 text-muted">{{ schoolProfile.address }}</p>
+            <div class="mt-3 bg-light border border-dark py-2">
+                <h5 class="m-0 fw-bold">PAYSLIP FOR {{ selectedSlip?.month }} {{ selectedSlip?.year }}</h5>
+            </div>
+        </div>
+    </div>
+</div>

@@ -115,6 +115,17 @@ export class Sidebar {
       ]
     },
     {
+      title: 'Payroll & HR',
+      icon: 'bi-cash-coin', // Good icon for money/salary
+      isOpen: false,
+      allowedRoles: ['ADMIN'], // Only Admin should see salary data
+      children: [
+        { title: 'Salary Setup', icon: '', link: '/dashboard/payroll/structure' },
+        { title: 'Generate Payroll', icon: '', link: '/dashboard/payroll/generate' },
+        { title: 'Salary Ledger', icon: '', link: '/dashboard/payroll/view' }, // View history
+      ]
+    },
+    {
       title: 'Attendance',
       icon: 'bi-calendar-check-fill',
       isOpen: false,
@@ -236,7 +247,21 @@ export class Sidebar {
           link: '/dashboard/admin/view',
           allowedRoles: ['ADMIN']
         }]
-    }
+    },
+    {
+      title: 'My Profile',
+      icon: 'bi-person-circle',
+      isOpen: false,
+      allowedRoles: ['TEACHER', 'PRINCIPAL', 'LIBRARIAN', 'ACCOUNTANT', 'ADMIN'], // Not for Admin (Admin has their own view)
+      children: [
+        // ... maybe 'My Attendance'
+        {
+          title: 'My Payslips',
+          icon: 'bi-file-earmark-text',
+          link: '/dashboard/payroll/my-slips'
+        },
+      ]
+    },
   ];
 
   constructor(private authService: Auth) { }

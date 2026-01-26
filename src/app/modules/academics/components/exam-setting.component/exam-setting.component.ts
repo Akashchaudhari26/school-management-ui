@@ -269,21 +269,23 @@ export class ExamSettingComponent {
     });
   }
 
-  onSubjectDateChange(classIndex: number, subjectIndex: number) {
+  syncFirstSubjectValue(
+    classIndex: number,
+    subjectIndex: number,
+    controlName: 'examDate' | 'startTime'
+  ) {
     if (subjectIndex !== 0) return;
 
     const subjects = this.getSubjectsArray(classIndex);
-    const first = subjects.at(0).value;
+    const firstValue = subjects.at(0).get(controlName)?.value;
 
     subjects.controls.forEach((ctrl, i) => {
       if (i === 0) return;
 
-      ctrl.patchValue({
-        examDate: first.examDate,
-        startTime: first.startTime
-      }, { emitEvent: false });
+      ctrl.get(controlName)?.patchValue(firstValue, { emitEvent: false });
     });
   }
+
 
   openEditModal(exam: ExamDefinition) {
     this.isEditMode = true;

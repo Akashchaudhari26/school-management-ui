@@ -1,0 +1,99 @@
+<div class="container-fluid p-2 p-md-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold m-0">Salary Ledger</h3>
+
+        <div class="d-flex gap-2">
+            <select [(ngModel)]="selectedMonth" (change)="fetchLedger()" class="form-select w-auto">
+                <option *ngFor="let m of months" [value]="m">{{ m }}</option>
+            </select>
+            <select [(ngModel)]="selectedYear" (change)="fetchLedger()" class="form-select w-auto">
+                <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+            </select>
+            <button class="btn btn-outline-success" (click)="downloadCSV()" title="Export Excel">
+                <i class="bi bi-file-earmark-spreadsheet"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm border-start border-4 border-primary h-100">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small">Total Salary Payable</h6>
+                    <h3 class="fw-bold text-primary m-0">{{ summary.totalLiability | currency:'INR' }}</h3>
+                    <small class="text-muted">For {{ summary.totalStaff }} Staff Members</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <div class="card border-0 shadow-sm border-start border-4 border-success h-100">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small">Disbursed (Paid)</h6>
+                    <h3 class="fw-bold text-success m-0">{{ summary.totalPaid | currency:'INR' }}</h3>
+                    <small class="text-muted">Cleared Transactions</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <div class="card border-0 shadow-sm border-start border-4 border-warning h-100">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small">Pending Dues</h6>
+                    <h3 class="fw-bold text-warning m-0">{{ summary.totalPending | currency:'INR' }}</h3>
+                    <small class="text-muted">Action Required</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h5 class="m-0 fs-6 fw-bold">Transaction History</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Staff Name</th>
+                        <th class="d-none d-md-table-cell">Days Worked</th>
+                        <th class="text-end">Earnings</th>
+                        <th class="text-end d-none d-md-table-cell">Deductions</th>
+                        <th class="text-end fw-bold">Net Pay</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of ledger">
+                        <td>
+                            <div class="fw-bold text-dark">{{ row.staffName }}</div>
+                            <small class="text-muted d-md-none">{{ row.month }}</small>
+                        </td>
+                        <td class="d-none d-md-table-cell">
+                            {{ row.presentDays }} <span class="text-muted small">/ {{ row.totalDaysInMonth }}</span>
+                        </td>
+                        <td class="text-end text-secondary">{{ row.totalEarnings | currency:'INR' }}</td>
+                        <td class="text-end text-danger d-none d-md-table-cell">{{ row.totalDeductions | currency:'INR'
+                            }}</td>
+                        <td class="text-end fw-bold text-dark">{{ row.netPayable | currency:'INR' }}</td>
+                        <td class="text-center">
+                            <span class="badge rounded-pill"
+                                [ngClass]="row.status === 'PAID' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'">
+                                {{ row.status }}
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="ledger.length === 0 && !isLoading">
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            No records found for {{ selectedMonth }} {{ selectedYear }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

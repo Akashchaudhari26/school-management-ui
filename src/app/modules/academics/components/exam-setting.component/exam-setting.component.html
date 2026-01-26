@@ -174,13 +174,13 @@
                                                             <td>
                                                                 <input type="date" class="form-control form-control-sm"
                                                                     formControlName="examDate"
-                                                                    (change)="onSubjectDateChange(classIndex, subIndex)">
+                                                                    (change)="syncFirstSubjectValue(classIndex, subIndex, 'examDate')">
                                                             </td>
 
                                                             <td>
                                                                 <input type="time" class="form-control form-control-sm"
                                                                     formControlName="startTime"
-                                                                    (change)="onSubjectDateChange(classIndex, subIndex)">
+                                                                    (change)="syncFirstSubjectValue(classIndex, subIndex, 'startTime')">
                                                             </td>
 
                                                             <td>
