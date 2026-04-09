@@ -39,7 +39,7 @@ export const routes: Routes = [
             },
             {
                 path: 'exams',
-                loadChildren: () => import('./modules/academics/academics-route').then(m => m.STUDENT_ROUTES)
+                loadChildren: () => import('./modules/academics/academics-route').then(m => m.ACADEMICS_ROUTES)
             },
             {
                 path: 'staff',

@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { roleGuard } from '../../core/guards/role.guards';
 
-export const STUDENT_ROUTES: Routes = [
+export const ACADEMICS_ROUTES: Routes = [
     {
         path: 'time-table',
         loadComponent: () => import('./components/exam-timetable.component/exam-timetable.component').then(m => m.ExamTimetableComponent)
