@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { jwtDecode } from 'jwt-decode'; // Import this
 
-export type UserRole = 'ADMIN' | 'PRINCIPAL' | 'TEACHER' | 'STUDENT' | 'PARENT' | 'ACCOUNTANT' | 'LIBRARIAN';
+export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'PRINCIPAL' | 'TEACHER' | 'STUDENT' | 'PARENT' | 'ACCOUNTANT' | 'LIBRARIAN';
 
 
 export interface User {
@@ -30,6 +30,12 @@ export interface LoginRequest {
   adharNumber?: string;
   password: string;
   tenantId?: string;
+}
+
+export interface ForgotPasswordRequest {
+  identifier: string;
+  newPassword: string;
+  confirmPassword: string;
 }
 
 export interface AuthResponse {
@@ -127,5 +133,9 @@ export class Auth {
 
   register(userData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, userData);
+  }
+
+  forgotPassword(request: ForgotPasswordRequest): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, request);
   }
 }

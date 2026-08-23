@@ -1,0 +1,54 @@
+.startup-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f7f9fc;
+}
+
+.loader-card {
+    width: 420px;
+    padding: 40px;
+    border-radius: 16px;
+    background: white;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .08);
+}
+
+.loader {
+    width: 52px;
+    height: 52px;
+    border: 5px solid #ececec;
+    border-top: 5px solid #2563eb;
+    border-radius: 50%;
+    margin: auto;
+    animation: spin 1s linear infinite;
+}
+
+h2 {
+    margin-top: 24px;
+}
+
+p {
+    color: #666;
+}
+
+button {
+
+    margin-top: 20px;
+    padding: 10px 24px;
+    cursor: pointer;
+
+}
+
+@keyframes spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}

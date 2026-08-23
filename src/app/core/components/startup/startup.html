@@ -1,0 +1,33 @@
+<div class="startup-container">
+
+    @if (loading) {
+
+    <div class="loader-card">
+
+        <div class="loader"></div>
+
+        <h2>Starting School Management System</h2>
+
+        <p>Please wait while we verify the application configuration...</p>
+
+    </div>
+
+    }
+
+    @if (error) {
+
+    <div class="loader-card">
+
+        <h2>Unable to connect</h2>
+
+        <p>Could not reach the backend server.</p>
+
+        <button (click)="retry()">
+            Retry
+        </button>
+
+    </div>
+
+    }
+
+</div>

@@ -41,52 +41,52 @@ export class Sidebar {
       title: 'Students',
       icon: 'bi-mortarboard-fill',
       isOpen: false,
-      allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER'], // Parents/Students don't manage students
+      allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER'], // Parents/Students don't manage students
       children: [
         {
           title: 'All Students',
           icon: '',
           link: '/dashboard/students',
-          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER']
         },
         {
           title: 'Add New',
           icon: '',
           link: '/dashboard/students/new',
-          allowedRoles: ['ADMIN', 'PRINCIPAL'] // Teachers usually don't admit students
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'] // Teachers usually don't admit students
         },
-        { title: 'Manage Families', icon: '', link: '/dashboard/students/families', allowedRoles: ['ADMIN', 'PRINCIPAL'] },
-        { title: 'Active / Inactive', icon: '', link: '/dashboard/students/active', allowedRoles: ['ADMIN', 'PRINCIPAL'] },
-        { title: 'Admission Letter', icon: '', link: '/dashboard/students/admission-letter', allowedRoles: ['ADMIN'] },
-        { title: 'Student ID Cards', icon: '', link: '/dashboard/students/id-cards', allowedRoles: ['ADMIN', 'PRINCIPAL'] },
-        { title: 'Print Basic List', icon: '', link: '/dashboard/students/print-list', allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] },
-        { title: 'Manage Login', icon: '', link: '/dashboard/students/login', allowedRoles: ['ADMIN'] },
-        { title: 'Promote Students', icon: '', link: '/dashboard/students/promote', allowedRoles: ['ADMIN', 'PRINCIPAL'] },
+        { title: 'Manage Families', icon: '', link: '/dashboard/students/families', allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'] },
+        { title: 'Active / Inactive', icon: '', link: '/dashboard/students/active', allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'] },
+        { title: 'Admission Letter', icon: '', link: '/dashboard/students/admission-letter', allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN'] },
+        { title: 'Student ID Cards', icon: '', link: '/dashboard/students/id-cards', allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'] },
+        { title: 'Print Basic List', icon: '', link: '/dashboard/students/print-list', allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER'] },
+        { title: 'Manage Login', icon: '', link: '/dashboard/students/login', allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN'] },
+        { title: 'Promote Students', icon: '', link: '/dashboard/students/promote', allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'] },
       ]
     },
     {
       title: 'Academics & Exams',
       icon: 'bi-journal-bookmark-fill',
       isOpen: false,
-      allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER', 'STUDENT', 'PARENT'],
+      allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER', 'STUDENT', 'PARENT'],
       children: [
         {
           title: 'Time Table',
           icon: '',
           link: '/dashboard/exams/time-table',
-          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER', 'PARENT'] // Students can't enter marks
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER', 'PARENT'] // Students can't enter marks
         },
         {
           title: 'Enter Marks',
           icon: '',
           link: '/dashboard/exams/entry',
-          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] // Students can't enter marks
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER'] // Students can't enter marks
         },
         {
           title: 'View Mark Sheet',
           icon: '',
           link: '/dashboard/exams/sheet',
-          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] // Teachers review class performance
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER'] // Teachers review class performance
         },
         {
           title: 'Report Cards',
@@ -98,7 +98,7 @@ export class Sidebar {
           title: 'Exam Settings',
           icon: '',
           link: '/dashboard/exams/settings',
-          allowedRoles: ['ADMIN'] // To configure Grade Rules (A+ > 90), Exam Names
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN'] // To configure Grade Rules (A+ > 90), Exam Names
         }
       ]
     },
@@ -106,7 +106,7 @@ export class Sidebar {
       title: 'Staff',
       icon: 'bi-person-workspace',
       isOpen: false,
-      allowedRoles: ['ADMIN', 'PRINCIPAL'], // Teachers shouldn't see staff management
+      allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'], // Teachers shouldn't see staff management
       children: [
         { title: 'All Staff', icon: '', link: '/dashboard/staff' },
         { title: 'Add New Staff', icon: '', link: '/dashboard/staff/new' },
@@ -118,7 +118,7 @@ export class Sidebar {
       title: 'Payroll & HR',
       icon: 'bi-cash-coin', // Good icon for money/salary
       isOpen: false,
-      allowedRoles: ['ADMIN'], // Only Admin should see salary data
+      allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN'], // Only Admin should see salary data
       children: [
         { title: 'Salary Setup', icon: '', link: '/dashboard/payroll/structure' },
         { title: 'Generate Payroll', icon: '', link: '/dashboard/payroll/generate' },
@@ -134,7 +134,7 @@ export class Sidebar {
           title: 'Mark Attendance',
           icon: '',
           link: '/dashboard/attendance/mark',
-          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER']
         },
         {
           title: 'View Attendance',
@@ -146,31 +146,31 @@ export class Sidebar {
           title: 'Class Register',
           icon: '',
           link: '/dashboard/attendance/class-register',
-          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER']
         },
         {
           title: 'Attendance Dashboard',
           icon: '',
           link: '/dashboard/attendance/dashboard',
-          allowedRoles: ['ADMIN', 'PRINCIPAL']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL']
         },
         {
           title: 'Reports',
           icon: '',
           link: '/dashboard/attendance/reports',
-          allowedRoles: ['ADMIN', 'PRINCIPAL']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL']
         },
         {
           title: 'Leave Requests',
           icon: '',
           link: '/dashboard/attendance/leaves',
-          allowedRoles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] // Teachers might approve, or just Admin
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER'] // Teachers might approve, or just Admin
         },
         {
           title: 'Settings',
           icon: '',
           link: '/dashboard/attendance/settings',
-          allowedRoles: ['ADMIN']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN']
         },
       ]
     },
@@ -178,50 +178,50 @@ export class Sidebar {
       title: 'Fee Management',
       icon: 'bi-currency-exchange',
       isOpen: false,
-      allowedRoles: ['ADMIN', 'PRINCIPAL'],
+      allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'],
       children: [
         {
           title: 'Fee Structures',
           icon: '',
           link: '/dashboard/fees/create',
-          allowedRoles: ['ADMIN']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN']
         },
         {
           title: 'Collect Fees',
           icon: '',
           link: '/dashboard/fees/collect',
-          allowedRoles: ['ADMIN', 'PRINCIPAL']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL']
         },
         {
           title: 'Due Dashboard',
           icon: '',
           link: '/dashboard/fees/dues',
-          allowedRoles: ['ADMIN', 'PRINCIPAL']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL']
         },
         {
           title: 'Student History',
           icon: '',
           link: '/dashboard/fees/history',
-          allowedRoles: ['ADMIN', 'PRINCIPAL']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL']
         },
         {
           title: 'Bulk Fee Upload',
           icon: '',
           link: '/dashboard/fees/bulk-create',
-          allowedRoles: ['ADMIN', 'PRINCIPAL']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL']
         },
         {
           title: 'Fee Master Data',
           icon: '',
           link: '/dashboard/fees/fee-master',
-          allowedRoles: ['ADMIN', 'PRINCIPAL']
+          allowedRoles: ['SUPER_ADMIN', 'SUPER_ADMIN', 'ADMIN', 'PRINCIPAL']
         }
       ]
     },
     {
       title: 'School Configuration', // <--- I ADDED THIS FOR YOUR NEW MODULE
       icon: 'bi-gear-fill',
-      allowedRoles: ['ADMIN'],
+      allowedRoles: ['SUPER_ADMIN', 'ADMIN'],
       isOpen: false,
       children: [
         { title: 'Academic Years', icon: '', link: '/dashboard/config/years' },
@@ -232,27 +232,27 @@ export class Sidebar {
     {
       title: 'Admin Panel',
       icon: 'bi-shield-lock-fill', // Professional Admin Icon
-      allowedRoles: ['ADMIN'], // <--- Key Property
+      allowedRoles: ['SUPER_ADMIN', 'ADMIN'], // <--- Key Property
       isOpen: false,
       children: [
         {
           title: 'Create User',
           icon: '',
           link: '/dashboard/admin/create',
-          allowedRoles: ['ADMIN']
+          allowedRoles: ['SUPER_ADMIN', 'ADMIN']
         },
         {
           title: 'View User',
           icon: '',
           link: '/dashboard/admin/view',
-          allowedRoles: ['ADMIN']
+          allowedRoles: ['SUPER_ADMIN', 'ADMIN']
         }]
     },
     {
       title: 'My Profile',
       icon: 'bi-person-circle',
       isOpen: false,
-      allowedRoles: ['TEACHER', 'PRINCIPAL', 'LIBRARIAN', 'ACCOUNTANT', 'ADMIN'], // Not for Admin (Admin has their own view)
+      allowedRoles: ['TEACHER', 'PRINCIPAL', 'LIBRARIAN', 'ACCOUNTANT', 'SUPER_ADMIN', 'ADMIN'], // Not for Admin (Admin has their own view)
       children: [
         // ... maybe 'My Attendance'
         {

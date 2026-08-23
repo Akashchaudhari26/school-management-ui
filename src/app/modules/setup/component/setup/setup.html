@@ -1,0 +1,539 @@
+<div class="setup-page">
+
+    <div class="setup-card">
+
+        <aside class="sidebar">
+
+            <div class="brand">
+
+                <div class="logo" aria-hidden="true">M</div>
+
+                <h2>Matrutva School</h2>
+
+                <p>School Management System</p>
+
+            </div>
+
+            <div class="welcome">
+
+                <p class="eyebrow">First-time setup</p>
+
+                <h3>Build your school workspace</h3>
+
+                <p>
+
+                    Add the details your team needs to get started with Matrutva.
+
+                </p>
+
+            </div>
+
+            <ul class="step-list">
+
+                @for(step of steps; track step; let i = $index){
+
+                <li class="step-item" [class.active]="i===currentStep" [class.completed]="i<currentStep">
+
+                    <span class="step-number">
+
+                        @if(i<currentStep){ ✓ } @else{ {{i+1}} } </span>
+
+                            <span>
+
+                                {{step}}
+
+                            </span>
+
+                </li>
+
+                }
+
+            </ul>
+
+        </aside>
+
+        <section class="content">
+
+            <div class="content-header">
+
+                <div>
+                    <p class="eyebrow">Step {{ currentStep + 1 }} of {{ steps.length }}</p>
+                    <h1>{{steps[currentStep]}}</h1>
+                    <p>Complete the required information to continue.</p>
+                </div>
+
+            </div>
+
+            <form [formGroup]="setupForm" class="wizard-form">
+
+                @switch(currentStep){
+
+                @case(0){
+
+                <div formGroupName="school">
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>
+
+                                School Name *
+
+                            </label>
+
+                            <input type="text" formControlName="schoolName">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>
+
+                                Short Name
+
+                            </label>
+
+                            <input type="text" formControlName="shortName">
+
+                        </div>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+
+                            Tagline
+
+                        </label>
+
+                        <input type="text" formControlName="tagline">
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+
+                            Description
+
+                        </label>
+
+                        <textarea rows="5" formControlName="description">
+                                        </textarea>
+
+                    </div>
+
+                </div>
+
+                }
+                @case(1){
+
+                <div formGroupName="school">
+
+                    <div formGroupName="contact">
+
+                        <div class="grid">
+
+                            <div class="field">
+
+                                <label>Email Address <span class="required">*</span></label>
+
+                                <input type="email" formControlName="email" placeholder="school@example.com">
+
+                                @if(contact.controls.email.touched &&
+                                contact.controls.email.invalid){
+
+                                <small class="error">
+
+                                    @if(contact.controls.email.errors?.['required']){
+
+                                    Email is required.
+
+                                    }
+
+                                    @if(contact.controls.email.errors?.['email']){
+
+                                    Enter a valid email address.
+
+                                    }
+
+                                </small>
+
+                                }
+
+                            </div>
+
+                            <div class="field">
+
+                                <label>Phone Number <span class="required">*</span></label>
+
+                                <input type="text" maxlength="10" formControlName="phone" placeholder="9876543210">
+
+                                @if(contact.controls.phone.touched &&
+                                contact.controls.phone.invalid){
+
+                                <small class="error">
+
+                                    Phone number is required.
+
+                                </small>
+
+                                }
+
+                            </div>
+
+                        </div>
+
+                        <div class="grid">
+
+                            <div class="field">
+
+                                <label>Alternate Phone</label>
+
+                                <input type="text" maxlength="10" formControlName="alternatePhone">
+
+                            </div>
+
+                            <div class="field">
+
+                                <label>WhatsApp Number</label>
+
+                                <input type="text" maxlength="10" formControlName="whatsapp">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                }
+                @case(2){
+
+                <div [formGroup]="address">
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>Address Line 1</label>
+
+                            <input type="text" formControlName="line1" placeholder="House No, Street">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>Address Line 2</label>
+
+                            <input type="text" formControlName="line2" placeholder="Area">
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>Village</label>
+
+                            <input type="text" formControlName="village">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>City</label>
+
+                            <input type="text" formControlName="city">
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>District</label>
+
+                            <input type="text" formControlName="district">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>State</label>
+
+                            <input type="text" formControlName="state">
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>Country</label>
+
+                            <input type="text" formControlName="country">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>Pin Code</label>
+
+                            <input type="text" maxlength="6" formControlName="pinCode">
+                            @if(address.controls.pinCode.touched &&
+                            address.controls.pinCode.invalid){
+
+                            <small class="error">
+
+                                @if(address.controls.pinCode.errors?.['required']){
+
+                                Pin Code is required.
+
+                                }
+
+                                @if(address.controls.pinCode.errors?.['pattern']){
+
+                                Enter a valid 6-digit Pin Code.
+
+                                }
+
+                            </small>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+                }
+                @case(3){
+
+                <div [formGroup]="registration">
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>School Registration Number</label>
+
+                            <input type="text" formControlName="registrationNumber"
+                                placeholder="Enter Registration Number">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>UDISE Code</label>
+
+                            <input type="text" maxlength="11" formControlName="udiseCode"
+                                placeholder="11 Digit UDISE Code">
+                            @if(registration.controls.udiseCode.touched &&
+                            registration.controls.udiseCode.invalid){
+
+                            <small class="error">
+
+                                @if(registration.controls.udiseCode.errors?.['required']){
+
+                                UDISE Code is required.
+
+                                }
+
+                                @if(registration.controls.udiseCode.errors?.['pattern']){
+
+                                UDISE Code must contain exactly 11 digits.
+
+                                }
+
+                            </small> }
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>Affiliation Number</label>
+
+                            <input type="text" formControlName="affiliationNumber"
+                                placeholder="Board Affiliation Number">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>GST Number</label>
+
+                            <input type="text" maxlength="15" formControlName="gstNumber" placeholder="GST Number">
+                            @if(registration.controls.gstNumber.touched &&
+                            registration.controls.gstNumber.invalid){
+
+                            <small class="error">
+
+                                Invalid GST Number.
+
+                            </small>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>PAN Number</label>
+
+                        <input type="text" maxlength="10" formControlName="panNumber" placeholder="PAN Number">
+                        @if(registration.controls.panNumber.touched &&
+                        registration.controls.panNumber.invalid){
+
+                        <small class="error">
+
+                            Invalid PAN Number.
+
+                        </small>
+
+                        }
+
+                    </div>
+
+                </div>
+                }
+                @case(4){
+
+                <div [formGroup]="admin">
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>Full Name *</label>
+
+                            <input type="text" formControlName="fullName">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>Email *</label>
+
+                            <input type="email" formControlName="email">
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>Mobile *</label>
+
+                            <input type="text" maxlength="10" formControlName="mobile">
+
+                        </div>
+
+                        <div class="field"></div>
+
+                    </div>
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>Password *</label>
+
+                            <input type="password" formControlName="password">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>Confirm Password *</label>
+
+                            <input type="password" formControlName="confirmPassword">
+
+                        </div>
+
+                    </div>
+
+                    @if(!passwordsMatch()
+                    && confirmPassword.touched){
+
+                    <small class="error">
+
+                        Passwords do not match.
+
+                    </small>
+
+                    }
+
+                </div>
+                }
+
+                }
+            </form>
+
+            <div class="footer">
+
+                <button type="button" class="secondary-btn" (click)="previous()" [disabled]="currentStep==0">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    Previous
+                </button>
+                @if(currentStep<steps.length-1){ <button class="primary-btn" (click)="next()"
+                    [disabled]="!isCurrentStepValid()">
+                    Next
+                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </button>
+
+                    }
+
+                    @else{
+
+                    <button type="button" class="primary-btn" (click)="submit()" [disabled]="loading">
+                        Finish Setup
+                        <i class="bi bi-check2" aria-hidden="true"></i>
+                    </button> }
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+@if(loading){
+
+<div class="loading-overlay">
+
+    <div class="loading-card">
+
+        <div class="spinner"></div>
+
+        <h2>
+
+            Initializing School
+
+        </h2>
+
+        <p>
+
+            Please wait while we configure the application.
+
+        </p>
+
+    </div>
+
+</div> }

@@ -2,7 +2,9 @@ import { Router, Routes } from '@angular/router';
 import { Auth } from './core/services/auth';
 import { inject } from '@angular/core';
 import { Login } from './modules/auth/components/login/login';
+import { ForgotPassword } from './modules/auth/components/forgot-password/forgot-password';
 import { Dashboard } from './modules/dashboard/layout/dashboard';
+import { Startup } from './core/components/startup/startup';
 
 const authGuard = () => {
     const authService = inject(Auth);
@@ -19,6 +21,7 @@ const authGuard = () => {
 
 export const routes: Routes = [
     { path: 'login', component: Login },
+    { path: 'forgot-password', component: ForgotPassword },
     {
         path: 'dashboard',
         component: Dashboard, // The layout we just built
@@ -64,5 +67,12 @@ export const routes: Routes = [
         ]
     },
 
-    { path: '', redirectTo: 'login', pathMatch: 'full' }
+    { path: '', component: Startup },
+    {
+        path: 'setup',
+        loadChildren: () =>
+            import('./modules/setup/setup.route')
+                .then(m => m.SETUP_ROUTES)
+    },
+
 ];
