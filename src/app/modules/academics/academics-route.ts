@@ -18,12 +18,12 @@ export const ACADEMICS_ROUTES: Routes = [
         path: 'reports',
         loadComponent: () => import('./components/report-card.component/report-card.component').then(m => m.ReportCardComponent),
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] }
+        data: { roles: ['SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER'] }
     },
     {
         path: 'settings',
         loadComponent: () => import('./components/exam-setting.component/exam-setting.component').then(m => m.ExamSettingComponent),
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] }
+        data: { roles: ['SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER'] }
     }
 ];

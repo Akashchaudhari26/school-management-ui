@@ -13,19 +13,19 @@ export const STUDENT_ROUTES: Routes = [
     {
         path: 'new',
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN', 'PRINCIPAL'] },
+        data: { roles: ['SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'] },
         loadComponent: () => import('./components/student-form/student-form').then(m => m.StudentForm)
     },
     {
         path: 'edit/:id',
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN', 'PRINCIPAL'] },
+        data: { roles: ['SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'] },
         loadComponent: () => import('./components/student-form/student-form').then(m => m.StudentForm)
     },
     {
         path: 'promote',
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] },
+        data: { roles: ['SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER'] },
         loadComponent: () => import('./components/promote-student.component/promote-student.component').then(m => m.PromoteStudentComponent)
     }
 ];

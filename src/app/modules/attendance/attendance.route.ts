@@ -9,7 +9,7 @@ export const ATTENDANCE_ROUTES: Routes = [
     {
         path: 'mark',
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN', 'PRINCIPAL', 'TEACHER'] },
+        data: { roles: ['SUPER_ADMIN', 'ADMIN', 'PRINCIPAL', 'TEACHER'] },
         loadComponent: () =>
             import('./components/mark-attendance.component/mark-attendance.component')
                 .then(m => m.MarkAttendanceComponent)
@@ -29,7 +29,7 @@ export const ATTENDANCE_ROUTES: Routes = [
     {
         path: 'dashboard',
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN', 'PRINCIPAL'] },
+        data: { roles: ['SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'] },
         loadComponent: () =>
             import('./components/attendance-dashboard.component/attendance-dashboard.component')
                 .then(m => m.AttendanceDashboardComponent)
@@ -37,7 +37,7 @@ export const ATTENDANCE_ROUTES: Routes = [
     {
         path: 'reports',
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN', 'PRINCIPAL'] },
+        data: { roles: ['SUPER_ADMIN', 'ADMIN', 'PRINCIPAL'] },
         loadComponent: () =>
             import('./components/attendance-report.component/attendance-report.component')
                 .then(m => m.AttendanceReportComponent)
