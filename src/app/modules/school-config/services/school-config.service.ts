@@ -13,7 +13,7 @@ export class SchoolConfigService {
 
     private classesCache$: Observable<SchoolClass[]> | null = null;
     private subjectsCache$: Observable<Subject[]> | null = null;
-    private activeYearCache$: Observable<AcademicYear> | null = null;
+    private activeYearCache$: Observable<AcademicYear | null> | null = null;
     private academicYearsCache$?: Observable<AcademicYear[]>;
 
 
@@ -32,7 +32,7 @@ export class SchoolConfigService {
         );
     }
 
-    getActiveAcademicYear(): Observable<AcademicYear> {
+    getActiveAcademicYear(): Observable<AcademicYear | null> {
         if (!this.activeYearCache$) {
             this.activeYearCache$ = this.http.get<AcademicYear>(`${this.apiUrl}/academic-year/active`).pipe(
                 shareReplay(1) // Cache the result
